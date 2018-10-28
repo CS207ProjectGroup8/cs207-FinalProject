@@ -7,6 +7,26 @@ Created on Sun Oct 28 16:42:15 2018
 
 class AutoDiff():
     def __init__(self, val, varName, *args):
+        '''
+        INPUT: 
+            val: numeric type, value of the variable to be evaluated at
+            varName: string, 
+                     either created when the user is creating the AutoDiff 
+                     object at the beginning, eg, x = AutoDiff(3, "x");
+                     or as "dummy" in function operations
+            *args: only read in args[0], which is a dictionary of derivative(s);
+                    eg. {"x":1, "y":2} means partial derivative of x and 
+                    partial derivative of y;
+                    Only situation that *args present is in the output of methods' 
+                    implementation return
+        EXAMPLE: 
+            EITHER: (created at the beginning by user)
+                x = AutoDiff(3, "x")
+            OR: (in method implementation)
+                def...:
+                    .....
+                    return AutoDiff(x0*y0, "dummy", {"x":aa, "y":bb})
+        '''
         self.val = val
         if varName != "dummy":
             self.der = {varName:1}
@@ -16,13 +36,18 @@ class AutoDiff():
     def __mul__(self, other):
         try:
         #if isinstance(other, AutoDiffToy):
-            derDict = {}
-            setSelfDer = set(self.der)
-            setOtherDer = set(other.der)
+            derDict = {}      #Create a new dictionary to store updated derivative(s) information
+            setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
+            setOtherDer = set(other.der)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
             
-            for key in setSelfDer.union(setOtherDer):
+            #look through element in the Union set:eg from above would be {'x', 'y', 'z'}
+            for key in setSelfDer.union(setOtherDer):   
+                
+                #if both derivative dictionaries have the partial derivative info for this variable
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = self.der[key]*other.val + other.der[key]*self.val
+                    
+                #if only one of them have the partial derivative info for the variable
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]*other.val
                 else: 
