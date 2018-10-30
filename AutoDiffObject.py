@@ -135,6 +135,7 @@ class AutoDiff():
                     return AutoDiff(x0*y0, "dummy", {"x":aa, "y":bb})
         '''
         self.val = val
+        self.varName = varName
         if varName != "dummy":
             self.der = {varName:1}
         else:
