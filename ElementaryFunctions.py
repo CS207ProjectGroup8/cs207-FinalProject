@@ -38,7 +38,7 @@ class ElementaryFunctions():
             sin_value,cos_for_der = math.sin(other_val), math.cos(other_val)
             for key,derivative in other.der.items():          #Here, loop through other.der
                 other_der[key] = cos_for_der * derivative     #and build up other_der 
-            return AutoDiff(sin_value, "dummy", other_der)    #pass in other_der as updated der information
+            return autodiff.AutoDiff(sin_value, "dummy", other_der)    #pass in other_der as updated der information
 
         except:
             try:
