@@ -11,14 +11,11 @@ class ElementaryFunctions():
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
             other_val, other_varName = other.val, other.varName
-            if other_varName == "dummy":
-                other_der = {}
-                sin_value,cos_for_der = math.sin(other_val), math.cos(other_val)
-                for key,derivative in other.der.items():
-                    other_der[key] = cos_for_der * derivative
-                return autodiff.AutoDiff(sin_value, "dummy", other_der)
-            else:
-                return autodiff.AutoDiff(math.sin(other_val),"dummy",{other_varName:math.cos(other_val)})
+            other_der = {}
+            sin_value,cos_for_der = math.sin(other_val), math.cos(other_val)
+            for key,derivative in other.der.items():
+                other_der[key] = cos_for_der * derivative
+            return autodiff.AutoDiff(sin_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
