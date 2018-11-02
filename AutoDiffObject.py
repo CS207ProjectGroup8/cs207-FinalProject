@@ -239,17 +239,14 @@ class AutoDiff():
             return AutoDiff(self.val + other.real, "dummy", self.der)
 
 
+if __name__ == "__main__":
+    x = AutoDiff(2, "x")
+    y = AutoDiff(3, "y")
+    z = AutoDiff(4, "z")
 
+    f = 5*x + 7*y +4*x*y*z + 3.0*z + 4
 
-
-x = AutoDiff(2, "x")
-y = AutoDiff(3, "y")
-z = AutoDiff(4, "z")
-
-
-f = 5*x + 7*y +4*x*y*z + 3.0*z + 4
-
-print(f.val, f.der)
+    print(f.val, f.der)
 
 
 
