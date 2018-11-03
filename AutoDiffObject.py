@@ -57,29 +57,8 @@ class AutoDiff():
                 derDict[key] = other.real * self.der[key]
             return AutoDiff(self.val * other.real, "dummy", derDict)
 
-    def __rmul__(self, other):                       #reversed multiplication
-        try:
-        #if isinstance(other, AutoDiffToy):
-            derDict = {}
-            setSelfDer = set(self.der)
-            setOtherDer = set(other.der)
 
-            for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key]*other.val + other.der[key]*self.val
-                elif key in setSelfDer:
-                    derDict[key] = self.der[key]*other.val
-                else:
-                    derDict[key] = other.der[key]*self.val
-
-            return AutoDiff(self.val * other.val, "dummy", derDict)
-
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            derDict = {}
-            for key in self.der:
-                derDict[key] = other.real * self.der[key]
-            return AutoDiff(self.val * other.real, "dummy", derDict)
+    __rmul__ = __mul__
 
 
     def __add__(self, other):
@@ -103,27 +82,7 @@ class AutoDiff():
         #elif isinstance(other, (int,float, etc numeric types)):
             return AutoDiff(self.val + other.real, "dummy", self.der)
 
-
-    def __radd__(self, other):
-        try:
-        #if isinstance(other, AutoDiffToy):
-            derDict = {}
-            setSelfDer = set(self.der)
-            setOtherDer = set(other.der)
-
-            for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key] + other.der[key]
-                elif key in setSelfDer:
-                    derDict[key] = self.der[key]
-                else:
-                    derDict[key] = other.der[key]
-
-            return AutoDiff(self.val + other.val, "dummy", derDict)
-
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            return AutoDiff(self.val + other.real, "dummy", self.der)
+    __radd__ = __add__
 
 
 if __name__ == "__main__":
@@ -131,7 +90,7 @@ if __name__ == "__main__":
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
-    f = 5*x + 7*y +4*x*y*z + 3.0*z + 4
+    f = 4 + 5*x + 7*y + x*y*z*4 + 3.0*z + 4
 
     print(f.val, f.der)
 
