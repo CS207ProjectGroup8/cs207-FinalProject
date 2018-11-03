@@ -27,6 +27,15 @@ class AutoDiff():
             self.der = {varName:1}
         else:
             self.der = args[0]
+    
+    def __neg__(self):
+        derDict = {}      #Create a new dictionary to store updated derivative(s) information
+        setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
+        # Store negatives of each partial derivative
+        for key in setSelfDer:
+            derDict[key] = -self.der[key]
+            
+        return AutoDiff(-1* self.val, "dummy", derDict)
 
     def __mul__(self, other):
         try:
@@ -107,18 +116,31 @@ class AutoDiff():
 
     __rsub__ = __sub__
 
+
 if __name__ == "__main__":
+
+
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
+
     f = 5*x - 7*y + x*y*z*4 + 3.0*z + 4
-
     print(f.val, f.der)
+    
+    g = -x*y*z
+    print(g.val, g.der)
 
+        
 
-
-
+#test = {'x': 53, 'z': 27.0, 'y': 39}
+#test.keys
+#set(test)
+#test1 = {}
+#for i in set(test):
+#    print (i)
+#    test1[i] = -test[i]
+#test1
 
 
 '''
