@@ -83,14 +83,36 @@ class AutoDiff():
             return AutoDiff(self.val + other.real, "dummy", self.der)
 
     __radd__ = __add__
+    
+    def __sub__(self,other):
+        try:
+        #if isinstance(other, AutoDiffToy):
+            derDict = {}
+            setSelfDer = set(self.der)
+            setOtherDer = set(other.der)
 
+            for key in setSelfDer.union(setOtherDer):
+                if key in setSelfDer and key in setOtherDer:
+                    derDict[key] = self.der[key] - other.der[key]
+                elif key in setSelfDer:
+                    derDict[key] = self.der[key]
+                else:
+                    derDict[key] = other.der[key]
+
+            return AutoDiff(self.val - other.val, "dummy", derDict)
+
+        except AttributeError:
+        #elif isinstance(other, (int,float, etc numeric types)):
+            return AutoDiff(self.val - other.real, "dummy", self.der)
+
+    __rsub__ = __sub__
 
 if __name__ == "__main__":
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
-    f = 4 + 5*x + 7*y + x*y*z*4 + 3.0*z + 4
+    f = 5*x - 7*y + x*y*z*4 + 3.0*z + 4
 
     print(f.val, f.der)
 
