@@ -39,7 +39,7 @@ class AutoDiff():
 
     def __mul__(self, other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}      #Create a new dictionary to store updated derivative(s) information
             setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
             setOtherDer = set(other.der)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
@@ -72,7 +72,7 @@ class AutoDiff():
 
     def __add__(self, other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
@@ -95,7 +95,7 @@ class AutoDiff():
     
     def __sub__(self,other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
@@ -116,6 +116,32 @@ class AutoDiff():
 
     __rsub__ = __sub__
 
+    def __truediv__(self,other):
+        try: 
+        #if isinstance(other, AutoDiff)
+            derDict = {}
+            setSelfDer = set(self.der)
+            setOtherDer = set(other.der)
+                        
+            for key in setSelfDer.union(setOtherDer):
+                if key in setSelfDer and key in setOtherDer:
+                    derDict[key] = (self.der * other.val - self.val * other.der)/(other.val * other.val)
+                elif key in setOtherDer:
+                    derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
+                elif key in setSelfDer:
+                    derDict[key] = (self.der[key] * other.val)/(other.val*other.val)
+                    
+            return AutoDiff(self.val/other.val, "dummy", derDict)
+            
+        except AttributeError:
+        #elif isinstance(other, (int,float, etc numeric types)):
+            derDict = {}
+            for key in self.der:
+                derDict[key] = (1/other.real) * self.der[key]
+
+            return AutoDiff(self.val/other.real, "dummy", derDict)
+        
+#    __rtruediv__ = __truediv__
 
 if __name__ == "__main__":
 
@@ -130,17 +156,9 @@ if __name__ == "__main__":
     
     g = -x*y*z
     print(g.val, g.der)
-
-        
-
-#test = {'x': 53, 'z': 27.0, 'y': 39}
-#test.keys
-#set(test)
-#test1 = {}
-#for i in set(test):
-#    print (i)
-#    test1[i] = -test[i]
-#test1
+    
+    h = x*y/9
+    print(h.val, h.der)
 
 
 '''
