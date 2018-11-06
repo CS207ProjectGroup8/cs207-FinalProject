@@ -49,3 +49,9 @@ def test_tan_deriv():
 # for root finding
 # check Jacobian size 
 
+# from Timothy
+# 3-4 tests for every elem function
+# 70-80% coverage
+# need doctests and docstrings
+# for regular ad objects: multiple examples and edge cases
+
