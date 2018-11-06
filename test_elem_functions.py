@@ -39,3 +39,19 @@ def test_tan_deriv():
 	f = ef.tan(x)
 	assert f.der['x'] == 1/(math.cos(12)**2);
 
+# for general tests
+# passing illegal objects
+# passing null objects
+# passing no element
+# passing 1 element
+# passing matrix
+
+# for root finding
+# check Jacobian size 
+
+# from Timothy
+# 3-4 tests for every elem function
+# 70-80% coverage
+# need doctests and docstrings
+# for regular ad objects: multiple examples and edge cases
+
