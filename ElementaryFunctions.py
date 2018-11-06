@@ -82,9 +82,9 @@ class ElementaryFunctions():
                 power_der = set(power.der)
                 for key in base_der.union(power_der):
                     if key in base_der and key in power_der:
-                        other_der[key] = (power.der[key] * np.log(base.val) + power.val * (1/base.der[key])) * base_value
+                        other_der[key] = np.power(base.val,power.val-1) * (power.val * base.der[key] + base.val * np.log(base.val) * power.der[key])
                     elif key in base_der:
-                        other_der[key] = power.val * (1/base.der[key]) * base_value
+                        other_der[key] = power.val * np.power(base.val,power.val-1) * base.der[key]
                     else:
                         other_der[key] = power.der[key] * np.log(base.val) * base_value
                 return autodiff.AutoDiff(base_value, "dummy", other_der)
