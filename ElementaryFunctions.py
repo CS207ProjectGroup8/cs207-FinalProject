@@ -156,14 +156,15 @@ class ElementaryFunctions():
 
 
 
-x = autodiff.AutoDiff(2, "x")
-y = autodiff.AutoDiff(3, "y")
-ef = ElementaryFunctions()
+# x = autodiff.AutoDiff(2, "x")
+# y = autodiff.AutoDiff(3, "y")
+# ef = ElementaryFunctions()
 
-f = 5*x + ef.tan(7*x*y)
-# f2 = ef.log((3*x))
-f3 = 3*x
-f4 = ef.power(x,y)
-f5 = ef.sin(x)
+# f = 5*x + ef.tan(7*x*y)
+# # f2 = ef.log((3*x))
+# f3 = 3*x
+# f4 = ef.power(x,y)
+# f5 = ef.sin(x)
 
-print(f5.val, f5.der)
+# f6 = ef.sin("thirty")
+# print(f6.val, f6.der)
