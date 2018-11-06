@@ -1,117 +1,4 @@
-# class AutoDiffObject:
-#
-#     def __init__(self,value, *args):
-#         ##this init function will store the value and vectorized derivatives in
-#         ##the auto differentiator object
-#         if len(arg) == 0:
-#             self.val = value
-#             self.der = 1
-#
-#         else:
-#             self.val = value * arg[0]
-#             self.der = arg[0]
-#
-#     ##overload the basic arithmetic operations
-#     def __add__(self,other):
-#         """
-#         Addition for AutoDiff Objects
-#
-#         Arguments:
-#             other: element of addition operation. It can be another AutoDiff object or a numeric value.
-#
-#         Return:
-#             AutoDiff object after addition operation.
-#         """
-#         try:
-#               ##try to find if the passed in other object is autodiff object
-#               other_val, other_der = other.val, other.der
-#               return AutoDiffObject(self.val + other.val, self.der + other.der)
-#         except:
-#             try:
-#                 ##try to check if the passed in other object is numeric value
-#                 float(other)
-#                 return AutoDiffObject(self.val + other, self.der)
-#             except:
-#                 ##catch error if passed object is not numeric or autodiff
-#                 print("illegal input for arithmetic operations")
-#                 raise AttributeError
-#
-#     def __radd__(self,other):
-#         """
-#         Reverse Addition for AutoDiff Objects
-#
-#         Arguments:
-#             other: element of reverse addition operation. It can be another AutoDiff object or a numeric value.
-#
-#         Return:
-#             AutoDiff object after reverse addition operation.
-#         """
-#         try:
-#               ##try to find if the passed in other object is autodiff object
-#               other_val, other_der = other.val, other.der
-#               return AutoDiffObject(self.val + other.val, self.der + other.der)
-#         except:
-#             try:
-#                 ##try to check if the passed in other object is numeric value
-#                 float(other)
-#                 return AutoDiffObject(self.val + other, self.der)
-#             except:
-#                 ##catch error if passed object is not numeric or autodiff
-#                 print("illegal input for arithmetic operations")
-#                 raise AttributeError
-#
-#     def __mul__(self,other):
-#         """
-#         Multiplication for AutoDiff Objects
-#
-#         Arguments:
-#             other: element of addition operation. It can be another AutoDiff object or a numeric value.
-#
-#         Return:
-#             AutoDiff object after Multiplication operation.
-#         """
-#         try:
-#               ##try to find if the passed in other object is autodiff object
-#               other_val, other_der = other.val, other.der
-#               return AutoDiffObject(self.val * other.val, self.der * other.der)
-#         except:
-#             try:
-#                 ##try to check if the passed in other object is numeric value
-#                 float(other)
-#                 return AutoDiffObject(self.val * other, self.der)
-#             except:
-#                 ##catch error if passed object is not numeric or autodiff
-#                 print("illegal input for arithmetic operations. Has to be a number or autodiff object.")
-#                 raise AttributeError
-#
-#     def __rmul__(self,other):
-#         """
-#         Reverse Multiplication for AutoDiff Objects
-#
-#         Arguments:
-#             other: element of addition operation. It can be another AutoDiff object or a numeric value.
-#
-#         Return:
-#             AutoDiff object after Reverse Multiplication operation.
-#         """
-#         try:
-#               ##try to find if the passed in other object is autodiff object
-#               other_val, other_der = other.val, other.der
-#               return AutoDiffObject(self.val * other.val, self.der * other.der)
-#         except:
-#             try:
-#                 ##try to check if the passed in other object is numeric value
-#                 float(other)
-#                 return AutoDiffObject(self.val * other, self.der)
-#             except:
-#                 ##catch error if passed object is not numeric or autodiff
-#                 print("illegal input for arithmetic operations. Has to be a number or autodiff object.")
-#                 raise AttributeError
-#
-#     def __truediv__(self,other):
-#
-#
-#     def __neg__(self,other):
+
 class AutoDiff():
     def __init__(self, val, varName, *args):
         '''
@@ -140,10 +27,19 @@ class AutoDiff():
             self.der = {varName:1}
         else:
             self.der = args[0]
+    
+    def __neg__(self):
+        derDict = {}      #Create a new dictionary to store updated derivative(s) information
+        setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
+        # Store negatives of each partial derivative
+        for key in setSelfDer:
+            derDict[key] = -self.der[key]
+            
+        return AutoDiff(-1* self.val, "dummy", derDict)
 
     def __mul__(self, other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}      #Create a new dictionary to store updated derivative(s) information
             setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
             setOtherDer = set(other.der)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
@@ -170,34 +66,13 @@ class AutoDiff():
                 derDict[key] = other.real * self.der[key]
             return AutoDiff(self.val * other.real, "dummy", derDict)
 
-    def __rmul__(self, other):                       #reversed multiplication
-        try:
-        #if isinstance(other, AutoDiffToy):
-            derDict = {}
-            setSelfDer = set(self.der)
-            setOtherDer = set(other.der)
 
-            for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key]*other.val + other.der[key]*self.val
-                elif key in setSelfDer:
-                    derDict[key] = self.der[key]*other.val
-                else:
-                    derDict[key] = other.der[key]*self.val
-
-            return AutoDiff(self.val * other.val, "dummy", derDict)
-
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            derDict = {}
-            for key in self.der:
-                derDict[key] = other.real * self.der[key]
-            return AutoDiff(self.val * other.real, "dummy", derDict)
+    __rmul__ = __mul__
 
 
     def __add__(self, other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
@@ -216,41 +91,74 @@ class AutoDiff():
         #elif isinstance(other, (int,float, etc numeric types)):
             return AutoDiff(self.val + other.real, "dummy", self.der)
 
-
-    def __radd__(self, other):
+    __radd__ = __add__
+    
+    def __sub__(self,other):
         try:
-        #if isinstance(other, AutoDiffToy):
+        #if isinstance(other, AutoDiff):
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key] + other.der[key]
+                    derDict[key] = self.der[key] - other.der[key]
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]
                 else:
                     derDict[key] = other.der[key]
 
-            return AutoDiff(self.val + other.val, "dummy", derDict)
+            return AutoDiff(self.val - other.val, "dummy", derDict)
 
         except AttributeError:
         #elif isinstance(other, (int,float, etc numeric types)):
-            return AutoDiff(self.val + other.real, "dummy", self.der)
+            return AutoDiff(self.val - other.real, "dummy", self.der)
 
+    __rsub__ = __sub__
+
+    def __truediv__(self,other):
+        try: 
+        #if isinstance(other, AutoDiff)
+            derDict = {}
+            setSelfDer = set(self.der)
+            setOtherDer = set(other.der)
+                        
+            for key in setSelfDer.union(setOtherDer):
+                if key in setSelfDer and key in setOtherDer:
+                    derDict[key] = (self.der * other.val - self.val * other.der)/(other.val * other.val)
+                elif key in setOtherDer:
+                    derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
+                elif key in setSelfDer:
+                    derDict[key] = (self.der[key] * other.val)/(other.val*other.val)
+                    
+            return AutoDiff(self.val/other.val, "dummy", derDict)
+            
+        except AttributeError:
+        #elif isinstance(other, (int,float, etc numeric types)):
+            derDict = {}
+            for key in self.der:
+                derDict[key] = (1/other.real) * self.der[key]
+
+            return AutoDiff(self.val/other.real, "dummy", derDict)
+        
+#    __rtruediv__ = __truediv__
 
 if __name__ == "__main__":
+
+
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
-    f = 5*x + 7*y +4*x*y*z + 3.0*z + 4
 
+    f = 5*x - 7*y + x*y*z*4 + 3.0*z + 4
     print(f.val, f.der)
-
-
-
-
+    
+    g = -x*y*z
+    print(g.val, g.der)
+    
+    h = x*y/9
+    print(h.val, h.der)
 
 
 '''
