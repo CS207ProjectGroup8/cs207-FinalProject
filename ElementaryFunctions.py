@@ -164,5 +164,6 @@ f = 5*x + ef.tan(7*x*y)
 # f2 = ef.log((3*x))
 f3 = 3*x
 f4 = ef.power(x,y)
+f5 = ef.sin(x)
 
-print(f4.val, f4.der)
+print(f5.val, f5.der)
