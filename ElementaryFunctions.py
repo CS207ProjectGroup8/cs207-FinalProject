@@ -1,5 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import math
+import numpy as np
 import AutoDiffObject as autodiff
 
 class ElementaryFunctions():
@@ -12,7 +13,7 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val, other_varName = other.val, other.varName
             other_der = {}
-            sin_value,cos_for_der = math.sin(other_val), math.cos(other_val)
+            sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = cos_for_der * derivative
             return autodiff.AutoDiff(sin_value, "dummy", other_der)
@@ -20,7 +21,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return math.sin(other_value)
+                return np.sin(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
@@ -32,7 +33,7 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val, other_varName = other.val, other.varName
             other_der = {}
-            cos_value,sin_for_der = math.cos(other_val), -math.sin(other_val)
+            cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = sin_for_der * derivative
             return autodiff.AutoDiff(cos_value, "dummy", other_der)
@@ -40,7 +41,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return math.cos(other_value)
+                return np.cos(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
@@ -52,7 +53,7 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val= other.val
             other_der = {}
-            tan_value, tan_for_der = math.tan(other_val), 1/(math.cos(other_val)**2)
+            tan_value, tan_for_der = np.tan(other_val), 1/(np.cos(other_val)**2)
             for key,derivative in other.der.items():
                 other_der[key] = tan_for_der * derivative
             return autodiff.AutoDiff(tan_value, "dummy", other_der)
@@ -61,7 +62,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return math.tan(other_value)
+                return np.tan(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
@@ -76,21 +77,21 @@ class ElementaryFunctions():
             try:
                 ##When both the base and the power are autodiff objects
                 power_val = power.val
-                base_value = math.pow(base.val, power.val)
+                base_value = np.power(base.val, power.val)
                 base_der = set(base.der)
                 power_der = set(power.der)
                 for key in base_der.union(power_der):
                     if key in base_der and key in power_der:
-                        other_der[key] = (power.der[key] * math.log(base.val) + power.val * (1/base.der[key])) * base_value
+                        other_der[key] = (power.der[key] * np.log(base.val) + power.val * (1/base.der[key])) * base_value
                     elif key in base_der:
                         other_der[key] = power.val * (1/base.der[key]) * base_value
                     else:
-                        other_der[key] = power.der[key] * math.log(base.val) * base_value
+                        other_der[key] = power.der[key] * np.log(base.val) * base_value
                 return autodiff.AutoDiff(base_value, "dummy", other_der)
             except:
                 ##when base is autodiff object and power is not
-                base_value = math.pow(base_val, power)
-                base_der = power * math.pow(base_val, power-1)
+                base_value = np.power(base_val, power)
+                base_der = power * np.power(base_val, power-1)
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
                 return autodiff.AutoDiff(base_value, "dummy", other_der)
@@ -102,10 +103,10 @@ class ElementaryFunctions():
                     other_der = {}
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
-                        other_der[key] = power.der[key] * math.log(base) * math.pow(base,power.val)
-                    return autodiff.AutoDiff(math.pow(base.val,power.val), "dummy", other_der)
+                        other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
+                    return autodiff.AutoDiff(np.power(base.val,power.val), "dummy", other_der)
                 except:
-                    return math.pow(base,power)
+                    return np.power(base,power)
 
             except:
                 ##catch error if passed object is not numeric or autodiff
@@ -119,7 +120,7 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val = other.val
             other_der = {}
-            log_value, log_for_der = math.log(other_val), 1/float(other_val)
+            log_value, log_for_der = np.log(other_val), 1/float(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
             return autodiff.AutoDiff(log_value, "dummy", other_der)
@@ -128,7 +129,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return math.log(other_value)
+                return np.log(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
@@ -139,7 +140,7 @@ class ElementaryFunctions():
         try:
             other_val = other.val
             other_der = {}
-            exp_value, exp_for_der = math.exp(other_val), math.exp(other_val)
+            exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
             return autodiff.AutoDiff(exp_value, "dummy", other_der)
@@ -147,7 +148,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return math.exp(other_value)
+                return np.exp(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
