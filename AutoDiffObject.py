@@ -125,12 +125,11 @@ class AutoDiff():
                         
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = (self.der * other.val - self.val * other.der)/(other.val * other.val)
-                elif key in setOtherDer:
-                    derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
+                    derDict[key] = (self.der[key] * other.val - self.val * other.der[key])/(other.val * other.val)
                 elif key in setSelfDer:
                     derDict[key] = (self.der[key] * other.val)/(other.val*other.val)
-                    
+                elif key in setOtherDer:
+                    derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
             return AutoDiff(self.val/other.val, "dummy", derDict)
             
         except AttributeError:
@@ -141,10 +140,33 @@ class AutoDiff():
 
             return AutoDiff(self.val/other.real, "dummy", derDict)
         
-#    __rtruediv__ = __truediv__
+    def __rtruediv__(self,other):
+        try: 
+        #if isinstance(other, AutoDiff)
+            derDict = {}
+            setSelfDer = set(self.der)
+            setOtherDer = set(other.der)
+                        
+            for key in setSelfDer.union(setOtherDer):
+                if key in setSelfDer and key in setOtherDer:
+                    derDict[key] = (self.val * other.der[key] - self.der[key] * other.val)/(self.val * self.val)
+                elif key in setOtherDer:
+                    derDict[key] = (self.val * other.der[key])/(self.val * self.val)
+                elif key in setSelfDer:
+                    derDict[key] = (- self.der[key] * other.val)/(self.val * self.val)
+                    
+            return AutoDiff(other.val/self.val, "dummy", derDict)
+            
+        except AttributeError:
+        #elif isinstance(other, (int,float, etc numeric types)):
+            derDict = {}
+            for key in self.der:
+                derDict[key] = (1/(self.val * self.val)) * (-1 * other.real * self.der[key])
+
+            return AutoDiff(other.real/self.val, "dummy", derDict)        
+        
 
 if __name__ == "__main__":
-
 
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
@@ -157,7 +179,7 @@ if __name__ == "__main__":
     g = -x*y*z
     print(g.val, g.der)
     
-    h = x*y/9
+    h = 2/z
     print(h.val, h.der)
 
 
