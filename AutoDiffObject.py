@@ -91,8 +91,12 @@ class AutoDiff():
         >>> a = AutoDiff(1, 'a')
         >>> b = AutoDiff(2, 'b')
         >>> t = a * b 
-        >>> print(t.val, t.der)
-        2 {'a': 2, 'b': 1}
+        >>> print(t.val)
+        2
+        >>> print(t.der['a'])
+        2
+        >>> print(t.der['b'])
+        1
         
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
@@ -137,6 +141,43 @@ class AutoDiff():
 
 
     def __add__(self, other):
+                        
+        ''' Returns the another AutoDiff object which is the sum of current AutoDiff object 
+            and another object (either AutoDiff object or float) separated by '+'. 
+            This is a special method.
+        
+        RETURNS
+        ========
+        A new instance of AutoDiff object
+        
+        NOTES
+        =====
+        PRE: 
+             - Current instance of AutoDiff class 
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             
+        POST:
+             - Return a new Autodiff class instance
+
+        EXAMPLES
+        =========
+        >>> a = AutoDiff(1, 'a')
+        >>> b = AutoDiff(2, 'b')
+        >>> t = a + b 
+        >>> print(t.val)
+        3
+        >>> print(t.der['a'])
+        1
+        >>> print(t.der['b'])
+        1
+        
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 33
+        >>> t = a + b 
+        >>> print(t.val, t.der)
+        34 {'a': 1}
+        '''
         
         try:
         #if isinstance(other, AutoDiff):
@@ -164,6 +205,43 @@ class AutoDiff():
     __radd__ = __add__
 
     def __sub__(self,other):
+        
+        ''' Returns the another AutoDiff object which is the difference of current AutoDiff object 
+            and another object (either AutoDiff object or float) separated by '-'. 
+            This is a special method.
+        
+        RETURNS
+        ========
+        A new instance of AutoDiff object
+        
+        NOTES
+        =====
+        PRE: 
+             - Current instance of AutoDiff class 
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             
+        POST:
+             - Return a new Autodiff class instance
+
+        EXAMPLES
+        =========
+        >>> a = AutoDiff(1, 'a')
+        >>> b = AutoDiff(2, 'b')
+        >>> t = a - b 
+        >>> print(t.val)
+        -1
+        >>> print(t.der['a'])
+        1
+        >>> print(t.der['b'])
+        -1
+        
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 33
+        >>> t = a - b 
+        >>> print(t.val, t.der)
+        -32 {'a': 1}
+        '''
         try:
         #if isinstance(other, AutoDiff):
             derDict = {}
@@ -176,7 +254,7 @@ class AutoDiff():
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]
                 else:
-                    derDict[key] = other.der[key]
+                    derDict[key] = -1 * other.der[key]
 
             return AutoDiff(self.val - other.val, "dummy", derDict)
 
