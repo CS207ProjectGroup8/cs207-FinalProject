@@ -127,6 +127,7 @@ class AutoDiff():
     __rsub__ = __sub__
 
     def __truediv__(self,other):
+        print("Division starts")
         try:
         #if isinstance(other, AutoDiff)
             if other.val == 0:
@@ -158,6 +159,7 @@ class AutoDiff():
                 raise AttributeError
 
 
+
     def __rtruediv__(self,other):
         try:
         #if isinstance(other, AutoDiff)
@@ -179,7 +181,7 @@ class AutoDiff():
 
         except:
             try:
-                if self.real == 0:
+                if self.val == 0:
                     raise ZeroDivisionError
                 derDict = {}
                 for key in self.der:
