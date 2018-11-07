@@ -211,6 +211,9 @@ if __name__ == "__main__":
     h = 2/z
     print(h.val, h.der)
 
+    m = -x
+    print(m.val, m.der)
+
 
 '''
 Notes

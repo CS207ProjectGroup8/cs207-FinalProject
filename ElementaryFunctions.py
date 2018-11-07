@@ -54,6 +54,9 @@ class ElementaryFunctions():
             other_val= other.val
             other_der = {}
             tan_value, tan_for_der = np.tan(other_val), 1/(np.cos(other_val)**2)
+            if abs(tan_value) > 10**16:
+                print("Input value should not be pi/2 + 2*pi*k, k interger ")
+                raise ValueError
             for key,derivative in other.der.items():
                 other_der[key] = tan_for_der * derivative
             return autodiff.AutoDiff(tan_value, "dummy", other_der)
@@ -62,6 +65,9 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
+                if abs(np.tan(other_value)) > 10**16:
+                    print("Input value should not be pi/2 + 2*pi*k, k interger ")
+                    raise ValueError
                 return np.tan(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
@@ -155,16 +161,23 @@ class ElementaryFunctions():
                 raise AttributeError
 
 
+if __name__ == "__main__":
+    x = autodiff.AutoDiff(-2, "x")
+    y = autodiff.AutoDiff(3, "y")
+    z = autodiff.AutoDiff(4, "z")
+    ef = ElementaryFunctions()
 
-# x = autodiff.AutoDiff(2, "x")
-# y = autodiff.AutoDiff(3, "y")
-# ef = ElementaryFunctions()
+    f = 5*x + ef.tan(7*x*y)
+    print(f.val, f.der)
 
-# f = 5*x + ef.tan(7*x*y)
-# # f2 = ef.log((3*x))
-# f3 = 3*x
-# f4 = ef.power(x,y)
-# f5 = ef.sin(x)
+    f2 = ef.log((3*x))
+    print(f2.val, f2.der)
 
-# f6 = ef.sin("thirty")
-# print(f6.val, f6.der)
+    f3 = ef.power(x,z)
+    print(f3.val, f3.der)
+
+    f4 = ef.exp(x*y)
+    print(f4.val, f4.der)
+
+    # f6 = ef.sin("thirty")
+    # print(f6.val, f6.der)
