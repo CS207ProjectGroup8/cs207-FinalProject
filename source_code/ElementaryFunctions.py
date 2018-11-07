@@ -1,7 +1,9 @@
 ##This class is used to define the behavior of elementary functions
+import sys
+sys.path.append("./")
 import math
 import numpy as np
-import AutoDiffObject as autodiff
+from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -59,7 +61,7 @@ class ElementaryFunctions():
             sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = cos_for_der * derivative
-            return autodiff.AutoDiff(sin_value, "dummy", other_der)
+            return AutoDiff(sin_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -112,7 +114,7 @@ class ElementaryFunctions():
             cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = sin_for_der * derivative
-            return autodiff.AutoDiff(cos_value, "dummy", other_der)
+            return AutoDiff(cos_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -138,7 +140,7 @@ class ElementaryFunctions():
                 raise ValueError
             for key,derivative in other.der.items():
                 other_der[key] = tan_for_der * derivative
-            return autodiff.AutoDiff(tan_value, "dummy", other_der)
+            return AutoDiff(tan_value, "dummy", other_der)
 
         except:
             try:
@@ -193,7 +195,7 @@ class ElementaryFunctions():
 
                         other_der[key] = power.der[key] * np.log(base.val) * base_value
 
-                return autodiff.AutoDiff(base_value, "dummy", other_der)
+                return AutoDiff(base_value, "dummy", other_der)
             except:
                 ##when base is autodiff object and power is not
 
@@ -207,7 +209,7 @@ class ElementaryFunctions():
                 base_der = power * np.power(base_val, power-1)
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
-                return autodiff.AutoDiff(base_value, "dummy", other_der)
+                return AutoDiff(base_value, "dummy", other_der)
         except:
             try:
                 base_value = base.real
@@ -228,7 +230,7 @@ class ElementaryFunctions():
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
                         other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
-                    return autodiff.AutoDiff(np.power(base.val,power.val), "dummy", other_der)
+                    return AutoDiff(np.power(base.val,power.val), "dummy", other_der)
                 except:
 
                     if type(np.power(base, power)) == complex:
@@ -257,7 +259,7 @@ class ElementaryFunctions():
             log_value, log_for_der = np.log(other_val), 1/float(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
-            return autodiff.AutoDiff(log_value, "dummy", other_der)
+            return AutoDiff(log_value, "dummy", other_der)
 
         except:
             try:
@@ -282,7 +284,7 @@ class ElementaryFunctions():
             exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
-            return autodiff.AutoDiff(exp_value, "dummy", other_der)
+            return AutoDiff(exp_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -295,9 +297,9 @@ class ElementaryFunctions():
 
 
 if __name__ == "__main__":
-    x = autodiff.AutoDiff(-2, "x")
-    y = autodiff.AutoDiff(3, "y")
-    z = autodiff.AutoDiff(4, "z")
+    x = AutoDiff(-2, "x")
+    y = AutoDiff(3, "y")
+    z = AutoDiff(4, "z")
     ef = ElementaryFunctions()
 
     f = 5*x + ef.tan(7*x*y)
