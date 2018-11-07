@@ -1,0 +1,6 @@
+{
+  "test_elem_functions.py::test_power_illegal_arg": true,
+  "test_elem_functions.py::test_power_numeric_input_no_deriv": true,
+  "test_elem_functions.py::test_power_numeric_input_no_val": true,
+  "test_elem_functions.py::test_sin_numeric_input_deriv": true
+}
