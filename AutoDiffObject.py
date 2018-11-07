@@ -156,6 +156,8 @@ class AutoDiff():
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
+                
+
 
 
     def __rtruediv__(self,other):
@@ -179,7 +181,7 @@ class AutoDiff():
 
         except:
             try:
-                if self.real == 0:
+                if self.val == 0:
                     raise ZeroDivisionError
                 derDict = {}
                 for key in self.der:
@@ -188,7 +190,8 @@ class AutoDiff():
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
-
+                
+                
 
 
 
@@ -206,8 +209,12 @@ if __name__ == "__main__":
     g = -x*y*z
     print(g.val, g.der)
 
-    h = 2/z
+    h = z/2
     print(h.val, h.der)
+    
+    p = 2/z
+    print(p.val, p.der)
+
 
 
 '''
