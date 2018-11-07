@@ -140,6 +140,9 @@ class ElementaryFunctions():
                         print ("base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
                     
+                    if base.real <= 0:
+                        print ("base value should be positive, because we don't consider imaginary number here.")
+                        raise ValueError
                     
                     power_val = power.val
                     other_der = {}
@@ -168,7 +171,7 @@ class ElementaryFunctions():
             other_val = other.val
             
             if other_val <= 0:
-                    print ("input value should be positive ")
+                    print ("base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
             
             other_der = {}
@@ -183,7 +186,7 @@ class ElementaryFunctions():
                 other_value = other.real
                 
                 if other_value <= 0:
-                    print ("input value should be positive ")
+                    print ("base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
                 
                 return np.log(other_value)
