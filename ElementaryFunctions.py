@@ -4,10 +4,53 @@ import numpy as np
 import AutoDiffObject as autodiff
 
 class ElementaryFunctions():
+
+    ''' Create objects that support elementary functions on AutoDiff objects and return AutoDiff objects
+
+    EXAMPLE:
+            x = AutoDiff(3, "x")
+            ef = ElementaryFunctions()
+            new_x = ef.sin(x)
+    '''
+
     def __init__(self):
         return
 
     def sin(self,other):
+        ''' Returns the another AutoDiff object or numeric value after
+        performing sine operation on the input
+
+        RETURNS
+        ========
+        A new instance of AutoDiff object or numeric value
+
+        NOTES
+        =====
+        PRE:
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+
+        POST:
+             - Return a new Autodiff class instance or a numeric value
+
+        EXAMPLES
+        =========
+        >>> a = AutoDiff(2, 'a')
+        >>> ef = ElementaryFunctions()
+        >>> t = ef.sin(a)
+        >>> print(t.val)
+        0.9092974268256817
+        >>> print(t.der['a'])
+        -0.4161468365471424
+
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 33
+        >>> ef = ElementaryFunctions()
+        >>> t = ef.sin(a * b)
+        >>> print(t.val, t.der)
+        0.9999118601 {'a': -0.01327674722}
+        '''
+
         try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
@@ -28,6 +71,39 @@ class ElementaryFunctions():
                 raise AttributeError
 
     def cos(self,other):
+        ''' Returns the another AutoDiff object or numeric value after
+        performing cosine operation on the input
+
+        RETURNS
+        ========
+        A new instance of AutoDiff object or numeric value
+
+        NOTES
+        =====
+        PRE:
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+
+        POST:
+             - Return a new Autodiff class instance or a numeric value
+
+        EXAMPLES
+        =========
+        >>> a = AutoDiff(2, 'a')
+        >>> ef = ElementaryFunctions()
+        >>> t = ef.sin(a)
+        >>> print(t.val)
+        0.9092974268256817
+        >>> print(t.der['a'])
+        -0.4161468365471424
+
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 33
+        >>> ef = ElementaryFunctions()
+        >>> t = ef.sin(a * b)
+        >>> print(t.val, t.der)
+        0.9999118601 {'a': -0.01327674722}
+        '''
         try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
