@@ -62,7 +62,7 @@ def test_cos_illegal_arg():
 def test_tan_val():
 	x = autodiff.AutoDiff(12, "x")
 	f = ef.tan(x)
-	assert f.val == -0.6358599286615807;
+	assert f.val == -0.63585992866158081;
 
 def test_tan_deriv():
 	x = autodiff.AutoDiff(12, "x")
@@ -108,7 +108,7 @@ def test_power_numeric_input_no_deriv():
 
 def test_power_illegal_arg():
 	with pytest.raises(AttributeError):
-		ef.power("auto diff object");
+		ef.power("base", "power");
 
 
 # log
