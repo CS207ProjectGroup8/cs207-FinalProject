@@ -1,9 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import math
 import numpy as np
-
-import sys
-sys.path.insert(0, r'C:\Users\jiayi\Desktop\Kay\Study\Fall2018\cs207\cs207_jiayin_lu\project\cs207-FinalProject')
 import AutoDiffObject as autodiff
 
 class ElementaryFunctions():
