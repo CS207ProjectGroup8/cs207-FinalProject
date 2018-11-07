@@ -100,11 +100,11 @@ def test_power_numeric_input_val():
 
 def test_power_numeric_input_no_val():
 	with pytest.raises(AttributeError):
-		assert ef.power(2).val;
+		assert ef.power(2, 4).val;
 
 def test_power_numeric_input_no_deriv():
 	with pytest.raises(AttributeError):
-		assert ef.power(20).der;
+		assert ef.power(20, 1).der;
 
 def test_power_illegal_arg():
 	with pytest.raises(AttributeError):
