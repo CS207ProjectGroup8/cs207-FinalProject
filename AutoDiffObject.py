@@ -91,8 +91,12 @@ class AutoDiff():
         >>> a = AutoDiff(1, 'a')
         >>> b = AutoDiff(2, 'b')
         >>> t = a * b 
-        >>> print(t.val, t.der)
-        2 {'a': 2, 'b': 1}
+        >>> print(t.val)
+        2
+        >>> print(t.der['a'])
+        2
+        >>> print(t.der['b'])
+        1
         
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
@@ -158,8 +162,12 @@ class AutoDiff():
         >>> a = AutoDiff(1, 'a')
         >>> b = AutoDiff(2, 'b')
         >>> t = a + b 
-        >>> print(t.val, t.der)
-        3 {'a': 1, 'b': 1}
+        >>> print(t.val)
+        3
+        >>> print(t.der['a'])
+        1
+        >>> print(t.der['b'])
+        1
         
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
