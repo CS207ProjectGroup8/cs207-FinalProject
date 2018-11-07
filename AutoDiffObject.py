@@ -242,6 +242,7 @@ class AutoDiff():
         >>> print(t.val, t.der)
         -32 {'a': 1}
         '''
+        
         try:
         #if isinstance(other, AutoDiff):
             derDict = {}
@@ -269,8 +270,46 @@ class AutoDiff():
     __rsub__ = __sub__
 
     def __truediv__(self,other):
-        print("Division starts")
-        try:
+        
+        ''' Returns the another AutoDiff object which is the current AutoDiff object 
+            divided by another object (either AutoDiff object or float) separated by '/'. 
+            This is a special method.
+        
+        RETURNS
+        ========
+        A new instance of AutoDiff object
+        
+        NOTES
+        =====
+        PRE: 
+             - Current instance of AutoDiff class 
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             
+        POST:
+             - Return a new Autodiff class instance
+
+        EXAMPLES
+        =========
+        >>> a = AutoDiff(1, 'a')
+        >>> b = AutoDiff(2, 'b')
+        >>> t = a / b 
+        >>> print(t.val)
+        0.5
+        >>> print(t.der['a'])
+        0.5
+        >>> print(t.der['b'])
+        -0.25
+        
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 5
+        >>> t = a / b 
+        >>> print(t.val, t.der)
+        0.2 {'a': 0.2}
+        
+        '''
+        
+        try: 
         #if isinstance(other, AutoDiff)
             if other.val == 0:
                 raise ZeroDivisionError
@@ -305,6 +344,36 @@ class AutoDiff():
 
 
     def __rtruediv__(self,other):
+      
+        ''' Returns the another AutoDiff object which is the current AutoDiff object 
+            divided by another object (either AutoDiff object or float) separated by '/'. 
+            This is a special method.
+        
+        RETURNS
+        ========
+        A new instance of AutoDiff object
+        
+        NOTES
+        =====
+        PRE: 
+             - Current instance of AutoDiff class 
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             
+        POST:
+             - Return a new Autodiff class instance
+
+        EXAMPLES
+        =========
+        
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 5
+        >>> t = b / a
+        >>> print(t.val, t.der)
+        5.0 {'a': -5.0}
+        
+        '''
+
         try:
         #if isinstance(other, AutoDiff)
             if self.val == 0:
