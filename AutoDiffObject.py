@@ -32,7 +32,7 @@ class AutoDiff():
             self.der = {varName:1}
         else:
             self.der = args[0]
-    
+
     def __neg__(self):
         
         ''' Returns another AutoDiff object which is the negative of the instance of the complex class. 
@@ -63,7 +63,7 @@ class AutoDiff():
         # Store negatives of each partial derivative
         for key in setSelfDer:
             derDict[key] = -self.der[key]
-            
+
         return AutoDiff(-1* self.val, "dummy", derDict)
 
     def __mul__(self, other):
@@ -126,12 +126,15 @@ class AutoDiff():
 
             return AutoDiff(self.val * other.val, "dummy", derDict)
 
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            derDict = {}
-            for key in self.der:
-                derDict[key] = other.real * self.der[key]
-            return AutoDiff(self.val * other.real, "dummy", derDict)
+        except:
+            try:
+                derDict = {}
+                for key in self.der:
+                    derDict[key] = other.real * self.der[key]
+                return AutoDiff(self.val * other.real, "dummy", derDict)
+            except:
+                print("illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError
 
 
     __rmul__ = __mul__
@@ -191,13 +194,16 @@ class AutoDiff():
                     derDict[key] = other.der[key]
 
             return AutoDiff(self.val + other.val, "dummy", derDict)
+        except:
+            try:
+                return AutoDiff(self.val + other.real, "dummy", self.der)
+            except:
+                print("illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError
 
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            return AutoDiff(self.val + other.real, "dummy", self.der)
 
     __radd__ = __add__
-    
+
     def __sub__(self,other):
         
         ''' Returns the another AutoDiff object which is the difference of current AutoDiff object 
@@ -253,9 +259,13 @@ class AutoDiff():
 
             return AutoDiff(self.val - other.val, "dummy", derDict)
 
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            return AutoDiff(self.val - other.real, "dummy", self.der)
+        except:
+            try:
+                return AutoDiff(self.val - other.real, "dummy", self.der)
+            except:
+                print("illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError
+
 
     __rsub__ = __sub__
 
@@ -301,10 +311,12 @@ class AutoDiff():
         
         try: 
         #if isinstance(other, AutoDiff)
+            if other.val == 0:
+                raise ZeroDivisionError
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
-                        
+
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = (self.der[key] * other.val - self.val * other.der[key])/(other.val * other.val)
@@ -313,17 +325,26 @@ class AutoDiff():
                 elif key in setOtherDer:
                     derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
             return AutoDiff(self.val/other.val, "dummy", derDict)
-            
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            derDict = {}
-            for key in self.der:
-                derDict[key] = (1/other.real) * self.der[key]
 
-            return AutoDiff(self.val/other.real, "dummy", derDict)
-        
+        except:
+            try:
+                derDict = {}
+                if other.real == 0:
+                    raise ZeroDivisionError
+                for key in self.der:
+                    derDict[key] = (1/other.real) * self.der[key]
+
+                return AutoDiff(self.val/other.real, "dummy", derDict)
+            except:
+                print("illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError
+                
+
+
+
+
     def __rtruediv__(self,other):
-
+      
         ''' Returns the another AutoDiff object which is the current AutoDiff object 
             divided by another object (either AutoDiff object or float) separated by '/'. 
             This is a special method.
@@ -352,13 +373,15 @@ class AutoDiff():
         5.0 {'a': -5.0}
         
         '''
-                
-        try: 
+
+        try:
         #if isinstance(other, AutoDiff)
+            if self.val == 0:
+                raise ZeroDivisionError
             derDict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
-                        
+
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = (self.val * other.der[key] - self.der[key] * other.val)/(self.val * self.val)
@@ -366,17 +389,25 @@ class AutoDiff():
                     derDict[key] = (self.val * other.der[key])/(self.val * self.val)
                 elif key in setSelfDer:
                     derDict[key] = (- self.der[key] * other.val)/(self.val * self.val)
-                    
-            return AutoDiff(other.val/self.val, "dummy", derDict)
-            
-        except AttributeError:
-        #elif isinstance(other, (int,float, etc numeric types)):
-            derDict = {}
-            for key in self.der:
-                derDict[key] = (1/(self.val * self.val)) * (-1 * other.real * self.der[key])
 
-            return AutoDiff(other.real/self.val, "dummy", derDict)        
-        
+            return AutoDiff(other.val/self.val, "dummy", derDict)
+
+        except:
+            try:
+                if self.val == 0:
+                    raise ZeroDivisionError
+                derDict = {}
+                for key in self.der:
+                    derDict[key] = (1/(self.val * self.val)) * (-1 * other.real * self.der[key])
+                return AutoDiff(other.real/self.val, "dummy", derDict)
+            except:
+                print("illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError
+                
+                
+
+
+
 
 if __name__ == "__main__":
 
@@ -387,12 +418,16 @@ if __name__ == "__main__":
 
     f = 5*x - 7*y + x*y*z*4 + 3.0*z + 4
     print(f.val, f.der)
-    
+
     g = -x*y*z
     print(g.val, g.der)
-    
-    h = 2/z
+
+    h = z/2
     print(h.val, h.der)
+    
+    p = 2/z
+    print(p.val, p.der)
+
 
 
 '''
