@@ -1,6 +1,8 @@
 # CS-207 Final Project Group 8
 
-This repository will contain the source code for an automatic differentiation package. Our group members are:
+This repository contains the source code for an automatic differentiation package. For temporary information on how to use the package, please see `docs\milestone2.ipynb`.
+
+Our group members are:
 
 * Yuanheng Wang
 * Jiayin Lu

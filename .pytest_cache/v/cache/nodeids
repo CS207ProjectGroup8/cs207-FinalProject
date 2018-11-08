@@ -1,4 +1,6 @@
 [
+  "src/tests/test_autodiff_object.py::test_autodiff_string_args",
+  "src/tests/test_autodiff_object.py::test_autodiff_numeric_args",
   "src/tests/test_elem_functions.py::test_sin_val",
   "src/tests/test_elem_functions.py::test_sin_deriv",
   "src/tests/test_elem_functions.py::test_sin_numeric_input_val",

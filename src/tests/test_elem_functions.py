@@ -1,4 +1,4 @@
-# Tests for Elementary_Functions.py
+# Tests for ElementaryFunctions.py
 import numpy as np
 import pytest
 from src.source_code.AutoDiffObject import AutoDiff
