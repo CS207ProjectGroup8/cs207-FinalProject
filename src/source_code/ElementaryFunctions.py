@@ -101,7 +101,7 @@ class ElementaryFunctions():
         >>> np.isclose(t.val, -0.013276747223059479)
         True
         >>> np.isclose(t.der['a'], -32.99709138353982) 
-        True 
+        True
         '''
         
         try:
