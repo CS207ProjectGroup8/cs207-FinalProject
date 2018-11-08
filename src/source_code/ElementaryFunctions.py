@@ -7,7 +7,7 @@ class ElementaryFunctions():
     ''' Create objects that support elementary functions on AutoDiff objects and return AutoDiff objects
 
     EXAMPLE:
-            x = AutoDiff(3, "x")
+            x = AutoDiffObject.AutoDiff(3, "x")
             new_x = ElementaryFunctions.sin(x)
     '''
     
@@ -32,18 +32,20 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.sin(a)
         >>> print(t.val)
         0.9092974268256817
         >>> print(t.der['a'])
         -0.4161468365471424
 
-        >>> a = AutoDiff(1, 'a')
+        >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.sin(a * b)
-        >>> print(t.val, t.der)
-        0.9999118601 {'a': -0.01327674722}
+        >>> print(t.val)
+        0.9999118601072672
+        >>> print(t.der)
+        {'a': -0.4381326583609628}
         '''
 
         try:
@@ -54,7 +56,7 @@ class ElementaryFunctions():
             sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = cos_for_der * derivative
-            return AutoDiff(sin_value, "dummy", other_der)
+            return AutoDiffObject.AutoDiff(sin_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -86,18 +88,20 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.cos(a)
         >>> print(t.val)
-        -0.41614683654
+        -0.4161468365471424
         >>> print(t.der['a'])
-        -0.90929742682
+        -0.9092974268256817
 
-        >>> a = AutoDiff(1, 'a')
+        >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.cos(a * b)
-        >>> print(t.val, t.der)
-        -0.01327674722 {'a': -0.9999118601}
+        >>> print(t.val)
+        -0.013276747223059479
+        >>> print(t.der['a']) 
+        -32.99709138353982
         '''
         
         try:
@@ -108,7 +112,7 @@ class ElementaryFunctions():
             cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = sin_for_der * derivative
-            return AutoDiff(cos_value, "dummy", other_der)
+            return AutoDiffObject.AutoDiff(cos_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -140,18 +144,20 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.tan(a)
         >>> print(t.val)
-        -2.18503986326
+        -2.185039863261519
         >>> print(t.der['a'])
-        5.77439920404
+        5.774399204041917
 
-        >>> a = AutoDiff(1, 'a')
+        >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.tan(a * b)
-        >>> print(t.val, t.der)
-        -75.3130148001 {'a': 42.0282677387}
+        >>> print(t.val)
+        -75.31301480008509
+        >>> print(t.der['a'])
+        187210.6565431686
         '''
 
         try:
@@ -168,7 +174,7 @@ class ElementaryFunctions():
                 raise ValueError
             for key,derivative in other.der.items():
                 other_der[key] = tan_for_der * derivative
-            return AutoDiff(tan_value, "dummy", other_der)
+            return AutoDiffObject.AutoDiff(tan_value, "dummy", other_der)
 
         except:
             try:
@@ -212,21 +218,23 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
-        >>> b = AutoDiff(3, 'b')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
+        >>> b = AutoDiffObject.AutoDiff(3, 'b')
         >>> t = ElementaryFunctions.power(a,b)
         >>> print(t.val)
         8
         >>> print(t.der['a'])
-        5.545177444479562
-        >>> print(t.der['b'])
         12
+        >>> print(t.der['b'])
+        5.545177444479562
 
-        >>> a = AutoDiff(1, 'a')
-        >>> b = 2
-        >>> t = ElementaryFunctions.power(a * b)
-        >>> print(t.val, t.der)
-        4 {'a': 4}
+        >>> a = AutoDiffObject.AutoDiff(4, 'a')
+        >>> b = 0.5
+        >>> t = ElementaryFunctions.power(a, b)
+        >>> print(t.val)
+        2.0
+        >>> print(t.der['a'])
+        0.25
         '''
         
         try:
@@ -263,7 +271,7 @@ class ElementaryFunctions():
 
                         other_der[key] = power.der[key] * np.log(base.val) * base_value
 
-                return AutoDiff(base_value, "dummy", other_der)
+                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der)
             except:
                 ##when base is autodiff object and power is not
 
@@ -277,7 +285,7 @@ class ElementaryFunctions():
                 base_der = power * np.power(base_val, power-1)
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
-                return AutoDiff(base_value, "dummy", other_der)
+                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der)
         except:
             try:
                 base_value = base.real
@@ -297,7 +305,7 @@ class ElementaryFunctions():
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
                         other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
-                    return AutoDiff(np.power(base.val,power.val), "dummy", other_der)
+                    return AutoDiffObject.AutoDiff(np.power(base.val,power.val), "dummy", other_der)
                 except:
 
                     if type(np.power(base, power)) == complex:
@@ -332,10 +340,10 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.log(a)
         >>> print(t.val)
-        0.30102999566
+        0.6931471805599453
         >>> print(t.der['a'])
         0.5
         '''
@@ -353,7 +361,7 @@ class ElementaryFunctions():
             log_value, log_for_der = np.log(other_val), 1/float(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
-            return AutoDiff(log_value, "dummy", other_der)
+            return AutoDiffObject.AutoDiff(log_value, "dummy", other_der)
 
         except:
             try:
@@ -391,7 +399,7 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiff(2, 'a')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.exp(a)
         >>> print(t.val)
         7.38905609893065
@@ -405,7 +413,7 @@ class ElementaryFunctions():
             exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
-            return AutoDiff(exp_value, "dummy", other_der)
+            return AutoDiffObject.AutoDiff(exp_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -418,9 +426,9 @@ class ElementaryFunctions():
 
 
 if __name__ == "__main__":
-    x = autodiff.AutoDiff(2, "x")
-    y = autodiff.AutoDiff(3, "y")
-    z = autodiff.AutoDiff(4, "z")
+    x = AutoDiffObject.AutoDiff(2, "x")
+    y = AutoDiffObject.AutoDiff(3, "y")
+    z = AutoDiffObject.AutoDiff(4, "z")
 
     f = 5*x + ElementaryFunctions.tan(7*x*y)
     print(f.val, f.der)
