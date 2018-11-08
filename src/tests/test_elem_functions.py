@@ -3,9 +3,7 @@ import numpy as np
 import pytest
 import sys
 from src.source_code.AutoDiffObject import AutoDiff
-from src.source_code.ElementaryFunctions import ElementaryFunctions
-
-ef = ElementaryFunctions()
+from src.source_code.ElementaryFunctions import ElementaryFunctions as ef
 
 # sin
 def test_sin_val():

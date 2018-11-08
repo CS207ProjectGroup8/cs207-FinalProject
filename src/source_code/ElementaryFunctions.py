@@ -8,8 +8,7 @@ class ElementaryFunctions():
 
     EXAMPLE:
             x = AutoDiff(3, "x")
-            ef = ElementaryFunctions()
-            new_x = ef.sin(x)
+            new_x = ElementaryFunctions.sin(x)
     '''
     
     @staticmethod
@@ -34,8 +33,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiff(2, 'a')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.sin(a)
+        >>> t = ElementaryFunctions.sin(a)
         >>> print(t.val)
         0.9092974268256817
         >>> print(t.der['a'])
@@ -43,8 +41,7 @@ class ElementaryFunctions():
 
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.sin(a * b)
+        >>> t = ElementaryFunctions.sin(a * b)
         >>> print(t.val, t.der)
         0.9999118601 {'a': -0.01327674722}
         '''
@@ -90,8 +87,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiff(2, 'a')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.cos(a)
+        >>> t = ElementaryFunctions.cos(a)
         >>> print(t.val)
         -0.41614683654
         >>> print(t.der['a'])
@@ -99,8 +95,7 @@ class ElementaryFunctions():
 
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.cos(a * b)
+        >>> t = ElementaryFunctions.cos(a * b)
         >>> print(t.val, t.der)
         -0.01327674722 {'a': -0.9999118601}
         '''
@@ -146,8 +141,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiff(2, 'a')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.tan(a)
+        >>> t = ElementaryFunctions.tan(a)
         >>> print(t.val)
         -2.18503986326
         >>> print(t.der['a'])
@@ -155,8 +149,7 @@ class ElementaryFunctions():
 
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.tan(a * b)
+        >>> t = ElementaryFunctions.tan(a * b)
         >>> print(t.val, t.der)
         -75.3130148001 {'a': 42.0282677387}
         '''
@@ -221,8 +214,7 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiff(2, 'a')
         >>> b = AutoDiff(3, 'b')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.power(a,b)
+        >>> t = ElementaryFunctions.power(a,b)
         >>> print(t.val)
         8
         >>> print(t.der['a'])
@@ -232,8 +224,7 @@ class ElementaryFunctions():
 
         >>> a = AutoDiff(1, 'a')
         >>> b = 2
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.power(a * b)
+        >>> t = ElementaryFunctions.power(a * b)
         >>> print(t.val, t.der)
         4 {'a': 4}
         '''
@@ -342,8 +333,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiff(2, 'a')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.log(a)
+        >>> t = ElementaryFunctions.log(a)
         >>> print(t.val)
         0.30102999566
         >>> print(t.der['a'])
@@ -402,8 +392,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiff(2, 'a')
-        >>> ef = ElementaryFunctions()
-        >>> t = ef.exp(a)
+        >>> t = ElementaryFunctions.exp(a)
         >>> print(t.val)
         7.38905609893065
         >>> print(t.der['a'])
@@ -432,7 +421,6 @@ if __name__ == "__main__":
     x = autodiff.AutoDiff(2, "x")
     y = autodiff.AutoDiff(3, "y")
     z = autodiff.AutoDiff(4, "z")
-#    ef = ElementaryFunctions()
 
     f = 5*x + ElementaryFunctions.tan(7*x*y)
     print(f.val, f.der)
