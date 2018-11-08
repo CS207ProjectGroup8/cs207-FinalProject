@@ -2,9 +2,9 @@
 import numpy as np
 import pytest
 import sys
-sys.path.append("../source_code")
+#sys.path.append("../source_code")
 #from ElementaryFunctions import ElementaryFunctions
-import ElementaryFunctions as ef
+import ElementaryFunctions
 from AutoDiffObject import AutoDiff
 
 ef = ElementaryFunctions()
