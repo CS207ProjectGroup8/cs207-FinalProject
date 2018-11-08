@@ -1,6 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from AutoDiffObject import AutoDiff
+from . import AutoDiffObject
 
 class ElementaryFunctions():
 
