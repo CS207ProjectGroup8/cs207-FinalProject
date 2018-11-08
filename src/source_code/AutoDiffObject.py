@@ -1,3 +1,4 @@
+import numbers
 
 class AutoDiff():
 
@@ -26,8 +27,17 @@ class AutoDiff():
     '''
 
     def __init__(self, val, varName, *args):
-        self.val = val
-        self.varName = varName
+        
+        if isinstance(val, numbers.Real):
+            self.val = val
+        else:
+            raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
+
+        if isinstance(varName, str):
+            self.varName = varName
+        else:
+            raise TypeError("Please enter a string for the name of the AutoDiff object.")
+
         if varName != "dummy":
             self.der = {varName:1}
         else:
