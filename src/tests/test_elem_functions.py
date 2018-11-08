@@ -2,10 +2,6 @@
 import numpy as np
 import pytest
 import sys
-#sys.path.append("../source_code")
-#from ElementaryFunctions import ElementaryFunctions
-#import ElementaryFunctions
-#from AutoDiffObject import AutoDiff
 from src.source_code.AutoDiffObject import AutoDiff
 from src.source_code.ElementaryFunctions import ElementaryFunctions
 

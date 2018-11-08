@@ -1,6 +1,5 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-#import AutoDiffObject as autodiff
 from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():

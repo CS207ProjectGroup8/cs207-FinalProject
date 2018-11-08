@@ -6,6 +6,6 @@ before_install:
     - pip install coveralls
     - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
-    - py.test
+    - python -m pytest . --cov=.
 after_success:
     - coveralls
