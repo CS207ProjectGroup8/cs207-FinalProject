@@ -4,8 +4,10 @@ import pytest
 import sys
 #sys.path.append("../source_code")
 #from ElementaryFunctions import ElementaryFunctions
-import ElementaryFunctions
-from AutoDiffObject import AutoDiff
+#import ElementaryFunctions
+#from AutoDiffObject import AutoDiff
+from src.source_code import AutoDiffObject
+from src.source_code import ElementaryFunctions 
 
 ef = ElementaryFunctions()
 
