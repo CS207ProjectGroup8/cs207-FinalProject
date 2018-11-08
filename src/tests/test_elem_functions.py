@@ -1,7 +1,6 @@
 # Tests for Elementary_Functions.py
 import numpy as np
 import pytest
-import sys
 from src.source_code.AutoDiffObject import AutoDiff
 from src.source_code.ElementaryFunctions import ElementaryFunctions as ef
 
@@ -61,7 +60,7 @@ def test_cos_illegal_arg():
 def test_tan_val():
 	x = AutoDiff(12, "x")
 	f = ef.tan(x)
-	assert f.val == -0.63585992866158081;
+	assert np.isclose(f.val, -0.63585992866158081);
 
 def test_tan_deriv():
 	x = AutoDiff(12, "x")

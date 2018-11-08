@@ -34,18 +34,18 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.sin(a)
-        >>> print(t.val)
-        0.9092974268256817
-        >>> print(t.der['a'])
-        -0.4161468365471424
+        >>> np.isclose(t.val, 0.9092974268256817)
+        True
+        >>> np.isclose(t.der['a'], -0.4161468365471424)
+        True
 
         >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.sin(a * b)
-        >>> print(t.val)
-        0.9999118601072672
-        >>> print(t.der)
-        {'a': -0.4381326583609628}
+        >>> np.isclose(t.val, 0.9999118601072672)
+        True
+        >>> np.isclose(t.der['a'], -0.4381326583609628)
+        True
         '''
 
         try:
@@ -90,18 +90,18 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.cos(a)
-        >>> print(t.val)
-        -0.4161468365471424
-        >>> print(t.der['a'])
-        -0.9092974268256817
+        >>> np.isclose(t.val, -0.4161468365471424)
+        True
+        >>> np.isclose(t.der['a'], -0.9092974268256817)
+        True
 
         >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.cos(a * b)
-        >>> print(t.val)
-        -0.013276747223059479
-        >>> print(t.der['a']) 
-        -32.99709138353982
+        >>> np.isclose(t.val, -0.013276747223059479)
+        True
+        >>> np.isclose(t.der['a'], -32.99709138353982) 
+        True 
         '''
         
         try:
@@ -146,18 +146,18 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.tan(a)
-        >>> print(t.val)
-        -2.185039863261519
-        >>> print(t.der['a'])
-        5.774399204041917
+        >>> np.isclose(t.val, -2.185039863261519)
+        True
+        >>> np.isclose(t.der['a'], 5.774399204041917)
+        True
 
         >>> a = AutoDiffObject.AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.tan(a * b)
-        >>> print(t.val)
-        -75.31301480008509
-        >>> print(t.der['a'])
-        187210.6565431686
+        >>> np.isclose(t.val, -75.31301480008509)
+        True
+        >>> np.isclose(t.der['a'], 187210.6565431686)
+        True
         '''
 
         try:
@@ -225,8 +225,8 @@ class ElementaryFunctions():
         8
         >>> print(t.der['a'])
         12
-        >>> print(t.der['b'])
-        5.545177444479562
+        >>> np.isclose(t.der['b'], 5.545177444479562)
+        True
 
         >>> a = AutoDiffObject.AutoDiff(4, 'a')
         >>> b = 0.5
@@ -342,8 +342,8 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.log(a)
-        >>> print(t.val)
-        0.6931471805599453
+        >>> np.isclose(t.val, 0.6931471805599453)
+        True
         >>> print(t.der['a'])
         0.5
         '''
@@ -401,10 +401,10 @@ class ElementaryFunctions():
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.exp(a)
-        >>> print(t.val)
-        7.38905609893065
-        >>> print(t.der['a'])
-        7.38905609893065
+        >>> np.isclose(t.val, 7.38905609893065)
+        True
+        >>> np.isclose(t.der['a'], 7.38905609893065)
+        True
         '''
 
         try:
