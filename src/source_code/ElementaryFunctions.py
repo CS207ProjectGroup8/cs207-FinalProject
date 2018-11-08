@@ -1,5 +1,4 @@
 ##This class is used to define the behavior of elementary functions
-import math
 import numpy as np
 import AutoDiffObject as autodiff
 
@@ -12,11 +11,10 @@ class ElementaryFunctions():
             ef = ElementaryFunctions()
             new_x = ef.sin(x)
     '''
-
-    def __init__(self):
-        return
-
-    def sin(self,other):
+    
+    @staticmethod
+    def sin(other):
+        
         ''' Returns the another AutoDiff object or numeric value after
         performing sine operation on the input
 
@@ -54,7 +52,7 @@ class ElementaryFunctions():
         try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
-            other_val, other_varName = other.val, other.varName
+            other_val = other.val
             other_der = {}
             sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
             for key,derivative in other.der.items():
@@ -69,8 +67,10 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
-
-    def cos(self,other):
+    
+    @staticmethod
+    def cos(other):
+        
         ''' Returns the another AutoDiff object or numeric value after
         performing cosine operation on the input
 
@@ -104,10 +104,11 @@ class ElementaryFunctions():
         >>> print(t.val, t.der)
         -0.01327674722 {'a': -0.9999118601}
         '''
+        
         try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
-            other_val, other_varName = other.val, other.varName
+            other_val = other.val
             other_der = {}
             cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
             for key,derivative in other.der.items():
@@ -122,8 +123,10 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
-
-    def tan(self,other):
+    
+    @staticmethod
+    def tan(other):
+        
         ''' Returns the another AutoDiff object or numeric value after
         performing tangent operation on the input
 
@@ -190,7 +193,9 @@ class ElementaryFunctions():
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
 
-    def power(self,base,power):
+    @staticmethod
+    def power(base,power):
+        
         ''' Returns the another AutoDiff object or numeric value after
         raising base to the power operation
 
@@ -232,6 +237,7 @@ class ElementaryFunctions():
         >>> print(t.val, t.der)
         4 {'a': 4}
         '''
+        
         try:
             ##try to find if the passed in base and power object is autodiff object and do
             ##proper operation to the passed in object
@@ -244,8 +250,6 @@ class ElementaryFunctions():
                     print ("base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
-
-                power_val = power.val
                 base_value = np.power(base.val, power.val)
                 base_der = set(base.der)
                 power_der = set(power.der)
@@ -298,7 +302,6 @@ class ElementaryFunctions():
                         print ("base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
 
-                    power_val = power.val
                     other_der = {}
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
@@ -317,8 +320,9 @@ class ElementaryFunctions():
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
 
-    ##Need to look more into it
-    def log(self,other):
+    @staticmethod
+    def log(other):
+        
         ''' Returns the another AutoDiff object or numeric value after
         performing logrismic operation on the input
 
@@ -376,8 +380,9 @@ class ElementaryFunctions():
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
 
-
-    def exp(self,other):
+    @staticmethod
+    def exp(other):
+        
         ''' Returns the another AutoDiff object or numeric value after
         performing exponential operation on the input
 
@@ -427,19 +432,19 @@ if __name__ == "__main__":
     x = autodiff.AutoDiff(2, "x")
     y = autodiff.AutoDiff(3, "y")
     z = autodiff.AutoDiff(4, "z")
-    ef = ElementaryFunctions()
+#    ef = ElementaryFunctions()
 
-    f = 5*x + ef.tan(7*x*y)
+    f = 5*x + ElementaryFunctions.tan(7*x*y)
     print(f.val, f.der)
 
-    f2 = ef.log((3*x))
+    f2 = ElementaryFunctions.log((3*x))
     print(f2.val, f2.der)
 
-    f3 = ef.power(x,2)
+    f3 = ElementaryFunctions.power(x,2)
     print(f3.val, f3.der)
 
-    f4 = ef.exp(x)
+    f4 = ElementaryFunctions.exp(x)
     print(f4.val, f4.der)
 
-    # f6 = ef.sin("thirty")
-    # print(f6.val, f6.der)
+#    f6 = ElementaryFunctions.sin("thirty")
+#    print(f6.val, f6.der)
