@@ -1,4 +1,5 @@
 {
+  "src/tests/test_elem_functions.py": true,
   "test_elem_functions.py::test_power_illegal_arg": true,
   "test_elem_functions.py::test_power_numeric_input_no_deriv": true,
   "test_elem_functions.py::test_power_numeric_input_no_val": true,

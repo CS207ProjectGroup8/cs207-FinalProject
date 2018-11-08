@@ -6,8 +6,8 @@ import sys
 #from ElementaryFunctions import ElementaryFunctions
 #import ElementaryFunctions
 #from AutoDiffObject import AutoDiff
-from src.source_code import AutoDiffObject
-from src.source_code import ElementaryFunctions 
+from src.source_code.AutoDiffObject import AutoDiff
+from src.source_code.ElementaryFunctions import ElementaryFunctions
 
 ef = ElementaryFunctions()
 
