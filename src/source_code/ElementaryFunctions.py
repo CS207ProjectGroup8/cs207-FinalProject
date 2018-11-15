@@ -1,6 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from . import AutoDiffObject
+import AutoDiffObject
 
 class ElementaryFunctions():
 
@@ -10,10 +10,10 @@ class ElementaryFunctions():
             x = AutoDiffObject.AutoDiff(3, "x")
             new_x = ElementaryFunctions.sin(x)
     '''
-    
+
     @staticmethod
     def sin(other):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         performing sine operation on the input
 
@@ -66,10 +66,10 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
-    
+
     @staticmethod
     def cos(other):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         performing cosine operation on the input
 
@@ -100,10 +100,10 @@ class ElementaryFunctions():
         >>> t = ElementaryFunctions.cos(a * b)
         >>> np.isclose(t.val, -0.013276747223059479)
         True
-        >>> np.isclose(t.der['a'], -32.99709138353982) 
+        >>> np.isclose(t.der['a'], -32.99709138353982)
         True
         '''
-        
+
         try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
@@ -122,10 +122,10 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
-    
+
     @staticmethod
     def tan(other):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         performing tangent operation on the input
 
@@ -194,7 +194,7 @@ class ElementaryFunctions():
 
     @staticmethod
     def power(base,power):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         raising base to the power operation
 
@@ -236,7 +236,7 @@ class ElementaryFunctions():
         >>> print(t.der['a'])
         0.25
         '''
-        
+
         try:
             ##try to find if the passed in base and power object is autodiff object and do
             ##proper operation to the passed in object
@@ -321,7 +321,7 @@ class ElementaryFunctions():
 
     @staticmethod
     def log(other):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         performing logrismic operation on the input
 
@@ -380,7 +380,7 @@ class ElementaryFunctions():
 
     @staticmethod
     def exp(other):
-        
+
         ''' Returns the another AutoDiff object or numeric value after
         performing exponential operation on the input
 

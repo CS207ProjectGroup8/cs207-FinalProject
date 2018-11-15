@@ -145,7 +145,7 @@ def test_exp_illegal_arg():
 # passing matrix
 
 # for root finding
-# check Jacobian size 
+# check Jacobian size
 
 # from Timothy
 # 3-4 tests for every elem function
