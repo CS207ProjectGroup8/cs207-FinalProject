@@ -7,9 +7,8 @@ Created on Fri Nov 16 13:33:34 2018
 
 import numpy as np
 import sys
-sys.path.append(r'C:\Users\jiayi\Desktop\Kay\Study\Fall2018\cs207\cs207_jiayin_lu\project\cs207-FinalProject')
 import AutoDiffObject as autodiff
-import ElementaryFunctions_2 as ef
+import ElementaryFunctions as ef
 
 
 #Our method J_F that takes in the user defined function and vector list x
@@ -64,7 +63,6 @@ def Newton(F, x, criteria = 10^(-10)):
             rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
         
         return x_k
-
 
 
 
@@ -124,19 +122,4 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args):
         
     elif method = "steepest-descent":
         
-        
     elif method = "": #other methods? 
-        
-        
-    
-    
-    
-    
-    
-    
-
-        
-
-
-
-
