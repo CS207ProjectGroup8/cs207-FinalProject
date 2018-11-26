@@ -3,7 +3,6 @@ import numbers
 class AutoDiff():
 
     ''' Create objects that return the value and partial derivatives of desired functions
-
     INSTANCE VARIABLES
     =======
     - val: numeric type, value of the variable to be evaluated at
@@ -16,7 +15,6 @@ class AutoDiff():
             partial derivative of y is 2;
             Only situation that *args present is 0in the output of methods'
             implementation return
-
     EXAMPLE:
         EITHER: (created at the beginning by user)
             x = AutoDiff(3, "x")
@@ -40,26 +38,24 @@ class AutoDiff():
 
         if varName != "dummy":
             self.der = {varName:1}
+            self.der2 = {varName:0}
         else:
             self.der = args[0]
+            self.der2 = args[1]
 
     def __neg__(self):
 
         ''' Returns another AutoDiff object which is the negative of the instance of the complex class.
         This is a special method.
-
         RETURNS
         ========
         AutoDiff object with negative value and negative derivative of the current instance
-
         NOTES
         =====
         PRE:
              - Current isnstance of AutoDiff class
-
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         >>> z = AutoDiff(1,'x')
@@ -69,33 +65,31 @@ class AutoDiff():
         '''
 
         derDict = {}      #Create a new dictionary to store updated derivative(s) information
+        der2Dict = {}
         setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
         # Store negatives of each partial derivative
         for key in setSelfDer:
             derDict[key] = -self.der[key]
+            der2Dict[key] = -self.der2[key]
 
-        return AutoDiff(-1* self.val, "dummy", derDict)
+        return AutoDiff(-1* self.val, "dummy", derDict, der2Dict)
 
     def __mul__(self, other):
 
         ''' Returns the another AutoDiff object which is the product of current AutoDiff object
             and another object (either AutoDiff object or float) separated by '*'.
             This is a special method.
-
         RETURNS
         ========
         A new instance of AutoDiff object
-
         NOTES
         =====
         PRE:
              - Current instance of AutoDiff class
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         >>> a = AutoDiff(1, 'a')
@@ -107,7 +101,6 @@ class AutoDiff():
         2
         >>> print(t.der['b'])
         1
-
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = a * b
@@ -118,6 +111,7 @@ class AutoDiff():
         try:
         #if isinstance(other, AutoDiff):
             derDict = {}      #Create a new dictionary to store updated derivative(s) information
+            der2Dict = {}
             setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
             setOtherDer = set(other.der)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
 
@@ -127,21 +121,26 @@ class AutoDiff():
                 #if both derivative dictionaries have the partial derivative info for this variable
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = self.der[key]*other.val + other.der[key]*self.val
+                    der2Dict[key] = self.der2[key] *other.val + 2*other.der[key]*self.der[key] + self.val*other.der2[key]
 
                 #if only one of them have the partial derivative info for the variable
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]*other.val
+                    der2Dict[key] = self.der2[key] *other.val
                 else:
                     derDict[key] = other.der[key]*self.val
+                    der2Dict[key] = self.val*other.der2[key]
 
-            return AutoDiff(self.val * other.val, "dummy", derDict)
+            return AutoDiff(self.val * other.val, "dummy", derDict, der2Dict)
 
         except:
             try:
                 derDict = {}
+                der2Dict = {}
                 for key in self.der:
                     derDict[key] = other.real * self.der[key]
-                return AutoDiff(self.val * other.real, "dummy", derDict)
+                    der2Dict[key] = other.real * self.der2[key]
+                return AutoDiff(self.val * other.real, "dummy", derDict, der2Dict)
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
@@ -155,21 +154,17 @@ class AutoDiff():
         ''' Returns the another AutoDiff object which is the sum of current AutoDiff object
             and another object (either AutoDiff object or float) separated by '+'.
             This is a special method.
-
         RETURNS
         ========
         A new instance of AutoDiff object
-
         NOTES
         =====
         PRE:
              - Current instance of AutoDiff class
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         >>> a = AutoDiff(1, 'a')
@@ -181,7 +176,6 @@ class AutoDiff():
         1
         >>> print(t.der['b'])
         1
-
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = a + b
@@ -192,21 +186,25 @@ class AutoDiff():
         try:
         #if isinstance(other, AutoDiff):
             derDict = {}
+            der2Dict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = self.der[key] + other.der[key]
+                    der2Dict[key] = self.der2[key] + other.der2[key]
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]
+                    der2Dict[key] = self.der2[key]
                 else:
                     derDict[key] = other.der[key]
+                    der2Dict[key] = other.der2[key]
 
-            return AutoDiff(self.val + other.val, "dummy", derDict)
+            return AutoDiff(self.val + other.val, "dummy", derDict, der2Dict)
         except:
             try:
-                return AutoDiff(self.val + other.real, "dummy", self.der)
+                return AutoDiff(self.val + other.real, "dummy", self.der, self.der2)
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
@@ -219,21 +217,17 @@ class AutoDiff():
         ''' Returns the another AutoDiff object which is the difference of current AutoDiff object
             and another object (either AutoDiff object or float) separated by '-'.
             This is a special method.
-
         RETURNS
         ========
         A new instance of AutoDiff object
-
         NOTES
         =====
         PRE:
              - Current instance of AutoDiff class
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         >>> a = AutoDiff(1, 'a')
@@ -245,7 +239,6 @@ class AutoDiff():
         1
         >>> print(t.der['b'])
         -1
-
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = a - b
@@ -256,22 +249,26 @@ class AutoDiff():
         try:
         #if isinstance(other, AutoDiff):
             derDict = {}
+            der2Dict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = self.der[key] - other.der[key]
+                    der2Dict[key] = self.der2[key] - other.der2[key]
                 elif key in setSelfDer:
                     derDict[key] = self.der[key]
+                    der2Dict[key] = self.der2[key]
                 else:
                     derDict[key] = -1 * other.der[key]
+                    der2Dict[key] = -1 * other.der2[key]
 
-            return AutoDiff(self.val - other.val, "dummy", derDict)
+            return AutoDiff(self.val - other.val, "dummy", derDict, der2Dict)
 
         except:
             try:
-                return AutoDiff(self.val - other.real, "dummy", self.der)
+                return AutoDiff(self.val - other.real, "dummy", self.der, self.der2)
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
@@ -298,7 +295,6 @@ class AutoDiff():
              
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         >>> a = AutoDiff(1, 'a')
@@ -324,27 +320,37 @@ class AutoDiff():
             if other.val == 0:
                 raise ZeroDivisionError
             derDict = {}
+            der2Dict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = (self.der[key] * other.val - self.val * other.der[key])/(other.val * other.val)
+                    der2Dict[key] = self.der2[key]/other.val + (-self.der[key]*other.val + \
+                            2*self.val*other.der[key])*other.der[key]/other.val**3 - \
+                            other.der[key]*self.der[key]/other.val**2 - self.val*other.der2[key]/other.val**2
+                
                 elif key in setSelfDer:
                     derDict[key] = (self.der[key] * other.val)/(other.val*other.val)
+                    der2Dict[key] = (self.der2[key]*other.val)/other.val**2
                 elif key in setOtherDer:
                     derDict[key] = (-1*self.val * other.der[key])/(other.val*other.val)
-            return AutoDiff(self.val/other.val, "dummy", derDict)
+                    der2Dict[key] = -self.val*other.der2[key]/other.val**2 + \
+                                    2*self.val*other.der[key]**2/other.val**3
+            return AutoDiff(self.val/other.val, "dummy", derDict, der2Dict)
 
         except:
             try:
                 derDict = {}
+                der2Dict = {}
                 if other.real == 0:
                     raise ZeroDivisionError
                 for key in self.der:
                     derDict[key] = (1/other.real) * self.der[key]
+                    der2Dict[key] = (1/other.real) * self.der2[key]
 
-                return AutoDiff(self.val/other.real, "dummy", derDict)
+                return AutoDiff(self.val/other.real, "dummy", derDict, der2Dict)
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
@@ -372,7 +378,6 @@ class AutoDiff():
              
         POST:
              - Return a new Autodiff class instance
-
         EXAMPLES
         =========
         
@@ -389,27 +394,38 @@ class AutoDiff():
             if self.val == 0:
                 raise ZeroDivisionError
             derDict = {}
+            der2Dict = {}
             setSelfDer = set(self.der)
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
                 if key in setSelfDer and key in setOtherDer:
                     derDict[key] = (self.val * other.der[key] - self.der[key] * other.val)/(self.val * self.val)
+                    der2Dict[key] = other.der2[key]/self.val + (-other.der[key]*self.val + \
+                            2*other.val*self.der[key])*self.der[key]/self.val**3 - \
+                            self.der[key]*other.der[key]/self.val**2 - other.val*self.der2[key]/self.val**2
+                            
                 elif key in setOtherDer:
                     derDict[key] = (self.val * other.der[key])/(self.val * self.val)
+                    der2Dict[key] = (other.der2[key]*self.val)/self.val**2
                 elif key in setSelfDer:
                     derDict[key] = (- self.der[key] * other.val)/(self.val * self.val)
-
-            return AutoDiff(other.val/self.val, "dummy", derDict)
+                    der2Dict[key] = -other.val*self.der2[key]/self.val**2 + \
+                                    2*other.val*self.der[key]**2/self.val**3
+                    
+            return AutoDiff(other.val/self.val, "dummy", derDict, der2Dict)
 
         except:
             try:
                 if self.val == 0:
                     raise ZeroDivisionError
                 derDict = {}
+                der2Dict = {}
                 for key in self.der:
                     derDict[key] = (1/(self.val * self.val)) * (-1 * other.real * self.der[key])
-                return AutoDiff(other.real/self.val, "dummy", derDict)
+                    der2Dict[key] = -other.val*((self.der2[key]*self.val - 2*self.der[key]**2)/self.val**3)
+                    
+                return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict)
             except:
                 print("illegal argument. Needs to be either autodiff object or numeric value.")
                 raise AttributeError
@@ -425,9 +441,8 @@ if __name__ == "__main__":
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
-
     f = 5*x - 7*y + x*y*z*4 + 3.0*z + 4
-    print(f.val, f.der)
+    print(f.val, f.der, f.der2)
 
     g = -x*y*z
     print(g.val, g.der)
@@ -447,10 +462,8 @@ if __name__ == "__main__":
 Notes
 test = {"x":1, "y":2}
 test2 = {"y":3, "z":4}
-
 for key in test:
     print(test[key])
-
 set1 = set(test)
 set2 = set(test2)
 new = {}
