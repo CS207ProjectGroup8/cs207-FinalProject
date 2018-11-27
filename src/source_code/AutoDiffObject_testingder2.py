@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Nov 27 14:58:20 2018
+
+@author: jiayi
+"""
+
 import numbers
 
 class AutoDiff():
@@ -109,92 +116,67 @@ class AutoDiff():
         33 {'a': 33}
         '''
 
-        try:
-        #if isinstance(other, AutoDiff):
+        if isinstance(other, AutoDiff):
             derDict = {}      #Create a new dictionary to store updated derivative(s) information
             der2Dict = {}
 
             setSelfDer = set(self.der)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
             setOtherDer = set(other.der)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
-            # print (setSelfDer.union(setOtherDer))
-
-
-            setSelfDer2 = set(self.der2)      #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
-            setOtherDer2 = set(other.der2)     #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
-
-            # print (setSelfDer2.union(setOtherDer2))
 
             #look through element in the Union set:eg from above would be {'x', 'y', 'z'}
             for key in setSelfDer.union(setOtherDer):
             	for key2 in setSelfDer.union(setOtherDer):
-	                
-	                #if both derivative dictionaries have the partial derivative info for this variable
-	                if key in setSelfDer and key in setOtherDer:
-	                    derDict[key] = self.der[key]*other.val + other.der[key]*self.val
-
-    		            if key2+key in list(der2Dict.keys()):
-		            		der2Dict[key + key2] = der2Dict[key2 + key]
-		            else:
-		                if key2 == key:
-			                    der2Dict[key] = self.der2[key] *other.val + 2*other.der[key]*self.der[key] + self.val*other.der2[key]
-			            else:
-			                if key2 in setSelfDer and key2 in setOtherDer:
-                                self.der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key]*other.der[key2]+ self.der[key2]*other.der[key]+self.val*other.der2[key+key2]
-
-			                elif key2 in setSelfDer:
-                                self.der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key2]*other.der[key]
-
-			                else:
-                                self.der2Dict[key+key2] = self.der[key]*other.der[key2]+ self.val*other.der2[key +key2]
-
-
-                	#if only one of them have the partial derivative info for the variable
-                	elif key in setSelfDer:
-                    	derDict[key] = self.der[key]*other.val
-
-		            	if key2+key in list(der2Dict.keys()):
-		            		der2Dict[key + key2] = der2Dict[key2 + key]
-
-		            	else:
-		                    if key2 == key:
-			                    der2Dict[key] = self.der2[key] *other.val
-
-			                else:
-			                	if key2 in setSelfDer and key2 in setOtherDer:
-			                		self.der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key]*other.der[key2]
-
-			                	elif key2 in setSelfDer:
-			                		self.der2Dict[key+key2] = self.der2[key+key2]*other.val
-
-			                	else: 
-			                		self.der2Dict[key+key2] = self.der[key]*other.der[key2]
-
-
-	                else:
-	                    derDict[key] = other.der[key]*self.val
-
-		            	if key2+key in list(der2Dict.keys()):
-		            		der2Dict[key + key2] = der2Dict[key2 + key]
-
-		            	else:
-		                    if key2 == key:
-			                    der2Dict[key] = self.der2[key] *other.val
-
-			                else:
-			                	if key2 in setSelfDer and key2 in setOtherDer:
-			                		self.der2Dict[key+key2] = other.der2[key+key2]*self.val + other.der[key]*self.der[key2]
-
-			                	elif key2 in setSelfDer:
-			                		self.der2Dict[key+key2] = other.der[key]*self.der[key2]
-
-			                	else: 
-			                		self.der2Dict[key+key2] = other.der2[key + key2]*self.val
-
-
-
+                    
+                    #if both derivative dictionaries have the partial derivative info for this variable
+                    if key in setSelfDer and key in setOtherDer:
+                        derDict[key] = self.der[key]*other.val + other.der[key]*self.val
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else: 
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key] *other.val + 2*other.der[key]*self.der[key] + self.val*other.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key]*other.der[key2]+ self.der[key2]*other.der[key]+self.val*other.der2[key+key2]   
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key2]*other.der[key]
+                                else: 
+                                    der2Dict[key+key2] = self.der[key]*other.der[key2]+ self.val*other.der2[key +key2]
+                    
+                    #if only one of them have the partial derivative info for the variable
+                    elif key in setSelfDer:
+                        derDict[key] = self.der[key]*other.val
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key]*other.val
+                            else:
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key]*other.der[key2]
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]*other.val
+                                else:
+                                    der2Dict[key+key2] = self.der[key]*other.der[key2]
+                    
+                    else: #key in other
+                        derDict[key] = other.der[key]*self.val
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = other.der2[key]*self.val
+                            else:
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = other.der2[key+key2]*self.val + other.der[key]*self.der[key2]
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = other.der[key]*self.der[key2]
+                                else: 
+                                    der2Dict[key+key2] = other.der2[key + key2]*self.val
+                                    
             return AutoDiff(self.val * other.val, "dummy", derDict, der2Dict)
 
-        except:
+        else:
             try:
                 derDict = {}
                 der2Dict = {}
@@ -494,15 +476,13 @@ class AutoDiff():
 
 
 
-
-
 if __name__ == "__main__":
 
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
     z = AutoDiff(4, "z")
 
-    f = x*y # + x*y*z*4 + 3.0*z + 4
+    f = x*y*y # + x*y*z*4 + 3.0*z + 4
     print(f.val, f.der, f.der2)
 
     # g = -x*y*z
@@ -517,6 +497,11 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
+
+
+
+
+
 
 
 '''
@@ -537,3 +522,9 @@ for key in set1.union(set2):
         new[key] = test2[key]
 new
 '''
+
+
+
+
+
+
