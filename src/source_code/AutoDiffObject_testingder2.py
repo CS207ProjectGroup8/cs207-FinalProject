@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 27 14:58:20 2018
-
-@author: jiayi
-"""
 
 import numbers
 
