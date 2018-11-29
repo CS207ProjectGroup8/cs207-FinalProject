@@ -25,7 +25,7 @@ class AutoDiff():
                 return AutoDiff(x0*y0, "dummy", {"x":aa, "y":bb})
     '''
 
-    def __init__(self, val, varName, H = False, *args):
+    def __init__(self, val, varName, *args):
         
         if isinstance(val, numbers.Real):
             self.val = val
