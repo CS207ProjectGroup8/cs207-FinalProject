@@ -25,7 +25,7 @@ class AutoDiff():
                 return AutoDiff(x0*y0, "dummy", {"x":aa, "y":bb})
     '''
 
-    def __init__(self, val, varName, *args):
+    def __init__(self, val, varName, H = False, *args):
         
         if isinstance(val, numbers.Real):
             self.val = val
@@ -124,12 +124,13 @@ class AutoDiff():
                     #if both derivative dictionaries have the partial derivative info for this variable
                     if key in setSelfDer and key in setOtherDer:
                         derDict[key] = self.der[key]*other.val + other.der[key]*self.val
+                        
                         if key2+key in list(der2Dict.keys()):
                             der2Dict[key + key2] = der2Dict[key2 + key]
                         else: 
                             if key2 == key:
                                 der2Dict[key] = self.der2[key] *other.val + 2*other.der[key]*self.der[key] + self.val*other.der2[key]
-                            else: 
+                            else:
                                 if key2 in setSelfDer and key2 in setOtherDer:
                                     der2Dict[key+key2] = self.der2[key+key2]*other.val + self.der[key]*other.der[key2]+ self.der[key2]*other.der[key]+self.val*other.der2[key+key2]   
                                 elif key2 in setSelfDer:
