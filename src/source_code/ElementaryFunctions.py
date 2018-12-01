@@ -1,6 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from . import AutoDiffObject
+from AutoDiffObject_testingder2 import AutoDiff
 
 class ElementaryFunctions():
 
@@ -53,10 +53,28 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val = other.val
             other_der = {}
-            sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
+            other_der2 = {}
+            sin_value,cos_value = np.sin(other_val), np.cos(other_val)
+
+            # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = cos_for_der * derivative
-            return AutoDiffObject.AutoDiff(sin_value, "dummy", other_der)
+                other_der[key] = cos_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = -1*other.der[key]*sin_value*other.der[key] + cos_value*other.der2[key]
+                    print(key)
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = -1*other.der[first_var]*other.der[second_var]*sin_value + cos_value*other.der2[key]
+
+            return AutoDiff(sin_value, "dummy", other_der, other_der2)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -426,21 +444,24 @@ class ElementaryFunctions():
 
 
 if __name__ == "__main__":
-    x = AutoDiffObject.AutoDiff(2, "x")
-    y = AutoDiffObject.AutoDiff(3, "y")
-    z = AutoDiffObject.AutoDiff(4, "z")
+    x = AutoDiff(2, "x")
+    y = AutoDiff(3, "y")
+    # z = AutoDiffObject.AutoDiff(4, "z")
 
-    f = 5*x + ElementaryFunctions.tan(7*x*y)
-    print(f.val, f.der)
+    # f = 5*x + ElementaryFunctions.tan(7*x*y)
+    # print(f.val, f.der)
 
-    f2 = ElementaryFunctions.log((3*x))
-    print(f2.val, f2.der)
+    # f2 = cos_value.log((3*x))
+    # print(f2.val, f2.der)
 
-    f3 = ElementaryFunctions.power(x,2)
-    print(f3.val, f3.der)
+    # f3 = ElementaryFunctions.power(x,2)
+    # print(f3.val, f3.der)
 
-    f4 = ElementaryFunctions.exp(x)
-    print(f4.val, f4.der)
+    # f4 = ElementaryFunctions.exp(x)
+    # print(f4.val, f4.der)
 
 #    f6 = ElementaryFunctions.sin("thirty")
 #    print(f6.val, f6.der)
+
+    f = ElementaryFunctions.sin(x*x*y*y)
+    print(f.val, f.der, f.der2)
