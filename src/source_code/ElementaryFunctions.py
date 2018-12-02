@@ -67,7 +67,6 @@ class ElementaryFunctions():
                 # i.e., f_xx --> key == x and x in first derivative dictionary
                 if key in other.der.keys():
                     other_der2[key] = -1*other.der[key]*sin_value*other.der[key] + cos_value*other.der2[key]
-                    print(key)
                 else:
                     # split the second derivative dictionary key into the two variables
                     first_var = key[0]
@@ -75,6 +74,7 @@ class ElementaryFunctions():
                     other_der2[key] = -1*other.der[first_var]*other.der[second_var]*sin_value + cos_value*other.der2[key]
 
             return AutoDiff(sin_value, "dummy", other_der, other_der2)
+
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -127,10 +127,27 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val = other.val
             other_der = {}
-            cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
+            other_der2 = {}
+            cos_value,sin_value = np.cos(other_val), np.sin(other_val)
             for key,derivative in other.der.items():
-                other_der[key] = sin_for_der * derivative
-            return AutoDiffObject.AutoDiff(cos_value, "dummy", other_der)
+                other_der[key] = -1 * sin_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = -1*other.der[key]*cos_value*other.der[key] + -1*sin_value*other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = -other.der[first_var]*other.der[second_var]*cos_value + -1*sin_value*other.der2[key]
+
+            return AutoDiff(cos_value, "dummy", other_der, other_der2)
+
+
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -188,7 +205,7 @@ class ElementaryFunctions():
             other_der = {}
             tan_value, tan_for_der = np.tan(other_val), 1/(np.cos(other_val)**2)
             if abs(tan_value) > 10**16:
-                print("Input value should not be pi/2 + 2*pi*k, k interger ")
+                print("Input value should not be pi/2 + 2*pi*k, k interger")
                 raise ValueError
             for key,derivative in other.der.items():
                 other_der[key] = tan_for_der * derivative
@@ -463,5 +480,5 @@ if __name__ == "__main__":
 #    f6 = ElementaryFunctions.sin("thirty")
 #    print(f6.val, f6.der)
 
-    f = ElementaryFunctions.sin(x*x*y*y)
+    f = ElementaryFunctions.cos(x*x*y*y)
     print(f.val, f.der, f.der2)
