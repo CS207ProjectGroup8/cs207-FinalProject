@@ -441,17 +441,64 @@ class AutoDiff():
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key] + other.der[key]
-                    der2Dict[key] = self.der2[key] + other.der2[key]
-                elif key in setSelfDer:
-                    derDict[key] = self.der[key]
-                    der2Dict[key] = self.der2[key]
-                else:
-                    derDict[key] = other.der[key]
-                    der2Dict[key] = other.der2[key]
+                for key2 in setSelfDer.union(setOtherDer):
+                    
+                    if key in setSelfDer and key in setOtherDer:
+                        derDict[key] = self.der[key] + other.der[key]
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key] + other.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2] + other.der2[key+key2]
+                                    
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                
+                                else:
+                                    der2Dict[key+key2] = other.der2[key+key2]
+             
+                    elif key in setSelfDer:
+                        derDict[key] = self.der[key]
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                    
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                
+                                else:
+                                    der2Dict[key+key2] = 0
+                                            
+                    else:
+                        derDict[key] = other.der[key]
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = other.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = other.der2[key+key2]
+                                    
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = 0
+                                
+                                else:
+                                    der2Dict[key+key2] = other.der2[key+key2]
 
             return AutoDiff(self.val + other.val, "dummy", derDict, der2Dict)
+        
         except:
             try:
                 return AutoDiff(self.val + other.real, "dummy", self.der, self.der2)
@@ -504,15 +551,61 @@ class AutoDiff():
             setOtherDer = set(other.der)
 
             for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = self.der[key] - other.der[key]
-                    der2Dict[key] = self.der2[key] - other.der2[key]
-                elif key in setSelfDer:
-                    derDict[key] = self.der[key]
-                    der2Dict[key] = self.der2[key]
-                else:
-                    derDict[key] = -1 * other.der[key]
-                    der2Dict[key] = -1 * other.der2[key]
+                for key2 in setSelfDer.union(setOtherDer):
+                    
+                    if key in setSelfDer and key in setOtherDer:
+                        derDict[key] = self.der[key] - other.der[key]
+                    
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key] - other.der2[key]
+                            else:
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2] - other.der2[key+key2]
+                                        
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                
+                                else:
+                                    der2Dict[key+key2] = -other.der2[key+key2]
+                        
+                        
+                    elif key in setSelfDer:
+                        derDict[key] = self.der[key]
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = self.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                        
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = self.der2[key+key2]
+                                
+                                else:
+                                    der2Dict[key+key2] = 0
+                                
+                    else:
+                        derDict[key] = -1 * other.der[key]
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key + key2] = der2Dict[key2 + key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = -1 * other.der2[key]
+                            else: 
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = -other.der2[key+key2]
+                                        
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = 0
+                                
+                                else:
+                                    der2Dict[key+key2] = -other.der2[key+key2]
 
             return AutoDiff(self.val - other.val, "dummy", derDict, der2Dict)
 
