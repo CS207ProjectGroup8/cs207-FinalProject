@@ -298,7 +298,6 @@ class ElementaryFunctions():
 
             try:
                 ##When both the base and the power are autodiff objects
-
                 if type(np.power(base.val, power.val)) == complex:
                     print ("base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
@@ -332,8 +331,6 @@ class ElementaryFunctions():
                 if type(np.power(base.val, power.real)) == complex:
                     print ("base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
-
-
 
                 base_value = np.power(base_val, power)
                 base_der = power * np.power(base_val, power-1)
@@ -413,10 +410,26 @@ class ElementaryFunctions():
                     raise ValueError
 
             other_der = {}
+            other_der2 = {}
             log_value, log_for_der = np.log(other_val), 1/float(other_val)
+
+            ##First derivatives for log function
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
-            return AutoDiff(log_value, "dummy", other_der, other_der2)
+
+            ##Second Derivatives for log functions
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = -1/(other_val*other_val) * other.der[key] * other.der[key] + 1/other_val * other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = -1/(other_val*other_val) * other.der[first_var] * other.der[second_var] + 1/other_val * other.der2[key]
+
+            return AutoDiff(log_value, "dummy", other_der,other_der2)
 
         except:
             try:
@@ -465,9 +478,22 @@ class ElementaryFunctions():
         try:
             other_val = other.val
             other_der = {}
+            other_der2 = {}
             exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
+            ##First derivatives for log function
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
+
+            ##Second Derivatives for log functions
+            for key,derivative2 in other.der2.items():
+                if key in other.der.keys():
+                    other_der2[key] = exp_for_der * other.der[key] * other.der[key] + exp_for_der * other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = exp_for_der * other.der[first_var] * other.der[second_var] + exp_for_der * other.der2[key]
+
             return AutoDiff(exp_value, "dummy", other_der, other_der2)
         except:
             try:
@@ -483,19 +509,20 @@ class ElementaryFunctions():
 if __name__ == "__main__":
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
-    # z = AutoDiffObject.AutoDiff(4, "z")
+    z = AutoDiff(4, "z")
 
     # f = 5*x + ElementaryFunctions.tan(7*x*y)
     # print(f.val, f.der)
-
-    # f2 = cos_value.log((3*x))
-    # print(f2.val, f2.der)
-
+    #
+    # f2 = ElementaryFunctions.log((x*x*y*y))
+    # print(f2.val, f2.der, f2.der2)
+    #
     # f3 = ElementaryFunctions.power(x,2)
     # print(f3.val, f3.der)
+    #
+    # f4 = ElementaryFunctions.exp(x*x*y*y)
+    # print(f4.val, f4.der, f4.der2)
 
-    # f4 = ElementaryFunctions.exp(x)
-    # print(f4.val, f4.der)
 
 #    f6 = ElementaryFunctions.sin("thirty")
 #    print(f6.val, f6.der)
