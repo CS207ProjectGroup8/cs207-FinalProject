@@ -6,7 +6,6 @@ Created on Fri Nov 16 13:33:34 2018
 """
 
 import numpy as np
-import sys
 import AutoDiffObject as autodiff
 import ElementaryFunctions as ef
 
