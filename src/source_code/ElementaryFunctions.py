@@ -203,13 +203,30 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val= other.val
             other_der = {}
-            tan_value, tan_for_der = np.tan(other_val), 1/(np.cos(other_val)**2)
+            other_der2 = {}
+            tan_value, sec2_value = np.tan(other_val), 1/(np.cos(other_val)**2)
             if abs(tan_value) > 10**16:
                 print("Input value should not be pi/2 + 2*pi*k, k interger")
                 raise ValueError
+
+            # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = tan_for_der * derivative
-            return AutoDiffObject.AutoDiff(tan_value, "dummy", other_der)
+                other_der[key] = sec2_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = 2*other.der[key]*other.der[key]*sec2_value*tan_value + sec2_value*other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = 2*other.der[first_var]*other.der[second_var]*sec2_value*tan_value + sec2_value*other.der2[key]
+
+            return AutoDiff(tan_value, "dummy", other_der, other_der2)
 
         except:
             try:
@@ -306,7 +323,7 @@ class ElementaryFunctions():
 
                         other_der[key] = power.der[key] * np.log(base.val) * base_value
 
-                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der)
+                return AutoDiff(base_value, "dummy", other_der)
             except:
                 ##when base is autodiff object and power is not
 
@@ -320,7 +337,7 @@ class ElementaryFunctions():
                 base_der = power * np.power(base_val, power-1)
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
-                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der)
+                return AutoDiff(base_value, "dummy", other_der)
         except:
             try:
                 base_value = base.real
@@ -396,7 +413,7 @@ class ElementaryFunctions():
             log_value, log_for_der = np.log(other_val), 1/float(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
-            return AutoDiffObject.AutoDiff(log_value, "dummy", other_der)
+            return AutoDiff(log_value, "dummy", other_der)
 
         except:
             try:
@@ -448,7 +465,7 @@ class ElementaryFunctions():
             exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
-            return AutoDiffObject.AutoDiff(exp_value, "dummy", other_der)
+            return AutoDiff(exp_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -480,5 +497,5 @@ if __name__ == "__main__":
 #    f6 = ElementaryFunctions.sin("thirty")
 #    print(f6.val, f6.der)
 
-    f = ElementaryFunctions.cos(x*x*y*y)
+    f = ElementaryFunctions.tan(x*x*y*y)
     print(f.val, f.der, f.der2)
