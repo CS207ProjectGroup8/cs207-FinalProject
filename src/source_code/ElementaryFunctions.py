@@ -294,6 +294,8 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             base_val = base.val
             other_der = {}
+            other_der2 = {}
+
             try:
                 ##When both the base and the power are autodiff objects
 
@@ -323,7 +325,7 @@ class ElementaryFunctions():
 
                         other_der[key] = power.der[key] * np.log(base.val) * base_value
 
-                return AutoDiff(base_value, "dummy", other_der)
+                return AutoDiff(base_value, "dummy", other_der, other_der2)
             except:
                 ##when base is autodiff object and power is not
 
@@ -337,7 +339,8 @@ class ElementaryFunctions():
                 base_der = power * np.power(base_val, power-1)
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
-                return AutoDiff(base_value, "dummy", other_der)
+
+                return AutoDiff(base_value, "dummy", other_der, other_der2)
         except:
             try:
                 base_value = base.real
@@ -357,7 +360,7 @@ class ElementaryFunctions():
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
                         other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
-                    return AutoDiffObject.AutoDiff(np.power(base.val,power.val), "dummy", other_der)
+                    return AutoDiff(np.power(base.val,power.val), "dummy", other_der, other_der2)
                 except:
 
                     if type(np.power(base, power)) == complex:
@@ -413,7 +416,7 @@ class ElementaryFunctions():
             log_value, log_for_der = np.log(other_val), 1/float(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = log_for_der * derivative
-            return AutoDiff(log_value, "dummy", other_der)
+            return AutoDiff(log_value, "dummy", other_der, other_der2)
 
         except:
             try:
@@ -465,7 +468,7 @@ class ElementaryFunctions():
             exp_value, exp_for_der = np.exp(other_val), np.exp(other_val)
             for key,derivative in other.der.items():
                 other_der[key] = exp_for_der * derivative
-            return AutoDiff(exp_value, "dummy", other_der)
+            return AutoDiff(exp_value, "dummy", other_der, other_der2)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
