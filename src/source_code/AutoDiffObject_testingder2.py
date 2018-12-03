@@ -257,16 +257,16 @@ class AutoDiff():
                                             (self.der[key] * other.der[key2])/(other.val**2) - \
                                             (other.der2[key+key2] * self.val)/(other.val**2) - \
                                             (other.der[key] * self.der[key2]/(other.val **2)) + \
-                                            (other.der[key] * other.der[key2] * self.val)/(other.val**3)
+                                            (2 * other.der[key] * other.der[key2] * self.val)/(other.val**3)
                                     
                                 elif key2 in setSelfDer:
                                     der2Dict[key+key2] = self.der2[key+key2]/other.val - \
                                             (other.der[key] * self.der[key2]/(other.val **2))
                                             
                                 elif key2 in setOtherDer:
-                                    der2Dict[key+key2] = (self.der[key] * other.der[key2])/(other.val**2) - \
+                                    der2Dict[key+key2] = (- self.der[key] * other.der[key2])/(other.val**2) - \
                                             (other.der2[key+key2] * self.val)/(other.val**2) - \
-                                            (other.der[key] * other.der[key2] * self.val)/(other.val**3)
+                                            (2 * other.der[key] * other.der[key2] * self.val)/(other.val**3)
                                 
                     
                     elif key in setSelfDer:
@@ -362,23 +362,75 @@ class AutoDiff():
                 raise ZeroDivisionError
             derDict = {}
             der2Dict = {}
-            setSelfDer = set(self.der)
-            setOtherDer = set(other.der)
+            
+            setSelfDer = set(self.der)           #give a set of keys, eg. set({x:1, y:2}) = set('x', 'y')
+            setOtherDer = set(other.der)         #give a set of keys, eg. set({y:1, z:2}) = set('y', 'z')
 
             for key in setSelfDer.union(setOtherDer):
-                if key in setSelfDer and key in setOtherDer:
-                    derDict[key] = (self.val * other.der[key] - self.der[key] * other.val)/(self.val * self.val)
-                    der2Dict[key] = other.der2[key]/self.val + (-other.der[key]*self.val + \
-                            2*other.val*self.der[key])*self.der[key]/self.val**3 - \
-                            self.der[key]*other.der[key]/self.val**2 - other.val*self.der2[key]/self.val**2
-                            
-                elif key in setOtherDer:
-                    derDict[key] = (self.val * other.der[key])/(self.val * self.val)
-                    der2Dict[key] = (other.der2[key]*self.val)/self.val**2
-                elif key in setSelfDer:
-                    derDict[key] = (- self.der[key] * other.val)/(self.val * self.val)
-                    der2Dict[key] = -other.val*self.der2[key]/self.val**2 + \
-                                    2*other.val*self.der[key]**2/self.val**3
+                for key2 in setSelfDer.union(setOtherDer):
+
+                    if key in setSelfDer and key in setOtherDer:
+                        derDict[key] = (self.val * other.der[key] - self.der[key] * other.val)/(self.val * self.val)
+                    
+                    
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key+key2] = der2Dict[key2+key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = other.der2[key]/self.val - \
+                                                (self.der2[key]*other.val/self.val**2) - \
+                                                (2*other.der[key] * self.der[key]/self.val**2) + \
+                                                (2 * other.val * self.der[key] * self.der[key] / self.val ** 3)
+                            else:
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = other.der2[key+key2] / self.val - \
+                                                         (other.val * self.der2[key+key2]) / self.val**2 - \
+                                                         (self.der[key] * other.der[key2] / self.val**2) - \
+                                                         (other.der[key] * self.der[key2] / self.val**2) + \
+                                                         (2*other.val *self.der[key] * self.der[key2]/self.val**3)
+                                                         
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = (- other.val * self.der2[key+key2]) / self.val ** 2 - \
+                                                         (other.der[key] * self.der[key2] / self.val ** 2) + \
+                                                         (2*self.der[key] * self.der[key2] * other.val / self.val ** 3)
+                                else:
+                                    der2Dict[key+key2] = other.der2[key+key2]/self.val - \
+                                                         (self.der[key] * other.der[key2] / self.val ** 2)
+
+
+                    elif key in setOtherDer:
+                        derDict[key] = (self.val * other.der[key])/(self.val * self.val)
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key+key2] = der2Dict[key2+key]
+                        else:
+                            if key2 == key:
+                                der2Dict[key] = other.der2[key]/self.val
+                            else:
+                                if key2 in setSelfDer and key2 in setOtherDer:
+                                    der2Dict[key+key2] = other.der2[key+key2] / (self.val ** 2) - \
+                                                         (other.der[key] * self.der[key2]) / (self.val ** 2)
+                                elif key2 in setSelfDer:
+                                    der2Dict[key+key2] = - other.der[key] * self.der[key2] / self.val ** 2
+                                
+                                elif key2 in setOtherDer:
+                                    der2Dict[key+key2] = other.der2[key+key2]/self.val**2
+
+                    elif key in setSelfDer:
+                        derDict[key] = (- self.der[key] * other.val)/(self.val * self.val)
+                        
+                        if key2+key in list(der2Dict.keys()):
+                            der2Dict[key+key2] = der2Dict[key2+key]                        
+                        
+                        else:
+                            if key2 in setSelfDer and key2 in setOtherDer:
+                                der2Dict[key+key2] = 
+                                
+                                
+                                
+                                
+                        der2Dict[key] = -other.val*self.der2[key]/self.val**2 + \
+                                        2*other.val*self.der[key]**2/self.val**3
                     
             return AutoDiff(other.val/self.val, "dummy", derDict, der2Dict)
 
@@ -533,7 +585,7 @@ if __name__ == "__main__":
     y = AutoDiff(2, "y")
     z = AutoDiff(4, "z")
 
-    f = x/y # + x*y*z*4 + 3.0*z + 4
+    f = x/y/z - x # + x*y*z*4 + 3.0*z + 4
     print(f.val, f.der, f.der2)
 
     # g = -x*y*z
