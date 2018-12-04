@@ -679,7 +679,7 @@ if __name__ == "__main__":
     y = AutoDiff(2, "y")
     z = AutoDiff(4, "z")
 
-    f = x/y/z - x # + x*y*z*4 + 3.0*z + 4
+    f = 6/z - x # + x*y*z*4 + 3.0*z + 4
     print(f.val, f.der, f.der2)
 
     # g = -x*y*z
