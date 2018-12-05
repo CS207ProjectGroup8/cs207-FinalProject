@@ -625,7 +625,7 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return np.sqrt(other_value)
+                return np.exp(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
