@@ -895,11 +895,6 @@ if __name__ == "__main__":
 #l==m
 #
 
-        >>> a = AutoDiff(1, 'a', H=True)
-        >>> b = 5
-        >>> t = b / a
-        >>> print(t.val, t.der,t.der2)
-        5.0 {'a': -5.0} {'a': 10.0}
 '''
 Notes
 test = {"x":1, "y":2}
