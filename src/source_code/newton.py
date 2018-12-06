@@ -9,6 +9,9 @@ import numpy as np
 import AutoDiffObject as autodiff
 import ElementaryFunctions as ef
 
+#---------------------Left to do--------------------------#
+#implement get Hessian, incorporating the Switch 
+#---------------------------------------------------------#
 
 #Our method J_F that takes in the user defined function and vector list x
 
@@ -162,8 +165,8 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
             ymax = np.amax(ly)
             delty = ymax - ymin
             
-            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, 30*1.4*deltx)
-            y = np.linspace(ymin-delty*0.2, ymax+delty*0.2, 30*1.4*deltx)
+            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, int(30*1.4*deltx))
+            y = np.linspace(ymin-delty*0.2, ymax+delty*0.2, int(30*1.4*deltx))
 
             plt.figure(figsize = (12, 8))
             X, Y = np.meshgrid(x, y)
@@ -188,7 +191,7 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
             deltx = xmax - xmin
             
             
-            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, 30*1.4*deltx)
+            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, int(30*1.4*deltx))
             y = []
             for i in range(0, len(x)):
                 y.append(F([x[i]]))
