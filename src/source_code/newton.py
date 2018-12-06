@@ -6,12 +6,10 @@ Created on Fri Nov 16 13:33:34 2018
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import AutoDiffObject as autodiff
 import ElementaryFunctions as ef
 
-#---------------------Left to do--------------------------#
-#implement get Hessian, incorporating the Switch 
-#---------------------------------------------------------#
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
