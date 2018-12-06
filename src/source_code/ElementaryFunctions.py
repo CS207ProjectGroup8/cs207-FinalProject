@@ -509,7 +509,24 @@ class ElementaryFunctions():
              - Return a new Autodiff class instance or a numeric value
         EXAMPLES
         =========
-        add here
+        >>> g = ElementaryFunctions.arcsin(1)
+        >>> np.isclose(g.val, np.pi/2)
+        True
+        >>> a = AutoDiff(0.4, 'a')
+        >>> b = AutoDiff(0.5, 'b')
+        >>> f = ElementaryFunctions.arcsin(a*a*b*b)
+        >>> np.isclose(f.val, 0.04001067)
+        True
+        >>> np.isclose(f.der['a'], 0.2001602)
+        True
+        >>> np.isclose(f.der['b'], 0.1601282)
+        True
+        >>> np.isclose(f.der2['a'], 0.5020005)
+        True
+        >>> np.isclose(f.der2['b'], 0.3212803)
+        True
+        >>> np.isclose(f.der2['ab'], 0.8019208)
+        True
         '''
 
         if abs(other.val) > 1:
@@ -571,7 +588,24 @@ class ElementaryFunctions():
              - Return a new Autodiff class instance or a numeric value
         EXAMPLES
         =========
-        add here
+        >>> g = ElementaryFunctions.arccos(0)
+        >>> np.isclose(g.val, np.pi/2)
+        True
+        >>> a = AutoDiff(0.1, 'a')
+        >>> b = AutoDiff(0.8, 'b')
+        >>> f = ElementaryFunctions.arccos(a*a*b*b)
+        >>> np.isclose(f.val, 1.564396)
+        True
+        >>> np.isclose(f.der['a'], -0.1280026)
+        True
+        >>> np.isclose(f.der['b'], -0.01600033)
+        True
+        >>> np.isclose(f.der2['a'], -1.280131)
+        True
+        >>> np.isclose(f.der2['b'], -0.02000205)
+        True
+        >>> np.isclose(f.der2['ab'], -0.3200197)
+        True
         '''
 
         if abs(other.val) > 1:
@@ -632,7 +666,24 @@ class ElementaryFunctions():
              - Return a new Autodiff class instance or a numeric value
         EXAMPLES
         =========
-        add here
+        >>> g = ElementaryFunctions.arctan(1)
+        >>> np.isclose(g.val, np.pi/4)
+        True
+        >>> a = AutoDiff(0.3, 'a')
+        >>> b = AutoDiff(0.6, 'b')
+        >>> f = ElementaryFunctions.arctan(a*a*b*b)
+        >>> np.isclose(f.val, 0.03238867)
+        True
+        >>> np.isclose(f.der['a'], 0.2032113)
+        True
+        >>> np.isclose(f.der['b'], 0.1016057)
+        True
+        >>> np.isclose(f.der2['a'], 0.7162248)
+        True
+        >>> np.isclose(f.der2['b'], 0.1790562)
+        True
+        >>> np.isclose(f.der2['ab'], 0.7177349)
+        True
         '''
 
         try:
