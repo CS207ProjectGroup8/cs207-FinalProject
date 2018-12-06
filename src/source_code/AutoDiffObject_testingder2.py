@@ -44,6 +44,38 @@ class AutoDiff():
             self.der = args[0]
             self.der2 = args[1]
 
+
+    def __eq__(self, other):
+        
+        '''Returns the truth value of two objects being equal
+        RETURNS
+        ========
+        Truth value of two AD objects being equal in value and derivatives. 
+        
+        PRE:
+             - Current instance of AutoDiff class
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+
+        POST:
+             - Truth value of equal value and derivative
+             
+        EXAMPLES
+        =========
+        >>> z = AutoDiff(1,'x')
+        >>> t = -z
+        >>> print(t.val, t.der)
+        -1 {'x': -1}
+        
+        '''
+        if isinstance(other,AutoDiff):
+            return self.val == other.val and self.der == other.der
+        return False
+    
+    def __neq__(self, other):
+        return not self.__eq__(other)
+       
+    
     def __neg__(self):
 
         ''' Returns another AutoDiff object which is the negative of the instance of the complex class.
@@ -720,6 +752,9 @@ if __name__ == "__main__":
 
     h = 6/z  + x*3 - 9
     print(h.val, h.der, h.der2)
+    
+    print(x*99 == x*99)
+    print(x*90 == x)
 
 #    f = g + h
 #    print(f.val, f.der, f.der2)    
@@ -736,9 +771,6 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
-
-
-
 
 
 
