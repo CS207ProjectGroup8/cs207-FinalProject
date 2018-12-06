@@ -490,7 +490,7 @@ class ElementaryFunctions():
                 raise AttributeError
 
 
-        @staticmethod
+    @staticmethod
     def arcsin(other):
 
         '''
