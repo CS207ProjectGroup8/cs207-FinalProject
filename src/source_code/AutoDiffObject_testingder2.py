@@ -3,22 +3,37 @@ import numbers
 
 class AutoDiff():
 
-    ''' Create objects that return the value and partial derivatives of desired functions
+    ''' Create objects that return the value and partial derivatives of desired functions. Additionally, 
+    the second partial derivatives can also be returned.
+    
     INSTANCE VARIABLES
     =======
-    - val: numeric type, value of the variable to be evaluated at
+    - val: numeric type, value of the variable to be evaluated a
+    
     - varName: string,
              either created when the user is creating the AutoDiff
              object at the beginning, eg, x = AutoDiff(3, "x");
              or as "dummy" in function operations
-    - *args: only read in args[0], which is a dictionary of derivative(s);
-            eg. {"x":1, "y":2} means partial derivative of x is 1 and
-            partial derivative of y is 2;
-            Only situation that *args present is 0in the output of methods'
-            implementation return
+             
+    - *args: read in args[0], which is a dictionary of derivative(s);
+            eg. {"x":1, "y":2} means partial derivative with respect to x is 1 and
+            partial derivative with respect to y is 2;
+            Only situation that *args present is in the output of methods'
+            implementation return.
+            
+            If Hessian switch is on (H=True specified when instantiating the AD object), 
+            then read in args[1], which is a dictionary of second partial derivatives;
+            e.g. {"x": 1, "y": 2, "xy":3} means the second partial derivative of the
+            function with respect to x is 1, with respect to y is 2, and with respect 
+            to x and y is 3.
+    
     EXAMPLE:
         EITHER: (created at the beginning by user)
+            To calculate first partial derivatives:
             x = AutoDiff(3, "x")
+            To also calculate second partial derivatives:
+            x = AutoDiff(3, "x", H = True)
+        
         OR: (in method implementation)
             def...:
                 .....
@@ -37,7 +52,8 @@ class AutoDiff():
         else:
             raise TypeError("Please enter a string for the name of the AutoDiff object.")
         
-        self.H = H
+        if H in [True, False]:
+            self.H = H
         
         if varName != "dummy":
             self.der = {varName:1}
@@ -68,9 +84,14 @@ class AutoDiff():
         EXAMPLES
         =========
         >>> z = AutoDiff(1,'x')
-        >>> t = -z
-        >>> print(t.val, t.der)
-        -1 {'x': -1}
+        >>> a = AutoDiff(1,'x')
+        >>> z == a
+        True
+        
+        >>> l = AutoDiff(2,'z')
+        >>> m = AutoDiff(2,'x')
+        >>> l=m
+        False
         
         '''
         if self.H == True:
@@ -88,22 +109,30 @@ class AutoDiff():
     def __neg__(self):
 
         ''' Returns another AutoDiff object which is the negative of the instance of the complex class.
-        This is a special method.
+            This is a special method.
+        
         RETURNS
         ========
-        AutoDiff object with negative value and negative derivative of the current instance
+        AutoDiff object with negative value and negative derivative of the current instance. 
+        If Hessian of the current instance has been specified, then the negative second derivatives are also returned.
+        
         NOTES
         =====
         PRE:
-             - Current isnstance of AutoDiff class
+             - Current instance of AutoDiff class
         POST:
-             - Return a new Autodiff class instance
+             - Returns a new Autodiff class instance
         EXAMPLES
         =========
-        >>> z = AutoDiff(1,'x')
-        >>> t = -z
+        >>> x = AutoDiff(1,'x')
+        >>> t = -x
         >>> print(t.val, t.der)
         -1 {'x': -1}
+        
+        >>> y = AutoDiff(2, 'y', H = True)
+        >>> r = -y
+        >>> print(r.val, r.der, r.der2)
+        -2 {'y': -1} {'y': 0}
         '''
 
         derDict = {}      #Create a new dictionary to store updated derivative(s) information
@@ -125,6 +154,7 @@ class AutoDiff():
         ''' Returns the another AutoDiff object which is the product of current AutoDiff object
             and another object (either AutoDiff object or float) separated by '*'.
             This is a special method.
+        
         RETURNS
         ========
         A new instance of AutoDiff object
@@ -133,7 +163,8 @@ class AutoDiff():
         PRE:
              - Current instance of AutoDiff class
              - EITHER: another instance of AutoDiff class
-                 OR: float
+               OR: float
+        
         POST:
              - Return a new Autodiff class instance
         EXAMPLES
@@ -147,11 +178,23 @@ class AutoDiff():
         2
         >>> print(t.der['b'])
         1
+        
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = a * b
         >>> print(t.val, t.der)
         33 {'a': 33}
+        
+
+        >>> a = AutoDiff(3, 'a', H=True)
+        >>> b = AutoDiff(2, 'b',H=True)
+        >>> t = a * a * b * b
+        >>> print(t.val)
+        36
+        >>> print(t.der['a'])
+        24
+        >>> print(t.der2['a'])
+        8
         '''
 
         if isinstance(other, AutoDiff):
@@ -273,6 +316,7 @@ class AutoDiff():
 
         POST:
              - Return a new Autodiff class instance
+        
         EXAMPLES
         =========
         >>> a = AutoDiff(1, 'a')
@@ -290,6 +334,24 @@ class AutoDiff():
         >>> t = a / b
         >>> print(t.val, t.der)
         0.2 {'a': 0.2}
+        
+        >>> a = AutoDiff(1, 'a', H=True)
+        >>> b = AutoDiff(2, 'b', H=True)
+        >>> t = a / (b)
+        >>> print(t.val)
+        0.5
+        >>> print(t.der['a'])
+        0.5
+        >>> print(t.der['b'])
+        -0.25
+        >>> print(t.der2['b'])
+        0.25
+        
+        >>> a = AutoDiff(1, 'a', H=True)
+        >>> b = 5
+        >>> t = a / b
+        >>> print(t.val, t.der, t.der2)        
+        0.2 {'a': 0.2} {'a': 0.0}
 
         '''
 
@@ -335,7 +397,7 @@ class AutoDiff():
                                                 (other.der[key] * self.der[key2]/(other.val **2))
     
                                     elif key2 in setOtherDer:
-                                        der2Dict[key+key2] = 2*other.der[key] *other.der[key2] * self.val / other.val ** 3 -\
+                                        der2Dict[key+key2] = 2*other.der[key]*other.der[key2] * self.val / other.val ** 3 -\
                                                 self.der[key] * other.der[key2]/other.val**2 -\
                                                 self.val * other.der2[key+key2]/other.val**2
                                                 
@@ -425,11 +487,11 @@ class AutoDiff():
         EXAMPLES
         =========
 
-        >>> a = AutoDiff(1, 'a')
+        >>> a = AutoDiff(1, 'a', H=True)
         >>> b = 5
         >>> t = b / a
-        >>> print(t.val, t.der)
-        5.0 {'a': -5.0}
+        >>> print(t.val, t.der,t.der2)
+        5.0 {'a': -5.0} {'a': 10.0}
 
         '''
 
@@ -796,11 +858,11 @@ if __name__ == "__main__":
 
     x = AutoDiff(10, "x")
     y = AutoDiff(2, "y", H = True)
-    z = AutoDiff(4, "z")
+    z = AutoDiff(4, "z", H = True)
     
     print(x.val, x.der)
     
-    h = -y
+    h = -y/z
     print(h.val, h.der, h.der2)
 
 #    h = 6/z  + x*3 - 9
@@ -824,8 +886,20 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
+#z = AutoDiff(1,'x')
+#a = AutoDiff(1,'x')
+#z == a
+#
+#l = AutoDiff(2,'z')
+#m = AutoDiff(2,'x')
+#l==m
+#
 
-
+        >>> a = AutoDiff(1, 'a', H=True)
+        >>> b = 5
+        >>> t = b / a
+        >>> print(t.val, t.der,t.der2)
+        5.0 {'a': -5.0} {'a': 10.0}
 '''
 Notes
 test = {"x":1, "y":2}
