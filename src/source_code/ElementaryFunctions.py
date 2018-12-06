@@ -267,18 +267,14 @@ class ElementaryFunctions():
                                 other_der2[key+key2] = other_der2[key2+key]
                             else:
                                 if key == key2:
-                                    other_der2[key] = np.power(base.val,power.val) * (power.der[key] * np.log(base.val) + power.val / base.val * base.der[key])**2 +
-                                                      np.power(base.val,power.val) * (power.der2[key] * np.log(base.val) + 2 * power.der[key] * 1/base.val * base.der[key] - power.val * 1/(base.val**2) * base.der[key] + power.val/base.val * base.der2[key])
+                                    other_der2[key] = np.power(base.val,power.val) * (power.der[key] * np.log(base.val) + power.val/base.val * base.der[key])**2 + np.power(base.val,power.val) * (power.der2[key] * np.log(base.val) + 2 * power.der[key] * 1/base.val * base.der[key] - power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val * base.der2[key])
                                 else:
                                     if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + pwer.val/base.val*base.der[key2]) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) +
-                                                               np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2] + power.der[key2] * 1/base.val * base.der[key] + power.val/(base.val**2)*base.der[key2]*base.der[key] + power.val/base.val * base.der2[key+key2])
+                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val*base.der[key2]) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2] + power.der[key2] * 1/base.val * base.der[key] - power.val/(base.val**2)*base.der[key2]*base.der[key] + power.val/base.val * base.der2[key+key2])
                                     elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) +
-                                                                np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2] + power.val/(base.val**2) * base.der[key2] * base.der[key] + power.val/base.val * base.der[key+key2])
+                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2] + power.val/(base.val**2) * base.der[key2] * base.der[key] + power.val/base.val * base.der[key+key2])
                                     else:
-                                        other_der[key+key2] = np.power(base.val,power.val) * power.der[key2] * np.log(base.val) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) +
-                                                                np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + power.der[key2]*1/base.val*base.der[key])
+                                        other_der[key+key2] = np.power(base.val,power.val) * power.der[key2] * np.log(base.val) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + power.der[key2]*1/base.val*base.der[key])
                         elif key in base_der:
                             other_der[key] = power.val * np.power(base.val,power.val) * base.der[key] * 1/base.val
                             if key2+key in other_der2.keys():
@@ -288,14 +284,11 @@ class ElementaryFunctions():
                                     other_der2[key] = np.power(base.val, power.val) * (power.val/base.val * base.der[key])**2 + np.power(base.val, power.val) * (-power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val*base.der2[key])
                                 else:
                                     if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val/base.val * base.der[key] * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) +
-                                                                np.power(base.val, power.val) * (power.der[key2] * 1/base.val * base.der[key] + power.val/(base.val**2) * base.der[key] + power.val/base.val * base.der[key+key2])
+                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val/base.val * base.der[key] * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) + np.power(base.val, power.val) * (power.der[key2] * 1/base.val * base.der[key] + power.val/(base.val**2) * base.der[key] + power.val/base.val * base.der[key+key2])
                                     elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val**2 / base.val**2 * base.der[key] * base.der[key2] +
-                                                                np.power(base.val, power.val) * ((power.val/base.val**2) * base.der[key] * base.der[key2] + power.val/base.val * base.der2[key+key2])
+                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val**2 / base.val**2 * base.der[key] * base.der[key2] + np.power(base.val, power.val) * ((power.val/base.val**2) * base.der[key] * base.der[key2] + power.val/base.val * base.der2[key+key2])
                                     else:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.der[key2] * np.log(base.val) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) +
-                                                                np.power(base.val, power.val) * power.der[key2] * 1/base.val * base.der[key]
+                                        other_der2[key+key2] = np.power(base.val, power.val) * power.der[key2] * np.log(base.val) * (power.val/base.val * base.der[key]) + np.power(base.val, power.val) * power.der[key2] * 1/base.val * base.der[key]
                         else:
                             #other_der[key] = power.der[key] * np.log(base.val) * base_value
                             other_der[key] = np.power(base.val,power.val) * power.der[key] * np.log(base.val)
@@ -306,15 +299,13 @@ class ElementaryFunctions():
                                     other_der2[key] = np.power(base.val, power.val) * (power.der[key]*np.log(base.val))**2 + np.power(base.val, power.val) * (power.der2[key]*np.log(base.val))
                                 else:
                                     if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) * power.der[key] * np.log(base.val) +
-                                                                np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2])
+                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2])
                                     elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * power.der[key] * np.log(base.val) +
-                                                                np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2])
+                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2])
                                     else:
                                         other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2] * np.log(base.val) + power.val/base.val * base.der[key2])
 
-                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der, other_der2)
+                return AutoDiff(base_value, "dummy", other_der, other_der2)
             except:
                 ##when base is autodiff object and power is not
                 if type(np.power(base.val, power.real)) == complex:
@@ -334,7 +325,7 @@ class ElementaryFunctions():
                         key2 = key[1]
                         other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key1] * base.der[key2] + power * np.power(base.val,power-1) * base.der2[key]
 
-                return AutoDiffObject.AutoDiff(base_value, "dummy", other_der, other_der2)
+                return AutoDiff(base_value, "dummy", other_der, other_der2)
         except:
             try:
                 base_value = base.real
@@ -361,7 +352,7 @@ class ElementaryFunctions():
                             key1 = key[0]
                             key2 = key[1]
                             other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key] * power.der[key2] * np.log(base) * np.power(base,power.val)
-                    return AutoDiffObject.AutoDiff(np.power(base.val,power.val), "dummy", other_der, other_der2)
+                    return AutoDiff(np.power(base.val,power.val), "dummy", other_der, other_der2)
                 except:
 
                     if type(np.power(base, power)) == complex:
@@ -471,11 +462,20 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
-        >>> t = ElementaryFunctions.exp(a)
-        >>> np.isclose(t.val, 7.38905609893065)
+        >>> x = AutoDiff(2, 'x')
+        >>> y = AutoDiff(3, 'y')
+        >>> t = ElementaryFunctions.power(x*y,x*y)
+        >>> np.isclose(t.val, 46656)
         True
-        >>> np.isclose(t.der['a'], 7.38905609893065)
+        >>> np.isclose(t.der['x'], 390757)
+        True
+        >>> np.isclose(t.der['y'], 260505)
+        True
+        >>> np.isclose(t.der2['x'], 3342383)
+        True
+        >>> np.isclose(t.der2['y'], 1485637)
+        True
+        >>> np.isclose(t.der2['xy'], 2358707)
         True
         '''
 
@@ -551,12 +551,12 @@ class ElementaryFunctions():
                 # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
                 # i.e., f_xx --> key == x and x in first derivative dictionary
                 if key in other.der.keys():
-                    other_der2[key] = -1/4 * 1/(np.power(np.sqrt(other.val),3)) * other.der[key]**2 + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
+                    other_der2[key] = -1/4 * 1/other.val**(3/2) * other.der[key]**2 + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
                 else:
                     # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = -1/4 * 1/(np.power(np.sqrt(other.val),3)) * other.der[key1] * other.der[key2] + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
+                    key1 = key[0]
+                    key2 = key[1]
+                    other_der2[key] = -1/4 * 1/other.val**(3/2) * other.der[key1] * other.der[key2] + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
 
             return AutoDiff(sqrt_value, "dummy", other_der, other_der2)
 
@@ -604,7 +604,7 @@ class ElementaryFunctions():
 
             # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = np.exp(other.val) * other.der[key] / (1 + np.exp(power.val))**2
+                other_der[key] = np.exp(other.val) * other.der[key] / (1 + np.exp(other.val))**2
 
             # second derivative
             # loop through all keys in second derivative dictionary
@@ -612,12 +612,13 @@ class ElementaryFunctions():
                 # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
                 # i.e., f_xx --> key == x and x in first derivative dictionary
                 if key in other.der.keys():
-                    other_der2[key] = (np.exp(other.val) * other.der[key] + np.exp(other.val)*other.der2[key] + np.exp(other.val)**2 * other.der[key] + np.exp(other.val)**2 *other.der2[key] - np.exp(other.val)**2 * other.der[key]**2) / (1 + np.exp(other.val))**3
+                    other_der2[key] = (np.exp(other.val)*other.der[key]**2 + np.exp(other.val)*other.der2[key])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key]**2 / (1 + np.exp(other.val))**3
+                    # other_der2[key] = (np.exp(other.val) * other.der[key] + np.exp(other.val)*other.der2[key] + np.exp(other.val)**2 * other.der[key] + np.exp(other.val)**2 *other.der2[key] - np.exp(other.val)**2 * other.der[key]**2) / (1 + np.exp(other.val))**3
                 else:
                     # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = (np.exp(other.val) * other.der[key1] + np.exp(other.val)*other.der2[key+key2] + np.exp(other.val)**2 * other.der[key1] + np.exp(other.val)**2 *other.der2[key1+key2] - np.exp(other.val)**2 * other.der[key] * other.der[key2]) / (1 + np.exp(other.val))**3
+                    key1 = key[0]
+                    key2 = key[1]
+                    other_der2[key] = (np.exp(other.val)*other.der[key1]*other.der[key2] + np.exp(other.val)*other.der2[key1+key2])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key1]* other.der[key2] / (1 + np.exp(other.val))**3
 
             return AutoDiff(sqrt_value, "dummy", other_der, other_der2)
 
@@ -648,6 +649,17 @@ if __name__ == "__main__":
     #
     # f4 = ElementaryFunctions.exp(x*x*y*y)
     # print(f4.val, f4.der, f4.der2)
+
+    # f5 = ElementaryFunctions.power(x*y,x*y)
+    # print(f5.val, f5.der, f5.der2)
+
+    # f6 = ElementaryFunctions.sqrt(x*y)
+    # print(f6.val, f6.der, f6.der2)
+
+    f7 = ElementaryFunctions.logit(x)
+    print(f7.val, f7.der, f7.der2)
+
+
 
 
 #    f6 = ElementaryFunctions.sin("thirty")
