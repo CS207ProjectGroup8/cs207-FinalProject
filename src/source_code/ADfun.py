@@ -62,9 +62,10 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
 #Optimization & Root Finding
 #full Newton: root-finding
 #Require len(F) = len(x)
-def Newton(F, x, criteria = 10^(-10)):
-    x_k = x
+def Newton(F, x, criteria = 10**(-8)):
+    x_k = np.array(x)
     rel_step = 1
+    i = 0
     
     if len(F(x)) != len(x):
         print("Need to be a system of n functions with n unknowns!")
@@ -72,20 +73,21 @@ def Newton(F, x, criteria = 10^(-10)):
         
     else: 
         while rel_step > criteria:
-            JF_k = J_F(F, x_k)
+            JF_k = J_F(F, list(x_k))
             F_k = JF_k[0]
             J_k = JF_k[1]
             deltaX = np.linalg.solve(J_k, -F_k)
-            x_k = x_k + deltaX
             rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
+            x_k = x_k + deltaX
+            i += 1
         
-        return x_k
+        return {"x_min: ": x_k, "F(x_min): ": J_F(F, list(x_k))[0], "number of iter: ": i}
 
 
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 0.0001, plot = False):
+def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 0.0001, plot = False):
     #*args can take in as argument a matrix as initial guess of the inverse Hessian matrix; 
     #otherwise, default will use a identity matrix as the initial guess
     #rate is the learning rate in Gradient Descent method
@@ -116,7 +118,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 
         
         xk_1 = 100*x_k
     
-        while np.linalg.norm(x_k-xk_1)>10**(-8):
+        while np.linalg.norm(x_k-xk_1)>criteria:
             
             JH_k = J_F(F, list(x_k), H = True) 
         
@@ -155,7 +157,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 
         xk_1 = 100*x_k
         
             
-        while np.linalg.norm(x_k-xk_1)>10**(-8):
+        while np.linalg.norm(x_k-xk_1)>criteria:
             deltaX = - np.matmul(H_k, J_k)
             xk_1 = x_k
             x_k = x_k + deltaX
