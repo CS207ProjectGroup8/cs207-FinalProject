@@ -14,18 +14,31 @@ import ElementaryFunctions as ef
 #---------------------------------------------------------#
 
 #Our method J_F that takes in the user defined function and vector list x
-
-def J_F(F, x):              #F as a length n list, x as a length m list 
+def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
     n = len(F)
     m = len(x)
+    
+    if H != True and H != False:
+        print("H needs to be either True or False!")
+        raise ValueError
+    
+    #If H = True: Require len(F) = 1, to output the Hessian matrix
+    if H == True and len(F) != 1:
+        print("F needs to be a function from R^n to R!")
+        raise ValueError
     
     #Convert x to AutoDiffObject
     xCal = [0.0] * m
     for i in range(0, m):
-        xCal[i] = autodiff.AutoDiff(x[i], "{}".format(i))
+        if H == False:
+            xCal[i] = autodiff.AutoDiff(x[i], "{}".format(i))
+        if H == True:
+            xCal[i] = autodiff.AutoDiff(x[i], "{}".format(i), H = True)
         
     J_F = np.zeros((n, m))                     #to store Jacobian matrix information later
     F1 = np.array([0.0]*n)                      #to store function value later
+    if H == True: 
+        H_F = np.zeros((n, m))                 
 
     Fcal = F(xCal)    #This is a list of AutoDiffObjects, [F0(xCal), F1[xCal], ... F(n-1)[xCal]]
 
@@ -37,10 +50,20 @@ def J_F(F, x):              #F as a length n list, x as a length m list
           
         for j in range(0, m):
             J_F[i, j] = Fcal[i].der["{}".format(j)]
-
-    return [F1, J_F]     
-
-#This returns a list with the function value F(x) and and Jacobian J_F(x)
+            if H == True: 
+                H_F[j, j] = Fcal[i].der2["{}".format(j)]
+                for k in range(0, m):
+                    if j != k:
+                        H_F[j, k] = Fcal[i].der2["{}{}".format(j, k)]
+    
+    
+    #This returns a list with the function value F(x) and Jacobian J_F(x)
+    if H == False: 
+        return [F1, J_F]     
+   
+    #This returns a list with the function value F(x) and Jacobian J_F(x) and Hessian matrix H_F
+    if H == True: 
+        return [F1, J_F, H_F]
 
 
 
@@ -69,11 +92,23 @@ def Newton(F, x, criteria = 10^(-10)):
 
 
 
-#Optimization: Minimization
+#Optimization: Minimization for F from R^n to R
 def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot = False):
     #*args can take in as argument a matrix as initial guess of the inverse Hessian matrix; 
     #otherwise, default will use a identity matrix as the initial guess
     #rate is the learning rate in Gradient Descent method
+    
+    
+    #Catch errors:
+    if len(F)!= 1:
+        print("F needs to be a function from R^n to R!")
+        raise ValueError
+    
+    if plot == True:
+        if len(x) != 1 and len(x) != 2:
+            print("Cannot make plots of the iteration steps, since x is of more than 2 dimensions!")
+            raise ValueError
+    
     
     
     if method == "newton":
@@ -83,10 +118,10 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
         rel_step = 1
         
         while rel_step > criteria:
-            JH_k = JH_F(F, x_k)  #Need another function that calcuate both Jacobian and Hessian
+            JH_k = JH_F(F, x_k, H = True) 
         
             J_k = JH_k[1]
-            H_k = JH_k[2]   #Need to have Hessian Matrix calculated
+            H_k = JH_k[2]   
         
             deltaX = np.linalg.solve(H_k, -J_k)
             x_k = x_k + deltaX
