@@ -1,6 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from AutoDiffObject import AutoDiff
+from src.source_code.AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -41,6 +41,22 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['a'], -0.4381326583609628)
         True
+        >>> x = AutoDiff(4, 'x')
+        >>> y = AutoDiff(3, 'y')
+        >>> t = ElementaryFunctions.sin(x*x*y*y)
+        >>> np.isclose(t.val, -0.4910216)
+        True
+        >>> np.isclose(t.der['x'], 62.72261)
+        True
+        >>> np.isclose(t.der['y'], 83.63015)
+        True
+        >>> np.isclose(t.der2['x'], 2561.137)
+        True
+        >>> np.isclose(t.der2['y'], 4553.132)
+        True
+        >>> np.isclose(t.der2['xy'], 3435.756)
+        True
+        >>>
         '''
 
         try:
