@@ -1,6 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from AutoDiffObject_testingder2 import AutoDiff
+from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -490,7 +490,7 @@ class ElementaryFunctions():
                 raise AttributeError
 
 
-        @staticmethod
+    @staticmethod
     def arcsin(other):
 
         '''
