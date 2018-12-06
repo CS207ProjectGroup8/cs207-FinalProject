@@ -93,7 +93,7 @@ def Newton(F, x, criteria = 10^(-10)):
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot = False):
+def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 0.1, plot = False):
     #*args can take in as argument a matrix as initial guess of the inverse Hessian matrix; 
     #otherwise, default will use a identity matrix as the initial guess
     #rate is the learning rate in Gradient Descent method
@@ -108,6 +108,11 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
         if len(x) != 1 and len(x) != 2:
             print("Cannot make plots of the iteration steps, since x is of more than 2 dimensions!")
             raise ValueError
+    
+    if method != "newton" and method != "quasi-newton-BFGS" and method != "gradient-descent":
+        print("Optimization methods provided are newton, quasi-newton-BFGS and gradient-descent. Please choose one from them.")
+        raise ValueError
+        
     
     
     
@@ -129,6 +134,8 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
             
             x_trace = np.vstack([x_trace, x_k])
             i += 1
+        
+        JH_k = JH_F(F, x_k, H = True) 
             
         result = {"x_min": x_k, "min F(x)": JH_k[0], "Jcobian F(x_min)": JH_k[1], "Hessian F(x_min)": JH_k[2], "number of iter": i,  "trace":x_trace}
    
@@ -185,7 +192,9 @@ def Mini(F, x, method = "newton", criteria = 10^(-10), *args, rate = 0.1, plot =
             x_trace = np.vstack([x_trace, x_k])
             i += 1
             
-        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jcobian F(x_min)": J_k, "number of iter": i,  "trace":x_trace}
+        JF_k = J_F(F, x_k)
+            
+        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jcobian F(x_min)": JF_k[1], "number of iter": i,  "trace":x_trace}
         
     if len(x) == 2: 
         if plot == True:
