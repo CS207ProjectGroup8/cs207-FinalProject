@@ -765,6 +765,27 @@ class AutoDiff():
         >>> t = a - b
         >>> print(t.val, t.der)
         -32 {'a': 1}
+        
+        >>> a = AutoDiff(4, 'a', H=True)
+        >>> b = AutoDiff(2, 'b', H = True)
+        >>> t = a - b
+        >>> print(t.val)
+        2
+        >>> print(t.der['a'])
+        1
+        >>> print(t.der['b'])
+        -1
+        >>> print(t.der2['a'])   
+        0
+        >>> print(t.der2['b'])   
+        0        
+        
+        >>> a = AutoDiff(1, 'a')
+        >>> b = 33
+        >>> t = a - b
+        >>> print(t.val, t.der, t.der2)
+        -32 {'a': 1} {'a': 0}
+        
         '''
 
         try:
@@ -886,14 +907,7 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
-#z = AutoDiff(1,'x')
-#a = AutoDiff(1,'x')
-#z == a
-#
-#l = AutoDiff(2,'z')
-#m = AutoDiff(2,'x')
-#l==m
-#
+
 
 '''
 Notes
