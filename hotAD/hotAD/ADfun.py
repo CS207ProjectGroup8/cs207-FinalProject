@@ -5,6 +5,47 @@ from hotAD.AutoDiffObject import AutoDiff
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
+    ''' Takes in user defined n-vector function F and m-vector list x, and 
+        calculate the function value at x, the jacobian matrix of F evaluated
+        at x.
+        When the function F is an one-vector function, the Hessian matrix of F
+        can be calculated in output as well. 
+        
+        RETURNS
+        ========
+        H = False: Returns a list with the function value F(x) and Jacobian 
+            J_F(x), as [F(x), J_F(x)];
+        H = True and len(F) = 1: Returns a list as above, in addition to the 
+            Hessian matrix H_F(x), as [F(x), J_F(x), H_F(x)].
+        
+        NOTES
+        =====
+        PRE:
+             - F: A user defined function that returns a length n list
+             - x: A length m list of numeric types
+             - H: when True: F needs to be a one-vector function, and the 
+                 Hessian matrix of F will be calculated as well; 
+                 When False: No restriction on F, no second derivative information
+                 will be outputted
+        
+        POST:
+             - Return [F(x), J_F(x)] or [F(x), J_F(x), H_F(x)] as described above
+        EXAMPLES
+        =========
+        >>> def F(x):
+        >>>     F1 = x[0] * 3 + x[1] * x[2]
+        >>>     F2 = x[2] - x[0] * x[1] + x[0]
+        >>>     return [F1, F2]
+        >>> print(J_F(F, [2, 3, 4]))
+        [array([18.,  0.]), array([[ 3.,  4.,  3.], [-2., -2.,  1.]])]
+        
+        >>> def F2(x):
+        >>>     F1 = x[0] * 3 + x[1] * x[2] + x[3]*x[3]
+        >>>     return [F1]
+        >>> print(J_F(F2, [2, 3, 4, 8], H = True))
+        [array([82.]), array([[ 3.,  4.,  3., 16.]]), array([[0., 0., 0., 0.], [0., 0., 1., 0.], [0., 1., 0., 0.], [0., 0., 0., 2.]])]
+        '''
+    
     n = len(F(x))
     m = len(x)
     
