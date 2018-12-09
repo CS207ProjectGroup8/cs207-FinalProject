@@ -780,7 +780,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> g = ElementaryFunctions.arcsin(1)
-        >>> np.isclose(g.val, np.pi/2)
+        >>> np.isclose(g, np.pi/2)
         True
         >>> a = AutoDiff(0.4, 'a', H=True)
         >>> b = AutoDiff(0.5, 'b', H=True)
@@ -862,7 +862,7 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> g = ElementaryFunctions.arccos(0)
-        >>> np.isclose(g.val, np.pi/2)
+        >>> np.isclose(g, np.pi/2)
         True
         >>> a = AutoDiff(0.1, 'a', H=True)
         >>> b = AutoDiff(0.8, 'b', H=True)
