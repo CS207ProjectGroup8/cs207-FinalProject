@@ -56,7 +56,6 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der2['xy'], 3435.756)
         True
-        >>>
         '''
 
         try:
@@ -93,7 +92,7 @@ class ElementaryFunctions():
                 return np.sin(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -125,6 +124,21 @@ class ElementaryFunctions():
         >>> np.isclose(t.val, -0.013276747223059479)
         True
         >>> np.isclose(t.der['a'], -32.99709138353982)
+        True
+        >>> x = AutoDiff(0.4, 'x')
+        >>> y = AutoDiff(2, 'y')
+        >>> t = ElementaryFunctions.cos(x*x*y*y)
+        >>> np.isclose(t.val, 0.8020958)
+        True
+        >>> np.isclose(t.der['x'], -1.911025)
+        True
+        >>> np.isclose(t.der['y'], -0.3822051)
+        True
+        >>> np.isclose(t.der2['x'], -12.99102)
+        True
+        >>> np.isclose(t.der2['y'], -0.519641)
+        True
+        >>> np.isclose(t.der2['xy'], -3.553718)
         True
         '''
 
@@ -161,7 +175,7 @@ class ElementaryFunctions():
                 return np.cos(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -194,11 +208,26 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['a'], 187210.6565431686)
         True
+        >>> x = AutoDiff(1.1, 'x')
+        >>> y = AutoDiff(2.5, 'y')
+        >>> t = ElementaryFunctions.tan(x*x*y*y)
+        >>> np.isclose(t.val, 3.333033)
+        True
+        >>> np.isclose(t.der['x'], 166.5002)
+        True
+        >>> np.isclose(t.der['y'], 73.26009)
+        True
+        >>> np.isclose(t.der2['x'], 4536.984)
+        True
+        >>> np.isclose(t.der2['y'], 878.36)
+        True
+        >>> np.isclose(t.der2['xy'], 2062.873)
+        True
         '''
 
         try:
             if abs(np.tan(other.val)) > 10**16:
-                print ("input value should not be pi/2 + 2*pi*k, k integer ")
+                print ("Input value should not be pi/2 + 2*pi*k, k integer.")
                 raise ValueError
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
@@ -207,7 +236,7 @@ class ElementaryFunctions():
             other_der2 = {}
             tan_value, sec2_value = np.tan(other_val), 1/(np.cos(other_val)**2)
             if abs(tan_value) > 10**16:
-                print("Input value should not be pi/2 + 2*pi*k, k interger")
+                print("Input value should not be pi/2 + 2*pi*k, k interger.")
                 raise ValueError
 
             # first derivative
@@ -232,17 +261,17 @@ class ElementaryFunctions():
         except:
             try:
                 if abs(np.tan(other.real)) > 10**16:
-                    print ("input value should not be a pi/2 + 2*pi*k, k integer ")
+                    print ("input value should not be a pi/2 + 2*pi*k, k integer.")
                     raise ValueError
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
                 if abs(np.tan(other_value)) > 10**16:
-                    print("Input value should not be pi/2 + 2*pi*k, k interger ")
+                    print("Input value should not be pi/2 + 2*pi*k, k interger.")
                     raise ValueError
                 return np.tan(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
     @staticmethod
     def power(base,power):
@@ -307,7 +336,7 @@ class ElementaryFunctions():
             try:
                 ##When both the base and the power are autodiff objects
                 if type(np.power(base.val, power.val)) == complex:
-                    print ("base value should be positive, because we don't consider imaginary number here.")
+                    print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
                 base_value = np.power(base.val, power.val)
@@ -315,7 +344,7 @@ class ElementaryFunctions():
                 power_der = set(power.der)
 
                 if base.val <= 0:
-                    print ("base value should be positive, because we don't consider imaginary number here.")
+                    print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
                 for key in base_der.union(power_der):
@@ -369,7 +398,7 @@ class ElementaryFunctions():
             except:
                 ##when base is autodiff object and power is not
                 if type(np.power(base.val, power.real)) == complex:
-                    print ("base value should be positive, because we don't consider imaginary number here.")
+                    print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
                 base_value = np.power(base_val, power)
@@ -393,11 +422,11 @@ class ElementaryFunctions():
                 try:
                     #base numeric, power autodiff
                     if type(np.power(base.real, power.val)) == complex:
-                        print ("base value should be positive, because we don't consider imaginary number here.")
+                        print ("Base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
 
                     if base.real <= 0:
-                        print ("base value should be positive, because we don't consider imaginary number here.")
+                        print ("Base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
 
                     other_der = {}
@@ -416,14 +445,14 @@ class ElementaryFunctions():
                 except:
 
                     if type(np.power(base, power)) == complex:
-                        print ("base value should be positive, because we don't consider imaginary number here.")
+                        print ("Base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
 
                     return np.power(base,power)
 
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -470,7 +499,7 @@ class ElementaryFunctions():
             other_val = other.val
 
             if other_val <= 0:
-                    print ("base value should be positive, because we don't consider imaginary number here.")
+                    print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
             other_der = {}
@@ -501,13 +530,13 @@ class ElementaryFunctions():
                 other_value = other.real
 
                 if other_value <= 0:
-                    print ("base value should be positive, because we don't consider imaginary number here.")
+                    print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
                 return np.log(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -575,7 +604,7 @@ class ElementaryFunctions():
                 return np.exp(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -623,7 +652,7 @@ class ElementaryFunctions():
             sqrt_value = np.sqrt(other.val)
 
             if other_val < 0 :
-                print("unsupported input. Obect needs to have non-negative values")
+                print("Unsupported input. Obect needs to have non-negative values.")
                 raise ValueError
 
             # first derivative
@@ -652,7 +681,7 @@ class ElementaryFunctions():
                 return np.sqrt(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -694,7 +723,7 @@ class ElementaryFunctions():
             sqrt_value = np.exp(other.val) / (1 + np.exp(other.val))
 
             if other_val < 0 :
-                print("unsupported input. Obect needs to have non-negative values")
+                print("Unsupported input. Obect needs to have non-negative values.")
                 raise ValueError
 
             # first derivative
@@ -724,7 +753,7 @@ class ElementaryFunctions():
                 return np.exp(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
 
@@ -768,7 +797,7 @@ class ElementaryFunctions():
         '''
 
         if abs(other.val) > 1:
-            raise ValueError("Value must be in [-1, 1]")
+            raise ValueError("Value must be in [-1, 1].")
 
         try:
             ##try to find if the passed in other object is autodiff object and do
@@ -804,7 +833,7 @@ class ElementaryFunctions():
                 return np.arcsin(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -847,7 +876,7 @@ class ElementaryFunctions():
         '''
 
         if abs(other.val) > 1:
-            raise ValueError("Value must be in [-1, 1]")
+            raise ValueError("Value must be in [-1, 1].")
 
         try:
             ##try to find if the passed in other object is autodiff object and do
@@ -883,7 +912,7 @@ class ElementaryFunctions():
                 return np.arccos(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
     @staticmethod
@@ -958,38 +987,5 @@ class ElementaryFunctions():
                 return np.arctan(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
-                print("illegal argument. Needs to be either autodiff object or numeric value")
+                print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
-
-if __name__ == "__main__":
-    x = AutoDiff(2, "x")
-    y = AutoDiff(3, "y")
-    z = AutoDiff(4, "z")
-
-    # f = 5*x + ElementaryFunctions.tan(7*x*y)
-    # print(f.val, f.der)
-    #
-    # f2 = ElementaryFunctions.log((x*y))
-    # print(f2.val, f2.der, f2.der2)
-    #
-    # f3 = ElementaryFunctions.power(x,2)
-    # print(f3.val, f3.der, f3.der2)
-    #
-    # f4 = ElementaryFunctions.exp(x*y)
-    # print(f4.val, f4.der, f4.der2)
-
-    # f5 = ElementaryFunctions.power(x*y,x*y)
-    # print(f5.val, f5.der, f5.der2)
-    #
-    # f6 = ElementaryFunctions.sqrt(x*y)
-    # print(f6.val, f6.der, f6.der2)
-
-    # f7 = ElementaryFunctions.logit(x)
-    # print(f7.val, f7.der, f7.der2)
-
-
-#    f6 = ElementaryFunctions.sin("thirty")
-#    print(f6.val, f6.der)
-
-    f = ElementaryFunctions.tan(x*x*y*y)
-    print(f.val, f.der, f.der2)
