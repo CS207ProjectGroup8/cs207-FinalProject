@@ -1,8 +1,8 @@
 # Tests for ElementaryFunctions.py
 import numpy as np
 import pytest
-from hotAD.hotAD.AutoDiffObject import AutoDiff
-from hotAD.hotAD.ElementaryFunctions import ElementaryFunctions
+from hotAD.AutoDiffObject import AutoDiff
+from hotAD.ElementaryFunctions import ElementaryFunctions
 
 # sin
 def test_sin_val():
