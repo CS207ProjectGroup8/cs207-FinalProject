@@ -107,6 +107,36 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
 #full Newton: root-finding
 #Require len(F) = len(x)
 def Newton(F, x, criteria = 10**(-8)):
+    ''' Takes in user defined n-vector function F and m-vector list x, and 
+        returns the root closest to the initial guess (x).
+        
+        RETURNS
+        ========
+        A dictionary with:
+            - x_min: the root found
+            - F(x_min): the value of the function at the found root
+            - number of iter(ations) it took to iteratively find the root
+              
+        NOTES
+        =====
+        PRE:
+             - F: A user defined function that returns a length n list
+             - x: A length m list of numeric types with an initial guess for the root
+             - criteria: the minimum stopping criterion for step size in Newton's method.
+                         Default value is set to 10^(-8)
+
+        
+        POST:
+             - Returns a dictionary with the root found (x_min), the value of the function at the root (F(x_min))
+               and the number of iterations taken to find the root (number of iter)
+               
+        EXAMPLES
+        =========
+        >>> F = lambda x: [x[0] * 3 + x[1] * x[2], x[2] - x[0] * x[1] + x[0]]
+        >>> x = [2,3,1]
+        >>> Newton(F,x)
+                
+        '''    
     x_k = np.array(x)
     rel_step = 1
     i = 0
