@@ -85,7 +85,7 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         F1[i] = Fcal[i].val        
           
         for j in range(0, m):
-            if j in Fcal[i].der:
+            if str(j) in Fcal[i].der:
                 J_F[i, j] = Fcal[i].der["{}".format(j)]
             else: 
                 J_F[i, j] = 0
