@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 from hotAD.AutoDiffObject import AutoDiff
-from hotAD.ElementaryFunctions import ElementaryFunctions
+from hotAD.ElementaryFunctions import ElementaryFunctions as ef
 
 # sin
 def test_sin_val():
