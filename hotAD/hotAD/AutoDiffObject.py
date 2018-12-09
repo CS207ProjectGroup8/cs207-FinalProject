@@ -752,14 +752,14 @@ class AutoDiff():
              - Return a new Autodiff class instance
         EXAMPLES
         =========
-        >>> a = AutoDiff(1, 'a')
-        >>> b = AutoDiff(2, 'b')
-        >>> t = a - b
+        >>> x = AutoDiff(1, 'x')
+        >>> y = AutoDiff(2, 'y')
+        >>> t = x - y
         >>> print(t.val)
         -1
-        >>> print(t.der['a'])
+        >>> print(t.der['x'])
         1
-        >>> print(t.der['b'])
+        >>> print(t.der['y'])
         -1
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
@@ -781,7 +781,7 @@ class AutoDiff():
         >>> print(t.der2['b'])   
         0
         
-        >>> a = AutoDiff(1, 'a')
+        >>> a = AutoDiff(1, 'a', H=True)
         >>> b = 33
         >>> t = a - b
         >>> print(t.val, t.der, t.der2)
@@ -907,6 +907,23 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
+
+
+
+    >>> x = AutoDiff(1, 'x')
+    >>> y = AutoDiff(2, 'y')
+    >>> t = x - y
+    >>> print(t.val)
+    -1
+    >>> print(t.der['x'])
+    1
+    >>> print(t.der['y'])
+    -1
+    >>> a = AutoDiff(1, 'a')
+    >>> b = 33
+    >>> t = a - b
+    >>> print(t.val, t.der)
+    -32 {'a': 1}
 
 
 '''
