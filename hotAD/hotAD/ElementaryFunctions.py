@@ -41,8 +41,8 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['a'], -0.4381326583609628)
         True
-        >>> x = AutoDiff(4, 'x')
-        >>> y = AutoDiff(3, 'y')
+        >>> x = AutoDiff(4, 'x', H=True)
+        >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.sin(x*x*y*y)
         >>> np.isclose(t.val, -0.4910216)
         True
@@ -125,8 +125,8 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['a'], -32.99709138353982)
         True
-        >>> x = AutoDiff(0.4, 'x')
-        >>> y = AutoDiff(2, 'y')
+        >>> x = AutoDiff(0.4, 'x', H=True)
+        >>> y = AutoDiff(2, 'y', H=True)
         >>> t = ElementaryFunctions.cos(x*x*y*y)
         >>> np.isclose(t.val, 0.8020958)
         True
@@ -153,20 +153,24 @@ class ElementaryFunctions():
                 other_der[key] = -1 * sin_value * derivative
 
             # second derivative
-            # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = -1*other.der[key]*cos_value*other.der[key] + -1*sin_value*other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = -other.der[first_var]*other.der[second_var]*cos_value + -1*sin_value*other.der2[key]
+            if other.H:
 
-            return AutoDiff(cos_value, "dummy", other_der, other_der2)
+                # loop through all keys in second derivative dictionary
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = -1*other.der[key]*cos_value*other.der[key] + -1*sin_value*other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = -other.der[first_var]*other.der[second_var]*cos_value + -1*sin_value*other.der2[key]
 
+                return AutoDiff(cos_value, "dummy", other_der, other_der2)
+
+            else:
+                return AutoDiff(cos_value, "dummy", other_der)
 
         except:
             try:
@@ -208,8 +212,8 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['a'], 187210.6565431686)
         True
-        >>> x = AutoDiff(1.1, 'x')
-        >>> y = AutoDiff(2.5, 'y')
+        >>> x = AutoDiff(1.1, 'x', H=True)
+        >>> y = AutoDiff(2.5, 'y', H=True)
         >>> t = ElementaryFunctions.tan(x*x*y*y)
         >>> np.isclose(t.val, 3.333033)
         True
@@ -273,6 +277,7 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
+    
     @staticmethod
     def power(base,power):
 
@@ -299,8 +304,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
-        >>> b = AutoDiffObject.AutoDiff(3, 'b')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a', H=True)
+        >>> b = AutoDiffObject.AutoDiff(3, 'b', H=True)
         >>> t = ElementaryFunctions.power(a,b)
         >>> print(t.val)
         8
@@ -314,9 +319,7 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der2['ab'], 8.317766166719343)
         True
-
-
-        >>> a = AutoDiffObject.AutoDiff(4, 'a')
+        >>> a = AutoDiffObject.AutoDiff(4, 'a', H=True)
         >>> b = 2
         >>> t = ElementaryFunctions.power(a, b)
         >>> print(t.val)
@@ -476,8 +479,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
-        >>> b = AutoDiffObject.AutoDiff(3, 'b')
+        >>> a = AutoDiffObject.AutoDiff(2, 'a', H=True)
+        >>> b = AutoDiffObject.AutoDiff(3, 'b', H=True)
         >>> t = ElementaryFunctions.log(a*b)
         >>> np.isclose(t.val, 1.79175946923)
         True
@@ -560,8 +563,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> x = AutoDiff(2, 'x')
-        >>> y = AutoDiff(3, 'y')
+        >>> x = AutoDiff(2, 'x', H=True)
+        >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.exp(x*y)
         >>> np.isclose(t.val, 403.428793493)
         True
@@ -627,8 +630,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> x = AutoDiff(2, 'x')
-        >>> y = AutoDiff(3, 'y')
+        >>> x = AutoDiff(2, 'x', H=True)
+        >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.sqrt(x*y)
         >>> np.isclose(t.val, 2.44948974278)
         True
@@ -704,8 +707,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> x = AutoDiff(2, 'x')
-        >>> y = AutoDiff(3, 'y')
+        >>> x = AutoDiff(2, 'x', H=True)
+        >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.sqrt(x*y)
         >>> np.isclose(t.val, 0.880797077978)
         True
@@ -779,8 +782,8 @@ class ElementaryFunctions():
         >>> g = ElementaryFunctions.arcsin(1)
         >>> np.isclose(g.val, np.pi/2)
         True
-        >>> a = AutoDiff(0.4, 'a')
-        >>> b = AutoDiff(0.5, 'b')
+        >>> a = AutoDiff(0.4, 'a', H=True)
+        >>> b = AutoDiff(0.5, 'b', H=True)
         >>> f = ElementaryFunctions.arcsin(a*a*b*b)
         >>> np.isclose(f.val, 0.04001067)
         True
@@ -796,10 +799,11 @@ class ElementaryFunctions():
         True
         '''
 
-        if abs(other.val) > 1:
+        try:
+
+            if abs(other.val) > 1:
             raise ValueError("Value must be in [-1, 1].")
 
-        try:
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
             other_val = other.val
@@ -830,6 +834,8 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
+                if abs(other_value) > 1:
+                    raise ValueError("Value must be in [-1, 1].")
                 return np.arcsin(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
@@ -858,8 +864,8 @@ class ElementaryFunctions():
         >>> g = ElementaryFunctions.arccos(0)
         >>> np.isclose(g.val, np.pi/2)
         True
-        >>> a = AutoDiff(0.1, 'a')
-        >>> b = AutoDiff(0.8, 'b')
+        >>> a = AutoDiff(0.1, 'a', H=True)
+        >>> b = AutoDiff(0.8, 'b', H=True)
         >>> f = ElementaryFunctions.arccos(a*a*b*b)
         >>> np.isclose(f.val, 1.564396)
         True
@@ -875,10 +881,11 @@ class ElementaryFunctions():
         True
         '''
 
-        if abs(other.val) > 1:
-            raise ValueError("Value must be in [-1, 1].")
-
         try:
+
+            if abs(other.val) > 1:
+                raise ValueError("Value must be in [-1, 1].")
+
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
             other_val = other.val
@@ -909,6 +916,8 @@ class ElementaryFunctions():
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
+                if abs(other_value) > 1:
+                    raise ValueError("Value must be in [-1, 1].")
                 return np.arccos(other_value)
             except:
                 ##catch error if passed object is not numeric or autodiff
@@ -934,10 +943,10 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> g = ElementaryFunctions.arctan(1)
-        >>> np.isclose(g.val, np.pi/4)
+        >>> np.isclose(g, np.pi/4)
         True
-        >>> a = AutoDiff(0.3, 'a')
-        >>> b = AutoDiff(0.6, 'b')
+        >>> a = AutoDiff(0.3, 'a', H=True)
+        >>> b = AutoDiff(0.6, 'b', H=True)
         >>> f = ElementaryFunctions.arctan(a*a*b*b)
         >>> np.isclose(f.val, 0.03238867)
         True
