@@ -85,7 +85,11 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         F1[i] = Fcal[i].val        
           
         for j in range(0, m):
-            J_F[i, j] = Fcal[i].der["{}".format(j)]
+            if j in Fcal[i].der:
+                J_F[i, j] = Fcal[i].der["{}".format(j)]
+            else: 
+                J_F[i, j] = 0
+            
             if H == True: 
                 H_F[j, j] = Fcal[i].der2["{}".format(j)]
                 for k in range(0, m):
@@ -132,8 +136,8 @@ def Newton(F, x, criteria = 10**(-8)):
                
         EXAMPLES
         =========
-        >>> F = lambda x: [x[0] * 3 + x[0] * x[2], x[2] - x[0] * x[1] + x[1], x[2]*x[1] - x[0]*10]
-        >>> x = [2,3,9]
+        >>> x = [2,3]
+        >>> F = lambda x: [x[0] * 3, x[1] * x[0]]
         >>> Newton(F,x)
                 
         '''    
@@ -161,10 +165,90 @@ def Newton(F, x, criteria = 10**(-8)):
 
 #Optimization: Minimization for F from R^n to R
 def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 0.0001, plot = False):
-    #*args can take in as argument a matrix as initial guess of the inverse Hessian matrix; 
-    #otherwise, default will use a identity matrix as the initial guess
-    #rate is the learning rate in Gradient Descent method
+
+    '''
+    For optimization problems. Minimize an one-vector function F that takes in 
+    n variables, F: R^n -> R. Optimization methods provided are: newton, quasi-newton-BFGS,
+    and gradient-descent. 
     
+        
+    RETURNS
+    ========
+    All methods returns as a dictionary:
+        "x_min": the minimization point x calculated
+        "min F(x)": the function value evaluated at minimization point x_min
+        "number of iter": number of iterations
+        "trace": a history of all the x_k calculated in the iterations 
+        "Jcobian F(x_min)": First derivative information evaluated at minimization point x_min,
+                    calculated with our Automatic Differentiation library
+        
+    In addtion:
+        
+    "newton" method also output in the dictionary:
+        "Hessian F(x_min)": Hessian matrix evaluated at minimization point x_min, calculated
+                    with our Automatic Differentiation library
+                    
+    "quasi-newton-BFGS" method also output in the dictionary:
+        "Hessian approximate": The approximated Hessian matrix in the last iteration, calculated 
+                    in the BFGS algorithm
+    
+    NOTES
+    =====
+    PRE:
+        - F: A user defined function that returns a length 1 list
+        - x: A length n list of numeric types
+        - method = "quasi-newton-BFGS": Optimization method choice, default
+                to "quasi-newton-BFGS". Other options are "newton" and "gradient-descent"
+        - criteria = 10**(-8): Criteria to stop iterations for the optimization 
+                methods, |x_k-xk_1| < criteria;
+                Note: For "gradient-descent" method, since the method can converge very slowly,
+                the stopping criteria is to stop once reaching 10000 iteration steps or when 
+                |x_k-xk_1| < criteria
+        - *args: args can take in as argument a matrix as initial guess of the 
+                inverse Hessian matrix, for use in the "quasi-newton-BFGS" method;
+                otherwise, default will use a identity matrix as the initial guess
+        - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
+        - plot = False: if plot = True, require len(x) = 1 or len(x) = 2;
+                If plot = True, a plot of the iteration trace will show up
+        
+        
+    POST: 
+        - return a dictionary of minimization information as described above
+    EXAMPLES
+    =========
+    >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    >>> Mini(F3, [1, 0.5])['x_min']
+    array([1., 1.])
+    >>> Mini(F3, [1, 0.5])['min F(x)']
+    array([1.93577378e-21])
+    >>> Mini(F3, [1, 0.5])['Jcobian F(x_min)']
+    array([-1.04250164e-09,  5.55377966e-10])
+    >>> Mini(F3, [1, 0.5])['Hessian approximate']
+    array([[0.49616688, 0.99235036],
+        [0.99235036, 1.98973386]])
+    >>> Mini(F3, [1, 0.5])['number of iter']
+    31
+    
+    >>> Mini(F3, [1, 0.5], "newton")['x_min']
+    array([1., 1.])
+    >>> Mini(F3, [1, 0.5], "newton")['min F(x)']
+    array([0.])
+    >>> Mini(F3, [1, 0.5], "newton")['Jcobian F(x_min)']
+    array([0., 0.])
+    >>> Mini(F3, [1, 0.5], "newton")['Hessian F(x_min)']
+    array([[ 802., -400.],
+        [-400.,  200.]])
+    >>> Mini(F3, [1, 0.5], "newton")['number of iter']
+    2
+    
+    >>> Mini(F3, [1, 0.9], "gradient-descent")['x_min']
+    array([0.97345684, 0.9475103 ])
+    >>> Mini(F3, [1, 0.9], "gradient-descent")['min F(x)']
+    array([0.0007057])
+    >>> Mini(F3, [1, 0.9], "gradient-descent")['number of iter']
+    10000
+    
+    '''
     
     #Catch errors:
     if len(F(x))!= 1:
