@@ -132,8 +132,8 @@ def Newton(F, x, criteria = 10**(-8)):
                
         EXAMPLES
         =========
-        >>> F = lambda x: [x[0] * 3 + x[1] * x[2], x[2] - x[0] * x[1] + x[0]]
-        >>> x = [2,3,1]
+        >>> F = lambda x: [x[0] * 3 + x[0] * x[2], x[2] - x[0] * x[1] + x[1], x[2]*x[1] - x[0]*10]
+        >>> x = [2,3,9]
         >>> Newton(F,x)
                 
         '''    
