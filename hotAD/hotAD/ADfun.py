@@ -35,7 +35,7 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         =========
         >>> F = lambda x: [x[0] * 3 + x[1] * x[2], x[2] - x[0] * x[1] + x[0]]
         >>> print(J_F(F, [2, 3, 4])[0])
-        array([18.,  0.])
+        [18.,  0.]
         >>> print(J_F(F, [2, 3, 4])[1])
         array([[ 3.,  4.,  3.], [-2., -2.,  1.]])
                         
