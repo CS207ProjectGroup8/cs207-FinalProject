@@ -47,7 +47,10 @@ class AutoDiff():
             raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
 
         if isinstance(varName, str):
-            self.varName = varName
+            if len(varName) == 1:
+                self.varName = varName
+            else:
+                raise TypeError("Please enter a single character as the variable name.")
         else:
             raise TypeError("Please enter a string for the name of the AutoDiff object.")
 
