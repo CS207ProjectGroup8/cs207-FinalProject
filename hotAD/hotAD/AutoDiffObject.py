@@ -92,7 +92,8 @@ class AutoDiff():
         
         >>> l = AutoDiff(2,'z')
         >>> m = AutoDiff(2,'x')
-        >>> l=m
+        >>> l == m
+        False
         
         '''
         if self.H == True:
@@ -907,24 +908,6 @@ if __name__ == "__main__":
 
     # m = -x
     # print(m.val, m.der)
-
-
-
-    >>> x = AutoDiff(1, 'x')
-    >>> y = AutoDiff(2, 'y')
-    >>> t = x - y
-    >>> print(t.val)
-    -1
-    >>> print(t.der['x'])
-    1
-    >>> print(t.der['y'])
-    -1
-    >>> a = AutoDiff(1, 'a')
-    >>> b = 33
-    >>> t = a - b
-    >>> print(t.val, t.der)
-    -32 {'a': 1}
-
 
 '''
 Notes
