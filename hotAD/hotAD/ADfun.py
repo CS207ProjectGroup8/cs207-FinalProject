@@ -1,7 +1,8 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from hotAD.AutoDiffObject import AutoDiff
+from hotAD.AutoDiffObject import *
+from hotAD.ElementaryFunctions import *
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
