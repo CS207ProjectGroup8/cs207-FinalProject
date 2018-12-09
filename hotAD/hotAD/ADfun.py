@@ -85,7 +85,11 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         F1[i] = Fcal[i].val        
           
         for j in range(0, m):
-            J_F[i, j] = Fcal[i].der["{}".format(j)]
+            if j in Fcal[i].der:
+                J_F[i, j] = Fcal[i].der["{}".format(j)]
+            else: 
+                J_F[i, j] = 0
+            
             if H == True: 
                 H_F[j, j] = Fcal[i].der2["{}".format(j)]
                 for k in range(0, m):
