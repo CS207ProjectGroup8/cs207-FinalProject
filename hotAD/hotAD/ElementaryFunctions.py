@@ -304,8 +304,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a', H=True)
-        >>> b = AutoDiffObject.AutoDiff(3, 'b', H=True)
+        >>> a = AutoDiff(2, 'a', H=True)
+        >>> b = AutoDiff(3, 'b', H=True)
         >>> t = ElementaryFunctions.power(a,b)
         >>> print(t.val)
         8
@@ -319,7 +319,7 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der2['ab'], 8.317766166719343)
         True
-        >>> a = AutoDiffObject.AutoDiff(4, 'a', H=True)
+        >>> a = AutoDiff(4, 'a', H=True)
         >>> b = 2
         >>> t = ElementaryFunctions.power(a, b)
         >>> print(t.val)
@@ -462,7 +462,7 @@ class ElementaryFunctions():
     def log(other):
 
         ''' Returns the another AutoDiff object or numeric value after
-        performing logrismic operation on the input
+        performing logarithm operation on the input
 
         RETURNS
         ========
@@ -479,8 +479,8 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a', H=True)
-        >>> b = AutoDiffObject.AutoDiff(3, 'b', H=True)
+        >>> a = AutoDiff(2, 'a', H=True)
+        >>> b = AutoDiff(3, 'b', H=True)
         >>> t = ElementaryFunctions.log(a*b)
         >>> np.isclose(t.val, 1.79175946923)
         True
