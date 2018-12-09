@@ -1,7 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-# from . import AutoDiffObject
-from AutoDiffObject_testingder2 import AutoDiff
+from src.source_code.AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -17,36 +16,47 @@ class ElementaryFunctions():
 
         ''' Returns the another AutoDiff object or numeric value after
         performing sine operation on the input
-
         RETURNS
         ========
         A new instance of AutoDiff object or numeric value
-
         NOTES
         =====
         PRE:
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance or a numeric value
-
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
+        >>> a = AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.sin(a)
         >>> np.isclose(t.val, 0.9092974268256817)
         True
         >>> np.isclose(t.der['a'], -0.4161468365471424)
         True
-
-        >>> a = AutoDiffObject.AutoDiff(1, 'a')
+        >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.sin(a * b)
         >>> np.isclose(t.val, 0.9999118601072672)
         True
         >>> np.isclose(t.der['a'], -0.4381326583609628)
         True
+        >>> x = AutoDiff(4, 'x')
+        >>> y = AutoDiff(3, 'y')
+        >>> t = ElementaryFunctions.sin(x*x*y*y)
+        >>> np.isclose(t.val, -0.4910216)
+        True
+        >>> np.isclose(t.der['x'], 62.72261)
+        True
+        >>> np.isclose(t.der['y'], 83.63015)
+        True
+        >>> np.isclose(t.der2['x'], 2561.137)
+        True
+        >>> np.isclose(t.der2['y'], 4553.132)
+        True
+        >>> np.isclose(t.der2['xy'], 3435.756)
+        True
+        >>>
         '''
 
         try:
@@ -54,10 +64,28 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val = other.val
             other_der = {}
-            sin_value,cos_for_der = np.sin(other_val), np.cos(other_val)
+            other_der2 = {}
+            sin_value,cos_value = np.sin(other_val), np.cos(other_val)
+
+            # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = cos_for_der * derivative
-            return AutoDiffObject.AutoDiff(sin_value, "dummy", other_der)
+                other_der[key] = cos_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = -1*other.der[key]*sin_value*other.der[key] + cos_value*other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = -1*other.der[first_var]*other.der[second_var]*sin_value + cos_value*other.der2[key]
+
+            return AutoDiff(sin_value, "dummy", other_der, other_der2)
+
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -73,30 +101,25 @@ class ElementaryFunctions():
 
         ''' Returns the another AutoDiff object or numeric value after
         performing cosine operation on the input
-
         RETURNS
         ========
         A new instance of AutoDiff object or numeric value
-
         NOTES
         =====
         PRE:
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance or a numeric value
-
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
+        >>> a = AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.cos(a)
         >>> np.isclose(t.val, -0.4161468365471424)
         True
         >>> np.isclose(t.der['a'], -0.9092974268256817)
         True
-
-        >>> a = AutoDiffObject.AutoDiff(1, 'a')
+        >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.cos(a * b)
         >>> np.isclose(t.val, -0.013276747223059479)
@@ -110,10 +133,27 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val = other.val
             other_der = {}
-            cos_value,sin_for_der = np.cos(other_val), -np.sin(other_val)
+            other_der2 = {}
+            cos_value,sin_value = np.cos(other_val), np.sin(other_val)
             for key,derivative in other.der.items():
-                other_der[key] = sin_for_der * derivative
-            return AutoDiffObject.AutoDiff(cos_value, "dummy", other_der)
+                other_der[key] = -1 * sin_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = -1*other.der[key]*cos_value*other.der[key] + -1*sin_value*other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = -other.der[first_var]*other.der[second_var]*cos_value + -1*sin_value*other.der2[key]
+
+            return AutoDiff(cos_value, "dummy", other_der, other_der2)
+
+
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -129,30 +169,25 @@ class ElementaryFunctions():
 
         ''' Returns the another AutoDiff object or numeric value after
         performing tangent operation on the input
-
         RETURNS
         ========
         A new instance of AutoDiff object or numeric value
-
         NOTES
         =====
         PRE:
              - EITHER: another instance of AutoDiff class
                  OR: float
-
         POST:
              - Return a new Autodiff class instance or a numeric value
-
         EXAMPLES
         =========
-        >>> a = AutoDiffObject.AutoDiff(2, 'a')
+        >>> a = AutoDiff(2, 'a')
         >>> t = ElementaryFunctions.tan(a)
         >>> np.isclose(t.val, -2.185039863261519)
         True
         >>> np.isclose(t.der['a'], 5.774399204041917)
         True
-
-        >>> a = AutoDiffObject.AutoDiff(1, 'a')
+        >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = ElementaryFunctions.tan(a * b)
         >>> np.isclose(t.val, -75.31301480008509)
@@ -169,13 +204,30 @@ class ElementaryFunctions():
             ##proper operation to the passed in object
             other_val= other.val
             other_der = {}
-            tan_value, tan_for_der = np.tan(other_val), 1/(np.cos(other_val)**2)
+            other_der2 = {}
+            tan_value, sec2_value = np.tan(other_val), 1/(np.cos(other_val)**2)
             if abs(tan_value) > 10**16:
-                print("Input value should not be pi/2 + 2*pi*k, k interger ")
+                print("Input value should not be pi/2 + 2*pi*k, k interger")
                 raise ValueError
+
+            # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = tan_for_der * derivative
-            return AutoDiffObject.AutoDiff(tan_value, "dummy", other_der)
+                other_der[key] = sec2_value * derivative
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = 2*other.der[key]*other.der[key]*sec2_value*tan_value + sec2_value*other.der2[key]
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = 2*other.der[first_var]*other.der[second_var]*sec2_value*tan_value + sec2_value*other.der2[key]
+
+            return AutoDiff(tan_value, "dummy", other_der, other_der2)
 
         except:
             try:
@@ -192,7 +244,6 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
-
     @staticmethod
     def power(base,power):
 
@@ -677,6 +728,239 @@ class ElementaryFunctions():
                 raise AttributeError
 
 
+    @staticmethod
+    def arcsin(other):
+
+        '''
+        Returns the another AutoDiff object or numeric value after
+        performing the arcsine operation on the input
+        RETURNS
+        ========
+        A new instance of AutoDiff object or numeric value
+        NOTES
+        =====
+        PRE:
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             - Value must be in [-1, 1]
+        POST:
+             - Return a new Autodiff class instance or a numeric value
+        EXAMPLES
+        =========
+        >>> g = ElementaryFunctions.arcsin(1)
+        >>> np.isclose(g.val, np.pi/2)
+        True
+        >>> a = AutoDiff(0.4, 'a')
+        >>> b = AutoDiff(0.5, 'b')
+        >>> f = ElementaryFunctions.arcsin(a*a*b*b)
+        >>> np.isclose(f.val, 0.04001067)
+        True
+        >>> np.isclose(f.der['a'], 0.2001602)
+        True
+        >>> np.isclose(f.der['b'], 0.1601282)
+        True
+        >>> np.isclose(f.der2['a'], 0.5020005)
+        True
+        >>> np.isclose(f.der2['b'], 0.3212803)
+        True
+        >>> np.isclose(f.der2['ab'], 0.8019208)
+        True
+        '''
+
+        if abs(other.val) > 1:
+            raise ValueError("Value must be in [-1, 1]")
+
+        try:
+            ##try to find if the passed in other object is autodiff object and do
+            ##proper operation to the passed in object
+            other_val = other.val
+            other_der = {}
+            other_der2 = {}
+            arcsin_value = np.arcsin(other_val)
+
+            # first derivative
+            for key,derivative in other.der.items():
+                other_der[key] = derivative / np.sqrt(1 - other_val**2)
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = (other.der2[key]/np.sqrt(1-other_val**2)) + (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = (other.der2[key]*np.sqrt(1-other_val**2) + (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
+
+            return AutoDiff(arcsin_value, "dummy", other_der, other_der2)
+
+        except:
+            try:
+                ##try to check if the passed in other object is numeric value
+                other_value = other.real
+                return np.arcsin(other_value)
+            except:
+                ##catch error if passed object is not numeric or autodiff
+                print("illegal argument. Needs to be either autodiff object or numeric value")
+                raise AttributeError
+
+    @staticmethod
+    def arccos(other):
+
+        '''
+        Returns the another AutoDiff object or numeric value after
+        performing the arccosine operation on the input
+        RETURNS
+        ========
+        A new instance of AutoDiff object or numeric value
+        NOTES
+        =====
+        PRE:
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+             - Value must be in [-1, 1]
+        POST:
+             - Return a new Autodiff class instance or a numeric value
+        EXAMPLES
+        =========
+        >>> g = ElementaryFunctions.arccos(0)
+        >>> np.isclose(g.val, np.pi/2)
+        True
+        >>> a = AutoDiff(0.1, 'a')
+        >>> b = AutoDiff(0.8, 'b')
+        >>> f = ElementaryFunctions.arccos(a*a*b*b)
+        >>> np.isclose(f.val, 1.564396)
+        True
+        >>> np.isclose(f.der['a'], -0.1280026)
+        True
+        >>> np.isclose(f.der['b'], -0.01600033)
+        True
+        >>> np.isclose(f.der2['a'], -1.280131)
+        True
+        >>> np.isclose(f.der2['b'], -0.02000205)
+        True
+        >>> np.isclose(f.der2['ab'], -0.3200197)
+        True
+        '''
+
+        if abs(other.val) > 1:
+            raise ValueError("Value must be in [-1, 1]")
+
+        try:
+            ##try to find if the passed in other object is autodiff object and do
+            ##proper operation to the passed in object
+            other_val = other.val
+            other_der = {}
+            other_der2 = {}
+            arccos_value = np.arccos(other_val)
+
+            # first derivative
+            for key,derivative in other.der.items():
+                other_der[key] = (-1*derivative) / np.sqrt(1 - other_val**2)
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = (-1*other.der2[key]/np.sqrt(1-other_val**2)) - (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = (-1*other.der2[key]*np.sqrt(1-other_val**2) - (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
+
+            return AutoDiff(arccos_value, "dummy", other_der, other_der2)
+
+        except:
+            try:
+                ##try to check if the passed in other object is numeric value
+                other_value = other.real
+                return np.arccos(other_value)
+            except:
+                ##catch error if passed object is not numeric or autodiff
+                print("illegal argument. Needs to be either autodiff object or numeric value")
+                raise AttributeError
+
+    @staticmethod
+    def arctan(other):
+
+        '''
+        Returns the another AutoDiff object or numeric value after
+        performing the arctangent operation on the input
+        RETURNS
+        ========
+        A new instance of AutoDiff object or numeric value
+        NOTES
+        =====
+        PRE:
+             - EITHER: another instance of AutoDiff class
+                 OR: float
+        POST:
+             - Return a new Autodiff class instance or a numeric value
+        EXAMPLES
+        =========
+        >>> g = ElementaryFunctions.arctan(1)
+        >>> np.isclose(g.val, np.pi/4)
+        True
+        >>> a = AutoDiff(0.3, 'a')
+        >>> b = AutoDiff(0.6, 'b')
+        >>> f = ElementaryFunctions.arctan(a*a*b*b)
+        >>> np.isclose(f.val, 0.03238867)
+        True
+        >>> np.isclose(f.der['a'], 0.2032113)
+        True
+        >>> np.isclose(f.der['b'], 0.1016057)
+        True
+        >>> np.isclose(f.der2['a'], 0.7162248)
+        True
+        >>> np.isclose(f.der2['b'], 0.1790562)
+        True
+        >>> np.isclose(f.der2['ab'], 0.7177349)
+        True
+        '''
+
+        try:
+            ##try to find if the passed in other object is autodiff object and do
+            ##proper operation to the passed in object
+            other_val = other.val
+            other_der = {}
+            other_der2 = {}
+            arctan_value = np.arctan(other_val)
+
+            # first derivative
+            for key,derivative in other.der.items():
+                other_der[key] = other.der[key] / (1 + other_val**2)
+
+            # second derivative
+            # loop through all keys in second derivative dictionary
+            for key, derivative2 in other.der2.items():
+                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                # i.e., f_xx --> key == x and x in first derivative dictionary
+                if key in other.der.keys():
+                    other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[key]*other.der[key]*other_val)/((1+other_val**2)**2)
+                else:
+                    # split the second derivative dictionary key into the two variables
+                    first_var = key[0]
+                    second_var = key[1]
+                    other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[first_var]*other.der[second_var]*other_val)/((1+other_val**2)**2)
+
+            return AutoDiff(arctan_value, "dummy", other_der, other_der2)
+
+        except:
+            try:
+                ##try to check if the passed in other object is numeric value
+                other_value = other.real
+                return np.arctan(other_value)
+            except:
+                ##catch error if passed object is not numeric or autodiff
+                print("illegal argument. Needs to be either autodiff object or numeric value")
+                raise AttributeError
+
 if __name__ == "__main__":
     x = AutoDiff(2, "x")
     y = AutoDiff(3, "y")
@@ -706,3 +990,6 @@ if __name__ == "__main__":
 
 #    f6 = ElementaryFunctions.sin("thirty")
 #    print(f6.val, f6.der)
+
+    f = ElementaryFunctions.tan(x*x*y*y)
+    print(f.val, f.der, f.der2)
