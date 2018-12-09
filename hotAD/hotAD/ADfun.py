@@ -33,14 +33,14 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
              - Return [F(x), J_F(x)] or [F(x), J_F(x), H_F(x)] as described above
         EXAMPLES
         =========
-        >>>def F(x):
+        >>> def F(x):
         >>>    F1 = x[0] * 3 + x[1] * x[2]
         >>>    F2 = x[2] - x[0] * x[1] + x[0]
         >>>    return [F1, F2]
         >>>print(J_F(F, [2, 3, 4]))
         [array([18.,  0.]), array([[ 3.,  4.,  3.], [-2., -2.,  1.]])]
         
-        >>>def F2(x):
+        >>> def F2(x):
         >>>    F1 = x[0] * 3 + x[1] * x[2] + x[3]*x[3]
         >>>    return [F1]
         >>>print(J_F(F2, [2, 3, 4, 8], H = True))
