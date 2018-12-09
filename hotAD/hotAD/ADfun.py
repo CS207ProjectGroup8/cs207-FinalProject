@@ -139,8 +139,7 @@ def Newton(F, x, criteria = 10**(-8)):
         >>> import numpy as np
         >>> x = [0.2,0.1]
         >>> F = lambda x: [x[0] * x[0], x[1] + x[0]]
-        >>> np.isclose(Newton(F,x)['x_min'][0], 1.46864921e-162)
-        True
+        >>> Newton(F,x)
         
         '''    
     x_k = np.array(x)
