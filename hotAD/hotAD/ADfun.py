@@ -57,13 +57,11 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
     m = len(x)
     
     if H != True and H != False:
-        print("H needs to be either True or False!")
-        raise ValueError
+        raise ValueError ("H needs to be either True or False!")
     
     #If H = True: Require len(F) = 1, to output the Hessian matrix
     if H == True and n != 1:
-        print("F needs to be a function from R^n to R!")
-        raise ValueError
+        raise ValueError ("F needs to be a function from R^n to R!")
     
     #Convert x to AutoDiffObject
     xCal = [0.0] * m
@@ -114,8 +112,7 @@ def Newton(F, x, criteria = 10**(-8)):
     i = 0
     
     if len(F(x)) != len(x):
-        print("Need to be a system of n functions with n unknowns!")
-        raise ValueError
+        raise ValueError ("Need to be a system of n functions with n unknowns!")
         
     else: 
         while rel_step > criteria:
