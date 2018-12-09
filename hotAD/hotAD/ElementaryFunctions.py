@@ -1,7 +1,7 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from hotAD.AutoDiffObject import AutoDiff
-
+# from hotAD.AutoDiffObject import AutoDiff
+from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -741,9 +741,9 @@ class ElementaryFunctions():
         >>> t = ElementaryFunctions.logit(x*y)
         >>> np.isclose(t.val, 0.9975274)
         True
-        >>> np.isclose(t.der['x'], 0.104993585404)
+        >>> np.isclose(t.der['x'], 0.0073995278740801446)
         True
-        >>> np.isclose(t.der2['x'], -0.0799625010562)
+        >>> np.isclose(t.der2['x'], -0.022088806158422743)
         True
         '''
         try:
@@ -1039,3 +1039,11 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
+
+
+if __name__ == "__main__":
+    a = AutoDiff(2,"a",H=True)
+    b = AutoDiff(3,"b", H=True)
+
+    f = ElementaryFunctions.logit(a*b)
+    print(f.val,f.der,f.der2)
