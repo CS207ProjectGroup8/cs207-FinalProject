@@ -987,9 +987,9 @@ class ElementaryFunctions():
         >>> f = ElementaryFunctions.arctan(a*a*b*b)
         >>> np.isclose(f.val, 0.03238867)
         True
-        >>> np.isclose(f.der['a'], 0.2032113)
+        >>> np.isclose(f.der['a'], 0.21577348962153492)
         True
-        >>> np.isclose(f.der['b'], 0.1016057)
+        >>> np.isclose(f.der['b'], 0.10788674481076746)
         True
         >>> np.isclose(f.der2['a'], 0.7162248)
         True
