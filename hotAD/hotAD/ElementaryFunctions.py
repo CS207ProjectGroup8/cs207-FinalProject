@@ -319,11 +319,11 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['b'], 5.545177444479562)
         True
-        >>> np.isclose(t.der2['a'], 0)
+        >>> np.isclose(t.der2['a'], 12)
         True
         >>> np.isclose(t.der2['b'], 3.843624111345611)
         True
-        >>> np.isclose(t.der2['ab'], 8.317766166719343)
+        >>> np.isclose(t.der2['ab'], 12.317766166719343)
         True
         '''
 

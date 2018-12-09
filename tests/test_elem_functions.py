@@ -24,20 +24,20 @@ def test_sin_deriv_y():
 	assert np.isclose(f.der['y'], 1.6323282472535678);
 
 def test_sin_deriv2_x():
-	x = AutoDiff(4, "x")
-	y = AutoDiff(5, "y")
+	x = AutoDiff(4, "x", H=True)
+	y = AutoDiff(5, "y", H=True)
 	f = ef.sin(x*y)
 	assert np.isclose(f.der2['x'], -22.82363126819069);
 
 def test_sin_deriv2_y():
-	x = AutoDiff(4, "x")
-	y = AutoDiff(5, "y")
+	x = AutoDiff(4, "x", H=True)
+	y = AutoDiff(5, "y", H=True)
 	f = ef.sin(x*y)
 	assert np.isclose(f.der2['y'], -14.607124011642043);
 
 def test_sin_deriv2_xy():
-	x = AutoDiff(4, "x")
-	y = AutoDiff(5, "y")
+	x = AutoDiff(4, "x", H=True)
+	y = AutoDiff(5, "y", H=True)
 	f = ef.sin(x*y)
 	assert np.isclose(f.der2['xy'], -17.85082295273916);
 
