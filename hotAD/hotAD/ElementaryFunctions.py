@@ -7,7 +7,7 @@ class ElementaryFunctions():
     ''' Create objects that support elementary functions on AutoDiff objects and return AutoDiff objects
 
     EXAMPLE:
-            x = AutoDiffObject.AutoDiff(3, "x")
+            x = AutoDiff(3, "x")
             new_x = ElementaryFunctions.sin(x)
     '''
 
