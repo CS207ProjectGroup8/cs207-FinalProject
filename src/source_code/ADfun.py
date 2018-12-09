@@ -7,7 +7,7 @@ import ElementaryFunctions as ef
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
-    n = len(F)
+    n = len(F(x))
     m = len(x)
     
     if H != True and H != False:
@@ -15,7 +15,7 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         raise ValueError
     
     #If H = True: Require len(F) = 1, to output the Hessian matrix
-    if H == True and len(F) != 1:
+    if H == True and n != 1:
         print("F needs to be a function from R^n to R!")
         raise ValueError
     
@@ -30,7 +30,7 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
     J_F = np.zeros((n, m))                     #to store Jacobian matrix information later
     F1 = np.array([0.0]*n)                      #to store function value later
     if H == True: 
-        H_F = np.zeros((n, m))                 
+        H_F = np.zeros((m, m))                 
 
     Fcal = F(xCal)    #This is a list of AutoDiffObjects, [F0(xCal), F1[xCal], ... F(n-1)[xCal]]
 
@@ -62,37 +62,39 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
 #Optimization & Root Finding
 #full Newton: root-finding
 #Require len(F) = len(x)
-def Newton(F, x, criteria = 10^(-10)):
-    x_k = x
+def Newton(F, x, criteria = 10**(-8)):
+    x_k = np.array(x)
     rel_step = 1
+    i = 0
     
-    if len(F) != len(x):
+    if len(F(x)) != len(x):
         print("Need to be a system of n functions with n unknowns!")
         raise ValueError
         
     else: 
         while rel_step > criteria:
-            JF_k = J_F(F, x_k)
+            JF_k = J_F(F, list(x_k))
             F_k = JF_k[0]
             J_k = JF_k[1]
             deltaX = np.linalg.solve(J_k, -F_k)
-            x_k = x_k + deltaX
             rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
+            x_k = x_k + deltaX
+            i += 1
         
-        return x_k
+        return {"x_min: ": x_k, "F(x_min): ": J_F(F, list(x_k))[0], "number of iter: ": i}
 
 
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 0.1, plot = False):
+def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 0.0001, plot = False):
     #*args can take in as argument a matrix as initial guess of the inverse Hessian matrix; 
     #otherwise, default will use a identity matrix as the initial guess
     #rate is the learning rate in Gradient Descent method
     
     
     #Catch errors:
-    if len(F)!= 1:
+    if len(F(x))!= 1:
         print("F needs to be a function from R^n to R!")
         raise ValueError
     
@@ -109,84 +111,93 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 
     
     
     if method == "newton":
-        x_k = x 
+        x_k = np.array(x)
         x_trace = x_k
         i = 0
         rel_step = 1
         
-        while rel_step > criteria:
-            JH_k = JH_F(F, x_k, H = True) 
+        xk_1 = 100*x_k
+    
+        while np.linalg.norm(x_k-xk_1)>criteria:
+            
+            JH_k = J_F(F, list(x_k), H = True) 
         
-            J_k = JH_k[1]
+            J_k = JH_k[1][0]
             H_k = JH_k[2]   
         
             deltaX = np.linalg.solve(H_k, -J_k)
+            xk_1 = x_k
             x_k = x_k + deltaX
             rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
             
             x_trace = np.vstack([x_trace, x_k])
             i += 1
         
-        JH_k = JH_F(F, x_k, H = True) 
+        JH_k = J_F(F, list(x_k), H = True) 
             
-        result = {"x_min": x_k, "min F(x)": JH_k[0], "Jcobian F(x_min)": JH_k[1], "Hessian F(x_min)": JH_k[2], "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JH_k[0], "Jcobian F(x_min)": JH_k[1][0], "Hessian F(x_min)": JH_k[2], "number of iter": i,  "trace":x_trace}
    
         
     if method == "quasi-newton-BFGS":  #H_k is Inverse Hessian approximation
-        x_k = x
+        x_k = np.array(x)
+
         x_trace = x_k
         i = 0
         rel_step = 1
-        I = np.eye(len(x),len(F))
+        I = np.eye(len(x),len(x))
         
         if len(args) != 0:
             H_k = args[0]
         else: 
             H_k = I
         
-        JF_k = J_F(F, x_k)
-        J_k = JF_k[1]
-        while rel_step > criteria: 
+        JF_k = J_F(F, list(x_k))
+        J_k = JF_k[1][0]
+        
+        xk_1 = 100*x_k
+        
             
+        while np.linalg.norm(x_k-xk_1)>criteria:
             deltaX = - np.matmul(H_k, J_k)
+            xk_1 = x_k
             x_k = x_k + deltaX
+            
             
             x_trace = np.vstack([x_trace, x_k])
             
             
-            JF_k2 = J_F(F, x_k)
-            J_k2 = JF_k2[1]
+            JF_k2 = J_F(F, list(x_k))
+            J_k2 = JF_k2[1][0]
             
             yk = J_k2 - J_k    #vector
             rouk = 1/(yk.T @ deltaX)    #number
             H_k = np.matmul(np.matmul((I - np.outer((deltaX * rouk), yk.T)), H_k), (I - np.outer((rouk * yk), deltaX.T))) + np.outer((rouk * deltaX), deltaX.T) 
         
             J_k = J_k2
-            rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
             i += 1
         
-        result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jcobian F(x_min)": JF_k2[1], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jcobian F(x_min)": JF_k2[1][0], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
         
         
     if method == "gradient-descent":
         x_k = np.array(x)
         x_trace = x_k
         i=0
-        xk_1 = np.array([x[0]+10, x[1]+10])
-        while i < 2000 and np.linalg.norm(xk-xk_1)>criteria:
+        xk_1 = 100*x_k
+        while i < 5000 and np.linalg.norm(x_k-xk_1)>criteria:
             JF_k = J_F(F, x_k)
-            J_k = JF_k[1]
+            J_k = JF_k[1][0]
             
             sk = -J_k
-            xk_1 = xk
-            xk = xk + rate * sk
+            xk_1 = x_k
+            x_k = x_k + rate * sk
             
             x_trace = np.vstack([x_trace, x_k])
             i += 1
             
         JF_k = J_F(F, x_k)
             
-        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jcobian F(x_min)": JF_k[1], "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jcobian F(x_min)": JF_k[1][0], "number of iter": i,  "trace":x_trace}
         
     if len(x) == 2: 
         if plot == True:
@@ -201,12 +212,12 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 
             ymax = np.amax(ly)
             delty = ymax - ymin
             
-            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, int(30*1.4*deltx))
-            y = np.linspace(ymin-delty*0.2, ymax+delty*0.2, int(30*1.4*deltx))
+            x = np.linspace(xmin-deltx*0.2, xmax+deltx*0.2, 100)
+            y = np.linspace(ymin-delty*0.2, ymax+delty*0.2, 100)
 
             plt.figure(figsize = (12, 8))
             X, Y = np.meshgrid(x, y)
-            Z = F([X, Y])
+            Z = F([X, Y])[0]
             plt.contour(X, Y, Z, 100, cmap='RdGy');
             
             plt.plot(lx, ly, 'go-')
@@ -217,7 +228,8 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10^(-10), *args, rate = 
         if plot == True:
             
             trace = result["trace"]
-            lx = trace.T
+            lx = trace.T[0]
+            print(lx)
             ly = []
             for i in range(0, len(lx)):
                 ly.append(F([lx[i]]))
