@@ -228,14 +228,23 @@ class ElementaryFunctions():
         12
         >>> np.isclose(t.der['b'], 5.545177444479562)
         True
+        >>> np.isclose(t.der2['a'], 0)
+        True
+        >>> np.isclose(t.der2['b'], 3.843624111345611)
+        True
+        >>> np.isclose(t.der2['ab'], 8.317766166719343)
+        True
+
 
         >>> a = AutoDiffObject.AutoDiff(4, 'a')
-        >>> b = 0.5
+        >>> b = 2
         >>> t = ElementaryFunctions.power(a, b)
         >>> print(t.val)
-        2.0
+        4.0
         >>> print(t.der['a'])
-        0.25
+        4
+        >>> print(t.der2['a'])
+        2
         '''
 
         try:
@@ -388,11 +397,20 @@ class ElementaryFunctions():
         EXAMPLES
         =========
         >>> a = AutoDiffObject.AutoDiff(2, 'a')
-        >>> t = ElementaryFunctions.log(a)
-        >>> np.isclose(t.val, 0.6931471805599453)
+        >>> b = AutoDiffObject.AutoDiff(3, 'b')
+        >>> t = ElementaryFunctions.log(a*b)
+        >>> np.isclose(t.val, 1.79175946923)
         True
-        >>> print(t.der['a'])
-        0.5
+        >>> np.isclose(t.der['a'],0.5)
+        True
+        >>> np.isclose(t.der['b'], 1/3)
+        True
+        >>> np.isclose(t.der2['a'], -0.25)
+        True
+        >>> np.isclose(t.der2['b'], -0.1111111111111111)
+        True
+        >>> np.isclose(t.der2['ab'], 0)
+        True
         '''
 
         try:
@@ -417,12 +435,12 @@ class ElementaryFunctions():
                 # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
                 # i.e., f_xx --> key == x and x in first derivative dictionary
                 if key in other.der.keys():
-                    other_der2[key] = -1/(other_val*other_val) * other.der[key] * other.der[key] + 1/other_val * other.der2[key]
+                    other_der2[key] = -1.0/other.val**2 * other.der[key] * other.der[key] + 1.0/other_val * other.der2[key]
                 else:
                     # split the second derivative dictionary key into the two variables
                     first_var = key[0]
                     second_var = key[1]
-                    other_der2[key] = -1/(other_val*other_val) * other.der[first_var] * other.der[second_var] + 1/other_val * other.der2[key]
+                    other_der2[key] = -1.0/other.val**2 * other.der[first_var] * other.der[second_var] + 1.0/other_val * other.der2[key]
 
             return AutoDiff(log_value, "dummy", other_der,other_der2)
 
@@ -464,18 +482,18 @@ class ElementaryFunctions():
         =========
         >>> x = AutoDiff(2, 'x')
         >>> y = AutoDiff(3, 'y')
-        >>> t = ElementaryFunctions.power(x*y,x*y)
-        >>> np.isclose(t.val, 46656)
+        >>> t = ElementaryFunctions.exp(x*y)
+        >>> np.isclose(t.val, 403.428793493)
         True
-        >>> np.isclose(t.der['x'], 390757)
+        >>> np.isclose(t.der['x'], 1210.28638048)
         True
-        >>> np.isclose(t.der['y'], 260505)
+        >>> np.isclose(t.der['y'], 806.857586985)
         True
-        >>> np.isclose(t.der2['x'], 3342383)
+        >>> np.isclose(t.der2['x'], 3630.85914143)
         True
-        >>> np.isclose(t.der2['y'], 1485637)
+        >>> np.isclose(t.der2['y'], 1613.71517397)
         True
-        >>> np.isclose(t.der2['xy'], 2358707)
+        >>> np.isclose(t.der2['xy'], 2824.00155445)
         True
         '''
 
@@ -509,6 +527,7 @@ class ElementaryFunctions():
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
 
+    @staticmethod
     def sqrt(other):
         ''' Returns the another AutoDiff object or numeric value after
         performing square root operation on the input
@@ -528,6 +547,21 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
+        >>> x = AutoDiff(2, 'x')
+        >>> y = AutoDiff(3, 'y')
+        >>> t = ElementaryFunctions.sqrt(x*y)
+        >>> np.isclose(t.val, 2.44948974278)
+        True
+        >>> np.isclose(t.der['x'], 0.61237243569579458)
+        True
+        >>> np.isclose(t.der['y'], 0.40824829046386307)
+        True
+        >>> np.isclose(t.der2['x'], -0.15309310892394862)
+        True
+        >>> np.isclose(t.der2['y'], -0.06804138174397717)
+        True
+        >>> np.isclose(t.der2['xy'], 0.10206207261596578)
+        True
         '''
         try:
             ##try to find if the passed in other object is autodiff object and do
@@ -543,7 +577,7 @@ class ElementaryFunctions():
 
             # first derivative
             for key,derivative in other.der.items():
-                other_der[key] = 1/2 * 1/np.sqrt(other.val) * other.der[key]
+                other_der[key] = 1.0/2 * 1.0/np.sqrt(other.val) * other.der[key]
 
             # second derivative
             # loop through all keys in second derivative dictionary
@@ -551,12 +585,12 @@ class ElementaryFunctions():
                 # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
                 # i.e., f_xx --> key == x and x in first derivative dictionary
                 if key in other.der.keys():
-                    other_der2[key] = -1/4 * 1/other.val**(3/2) * other.der[key]**2 + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
+                    other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key]**2 + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
                 else:
                     # split the second derivative dictionary key into the two variables
                     key1 = key[0]
                     key2 = key[1]
-                    other_der2[key] = -1/4 * 1/other.val**(3/2) * other.der[key1] * other.der[key2] + 1/2 * 1/np.sqrt(other.val) * other.der2[key]
+                    other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key1] * other.der[key2] + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
 
             return AutoDiff(sqrt_value, "dummy", other_der, other_der2)
 
@@ -570,6 +604,7 @@ class ElementaryFunctions():
                 print("illegal argument. Needs to be either autodiff object or numeric value")
                 raise AttributeError
 
+    @staticmethod
     def logit(other):
         ''' Returns the another AutoDiff object or numeric value after
         performing square root operation on the input
@@ -589,6 +624,15 @@ class ElementaryFunctions():
 
         EXAMPLES
         =========
+        >>> x = AutoDiff(2, 'x')
+        >>> y = AutoDiff(3, 'y')
+        >>> t = ElementaryFunctions.sqrt(x*y)
+        >>> np.isclose(t.val, 0.880797077978)
+        True
+        >>> np.isclose(t.der['x'], 0.104993585404)
+        True
+        >>> np.isclose(t.der2['x'], -0.0799625010562)
+        True
         '''
         try:
             ##try to find if the passed in other object is autodiff object and do
@@ -641,25 +685,23 @@ if __name__ == "__main__":
     # f = 5*x + ElementaryFunctions.tan(7*x*y)
     # print(f.val, f.der)
     #
-    # f2 = ElementaryFunctions.log((x*x*y*y))
+    # f2 = ElementaryFunctions.log((x*y))
     # print(f2.val, f2.der, f2.der2)
     #
     # f3 = ElementaryFunctions.power(x,2)
-    # print(f3.val, f3.der)
+    # print(f3.val, f3.der, f3.der2)
     #
-    # f4 = ElementaryFunctions.exp(x*x*y*y)
+    # f4 = ElementaryFunctions.exp(x*y)
     # print(f4.val, f4.der, f4.der2)
 
     # f5 = ElementaryFunctions.power(x*y,x*y)
     # print(f5.val, f5.der, f5.der2)
-
+    #
     # f6 = ElementaryFunctions.sqrt(x*y)
     # print(f6.val, f6.der, f6.der2)
 
-    f7 = ElementaryFunctions.logit(x)
-    print(f7.val, f7.der, f7.der2)
-
-
+    # f7 = ElementaryFunctions.logit(x)
+    # print(f7.val, f7.der, f7.der2)
 
 
 #    f6 = ElementaryFunctions.sin("thirty")
