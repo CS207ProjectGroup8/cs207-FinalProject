@@ -136,10 +136,12 @@ def Newton(F, x, criteria = 10**(-8)):
                
         EXAMPLES
         =========
-        >>> x = [2,3]
-        >>> F = lambda x: [x[0] * 3, x[1] * x[0]]
-        >>> Newton(F,x)
-                
+        >>> import numpy as np
+        >>> x = [0.2,0.1]
+        >>> F = lambda x: [x[0] * x[0], x[1] + x[0]]
+        >>> np.isclose(Newton(F,x)['x_min'][0], 1.46864921e-162)
+        True
+        
         '''    
     x_k = np.array(x)
     rel_step = 1
