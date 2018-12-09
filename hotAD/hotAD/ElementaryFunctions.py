@@ -72,18 +72,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = -1*other.der[key]*sin_value*other.der[key] + cos_value*other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = -1*other.der[first_var]*other.der[second_var]*sin_value + cos_value*other.der2[key]
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = -1*other.der[key]*sin_value*other.der[key] + cos_value*other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = -1*other.der[first_var]*other.der[second_var]*sin_value + cos_value*other.der2[key]
 
-            return AutoDiff(sin_value, "dummy", other_der, other_der2)
+                return AutoDiff(sin_value, "dummy", other_der, other_der2,H = True)
+            else:
+                return AutoDiff(sin_value, "dummy", other_der)
 
         except:
             try:
@@ -249,18 +252,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = 2*other.der[key]*other.der[key]*sec2_value*tan_value + sec2_value*other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = 2*other.der[first_var]*other.der[second_var]*sec2_value*tan_value + sec2_value*other.der2[key]
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = 2*other.der[key]*other.der[key]*sec2_value*tan_value + sec2_value*other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = 2*other.der[first_var]*other.der[second_var]*sec2_value*tan_value + sec2_value*other.der2[key]
 
-            return AutoDiff(tan_value, "dummy", other_der, other_der2)
+                return AutoDiff(tan_value, "dummy", other_der, other_der2,H=True)
+            else:
+                return AutoDiff(tan_value, "dummy", other_der)
 
         except:
             try:
@@ -350,54 +356,69 @@ class ElementaryFunctions():
                     print ("Base value should be positive, because we don't consider imaginary number here.")
                     raise ValueError
 
-                for key in base_der.union(power_der):
-                    for key2 in base_der.union(power_der):
-                        ## If the element exists in both base derivative and power derivatives
-                        if key in base_der and key in power_der:
-                            other_der[key] = np.power(base.val,power.val) * (power.val * 1/base.val * base.der[key] + np.log(base.val) * power.der[key])
-                            if key2+key in other_der2.keys():
-                                other_der2[key+key2] = other_der2[key2+key]
-                            else:
-                                if key == key2:
-                                    other_der2[key] = np.power(base.val,power.val) * (power.der[key] * np.log(base.val) + power.val/base.val * base.der[key])**2 + np.power(base.val,power.val) * (power.der2[key] * np.log(base.val) + 2 * power.der[key] * 1/base.val * base.der[key] - power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val * base.der2[key])
+                if base.H and power.H:
+                    for key in base_der.union(power_der):
+                        for key2 in base_der.union(power_der):
+                            ## If the element exists in both base derivative and power derivatives
+                            if key in base_der and key in power_der:
+                                other_der[key] = np.power(base.val,power.val) * (power.val * 1/base.val * base.der[key] + np.log(base.val) * power.der[key])
+                                if key2+key in other_der2.keys():
+                                    other_der2[key+key2] = other_der2[key2+key]
                                 else:
-                                    if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val*base.der[key2]) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2] + power.der[key2] * 1/base.val * base.der[key] - power.val/(base.val**2)*base.der[key2]*base.der[key] + power.val/base.val * base.der2[key+key2])
-                                    elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2] + power.val/(base.val**2) * base.der[key2] * base.der[key] + power.val/base.val * base.der[key+key2])
+                                    if key == key2:
+                                        other_der2[key] = np.power(base.val,power.val) * (power.der[key] * np.log(base.val) + power.val/base.val * base.der[key])**2 + np.power(base.val,power.val) * (power.der2[key] * np.log(base.val) + 2 * power.der[key] * 1/base.val * base.der[key] - power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val * base.der2[key])
                                     else:
-                                        other_der[key+key2] = np.power(base.val,power.val) * power.der[key2] * np.log(base.val) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + power.der[key2]*1/base.val*base.der[key])
-                        elif key in base_der:
-                            other_der[key] = power.val * np.power(base.val,power.val) * base.der[key] * 1/base.val
-                            if key2+key in other_der2.keys():
-                                other_der2[key+key2] = other_der2[key2+key]
-                            else:
-                                if key == key2:
-                                    other_der2[key] = np.power(base.val, power.val) * (power.val/base.val * base.der[key])**2 + np.power(base.val, power.val) * (-power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val*base.der2[key])
+                                        if key2 in base_der and key2 in power_der:
+                                            other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val*base.der[key2]) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2] + power.der[key2] * 1/base.val * base.der[key] - power.val/(base.val**2)*base.der[key2]*base.der[key] + power.val/base.val * base.der2[key+key2])
+                                        elif key2 in base_der:
+                                            other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2] + power.val/(base.val**2) * base.der[key2] * base.der[key] + power.val/base.val * base.der[key+key2])
+                                        else:
+                                            other_der[key+key2] = np.power(base.val,power.val) * power.der[key2] * np.log(base.val) * (power.der[key]*np.log(base.val) + power.val/base.val * base.der[key]) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + power.der[key2]*1/base.val*base.der[key])
+                            elif key in base_der:
+                                other_der[key] = power.val * np.power(base.val,power.val) * base.der[key] * 1/base.val
+                                if key2+key in other_der2.keys():
+                                    other_der2[key+key2] = other_der2[key2+key]
                                 else:
-                                    if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val/base.val * base.der[key] * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) + np.power(base.val, power.val) * (power.der[key2] * 1/base.val * base.der[key] + power.val/(base.val**2) * base.der[key] + power.val/base.val * base.der[key+key2])
-                                    elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.val**2 / base.val**2 * base.der[key] * base.der[key2] + np.power(base.val, power.val) * ((power.val/base.val**2) * base.der[key] * base.der[key2] + power.val/base.val * base.der2[key+key2])
+                                    if key == key2:
+                                        other_der2[key] = np.power(base.val, power.val) * (power.val/base.val * base.der[key])**2 + np.power(base.val, power.val) * (-power.val * 1/(base.val**2) * base.der[key]**2 + power.val/base.val*base.der2[key])
                                     else:
-                                        other_der2[key+key2] = np.power(base.val, power.val) * power.der[key2] * np.log(base.val) * (power.val/base.val * base.der[key]) + np.power(base.val, power.val) * power.der[key2] * 1/base.val * base.der[key]
-                        else:
-                            #other_der[key] = power.der[key] * np.log(base.val) * base_value
-                            other_der[key] = np.power(base.val,power.val) * power.der[key] * np.log(base.val)
-                            if key2+key in other_der2.keys():
-                                other_der2[key+key2] = other_der2[key2+key]
+                                        if key2 in base_der and key2 in power_der:
+                                            other_der2[key+key2] = np.power(base.val, power.val) * power.val/base.val * base.der[key] * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) + np.power(base.val, power.val) * (power.der[key2] * 1/base.val * base.der[key] + power.val/(base.val**2) * base.der[key] + power.val/base.val * base.der[key+key2])
+                                        elif key2 in base_der:
+                                            other_der2[key+key2] = np.power(base.val, power.val) * power.val**2 / base.val**2 * base.der[key] * base.der[key2] + np.power(base.val, power.val) * ((power.val/base.val**2) * base.der[key] * base.der[key2] + power.val/base.val * base.der2[key+key2])
+                                        else:
+                                            other_der2[key+key2] = np.power(base.val, power.val) * power.der[key2] * np.log(base.val) * (power.val/base.val * base.der[key]) + np.power(base.val, power.val) * power.der[key2] * 1/base.val * base.der[key]
                             else:
-                                if key == key2:
-                                    other_der2[key] = np.power(base.val, power.val) * (power.der[key]*np.log(base.val))**2 + np.power(base.val, power.val) * (power.der2[key]*np.log(base.val))
+                                #other_der[key] = power.der[key] * np.log(base.val) * base_value
+                                other_der[key] = np.power(base.val,power.val) * power.der[key] * np.log(base.val)
+                                if key2+key in other_der2.keys():
+                                    other_der2[key+key2] = other_der2[key2+key]
                                 else:
-                                    if key2 in base_der and key2 in power_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2])
-                                    elif key2 in base_der:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2])
+                                    if key == key2:
+                                        other_der2[key] = np.power(base.val, power.val) * (power.der[key]*np.log(base.val))**2 + np.power(base.val, power.val) * (power.der2[key]*np.log(base.val))
                                     else:
-                                        other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2] * np.log(base.val) + power.val/base.val * base.der[key2])
+                                        if key2 in base_der and key2 in power_der:
+                                            other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2]*np.log(base.val) + power.val/base.val * base.der[key2]) * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (power.der2[key+key2]*np.log(base.val) + 1/base.val * power.der[key] * base.der[key2])
+                                        elif key2 in base_der:
+                                            other_der2[key+key2] = np.power(base.val,power.val) * power.val/base.val * base.der[key2] * power.der[key] * np.log(base.val) + np.power(base.val,power.val) * (1/base.val * power.der[key] * base.der[key2])
+                                        else:
+                                            other_der2[key+key2] = np.power(base.val,power.val) * (power.der[key2] * np.log(base.val) + power.val/base.val * base.der[key2])
 
-                return AutoDiff(base_value, "dummy", other_der, other_der2)
+                    return AutoDiff(base_value, "dummy", other_der, other_der2, H = True)
+                elif base.H or power.H:
+                    print("Both base and power should have Hessian set to True to carry out the operation")
+                else:
+                    for key in base_der.union(power_der):
+                        for key2 in base_der.union(power_der):
+                            if key in base_der and key in power_der:
+                                other_der[key] = np.power(base.val,power.val) * (power.val * 1/base.val * base.der[key] + np.log(base.val) * power.der[key])
+                            elif key in base_der:
+                                other_der[key] = power.val * np.power(base.val,power.val) * base.der[key] * 1/base.val
+                            else:
+                                #other_der[key] = power.der[key] * np.log(base.val) * base_value
+                                other_der[key] = np.power(base.val,power.val) * power.der[key] * np.log(base.val)
+                    return AutoDiff(base_value, "dummy", other_der)
+
             except:
                 ##when base is autodiff object and power is not
                 if type(np.power(base.val, power.real)) == complex:
@@ -409,15 +430,19 @@ class ElementaryFunctions():
                 for key,derivative in base.der.items():
                     other_der[key] = base_der * derivative
 
-                for key,derivative2 in base.der2.items():
-                    if key in base.der.keys():
-                        other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key]**2 + power * np.power(base.val,power-1) * base.der2[key]
-                    else:
-                        key1 = key[0]
-                        key2 = key[1]
-                        other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key1] * base.der[key2] + power * np.power(base.val,power-1) * base.der2[key]
+                if base.H:
+                    for key,derivative2 in base.der2.items():
+                        if key in base.der.keys():
+                            other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key]**2 + power * np.power(base.val,power-1) * base.der2[key]
+                        else:
+                            key1 = key[0]
+                            key2 = key[1]
+                            other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key1] * base.der[key2] + power * np.power(base.val,power-1) * base.der2[key]
 
-                return AutoDiff(base_value, "dummy", other_der, other_der2)
+                    return AutoDiff(base_value, "dummy", other_der, other_der2, H = True)
+                else:
+                    return AutoDiff(base_value, "dummy", other_der)
+
         except:
             try:
                 base_value = base.real
@@ -437,14 +462,17 @@ class ElementaryFunctions():
                     ##try to check if the passed in other object is numeric value
                     for key,derivative in power.der.items():
                         other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
-                    for key, derivative2 in power.der2.items():
-                        if key in base.der.keys():
-                            other_der2[key] = power.der[key] * np.log(base) * np.power(base,power.val) + power.der2[key] * np.log(base) * np.power(base,power.val)
-                        else:
-                            key1 = key[0]
-                            key2 = key[1]
-                            other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key] * power.der[key2] * np.log(base) * np.power(base,power.val)
-                    return AutoDiff(np.power(base.val,power.val), "dummy", other_der, other_der2)
+                    if power.H:
+                        for key, derivative2 in power.der2.items():
+                            if key in base.der.keys():
+                                other_der2[key] = power.der[key] * np.log(base) * np.power(base,power.val) + power.der2[key] * np.log(base) * np.power(base,power.val)
+                            else:
+                                key1 = key[0]
+                                key2 = key[1]
+                                other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key] * power.der[key2] * np.log(base) * np.power(base,power.val)
+                        return AutoDiff(np.power(base.val,power.val), "dummy", other_der, other_der2, H = True)
+                    else:
+                        return AutoDiff(np.power(base.val,power.val), "dummy", other_der)
                 except:
 
                     if type(np.power(base, power)) == complex:
@@ -514,18 +542,21 @@ class ElementaryFunctions():
                 other_der[key] = log_for_der * derivative
 
             ##Second Derivatives for log functions
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = -1.0/other.val**2 * other.der[key] * other.der[key] + 1.0/other_val * other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = -1.0/other.val**2 * other.der[first_var] * other.der[second_var] + 1.0/other_val * other.der2[key]
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = -1.0/other.val**2 * other.der[key] * other.der[key] + 1.0/other_val * other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = -1.0/other.val**2 * other.der[first_var] * other.der[second_var] + 1.0/other_val * other.der2[key]
 
-            return AutoDiff(log_value, "dummy", other_der,other_der2)
+                return AutoDiff(log_value, "dummy", other_der,other_der2,H=True)
+            else:
+                return AutoDiff(log_value, "dummy", other_der)
 
         except:
             try:
@@ -590,16 +621,19 @@ class ElementaryFunctions():
                 other_der[key] = exp_for_der * derivative
 
             ##Second Derivatives for log functions
-            for key,derivative2 in other.der2.items():
-                if key in other.der.keys():
-                    other_der2[key] = exp_for_der * other.der[key] * other.der[key] + exp_for_der * other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = exp_for_der * other.der[first_var] * other.der[second_var] + exp_for_der * other.der2[key]
+            if other.H:
+                for key,derivative2 in other.der2.items():
+                    if key in other.der.keys():
+                        other_der2[key] = exp_for_der * other.der[key] * other.der[key] + exp_for_der * other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = exp_for_der * other.der[first_var] * other.der[second_var] + exp_for_der * other.der2[key]
 
-            return AutoDiff(exp_value, "dummy", other_der, other_der2)
+                return AutoDiff(exp_value, "dummy", other_der, other_der2,H=True)
+            else:
+                return AutoDiff(exp_value, "dummy", other_der)
         except:
             try:
                 ##try to check if the passed in other object is numeric value
@@ -664,18 +698,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key]**2 + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    key1 = key[0]
-                    key2 = key[1]
-                    other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key1] * other.der[key2] + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key]**2 + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        key1 = key[0]
+                        key2 = key[1]
+                        other_der2[key] = -1.0/4 * 1.0/other.val**(3.0/2) * other.der[key1] * other.der[key2] + 1.0/2 * 1.0/np.sqrt(other.val) * other.der2[key]
 
-            return AutoDiff(sqrt_value, "dummy", other_der, other_der2)
+                return AutoDiff(sqrt_value, "dummy", other_der, other_der2, H=True)
+            else:
+                return AutoDiff(sqrt_value, "dummy", other_der)
 
         except:
             try:
@@ -735,19 +772,22 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = (np.exp(other.val)*other.der[key]**2 + np.exp(other.val)*other.der2[key])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key]**2 / (1 + np.exp(other.val))**3
-                    # other_der2[key] = (np.exp(other.val) * other.der[key] + np.exp(other.val)*other.der2[key] + np.exp(other.val)**2 * other.der[key] + np.exp(other.val)**2 *other.der2[key] - np.exp(other.val)**2 * other.der[key]**2) / (1 + np.exp(other.val))**3
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    key1 = key[0]
-                    key2 = key[1]
-                    other_der2[key] = (np.exp(other.val)*other.der[key1]*other.der[key2] + np.exp(other.val)*other.der2[key1+key2])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key1]* other.der[key2] / (1 + np.exp(other.val))**3
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = (np.exp(other.val)*other.der[key]**2 + np.exp(other.val)*other.der2[key])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key]**2 / (1 + np.exp(other.val))**3
+                        # other_der2[key] = (np.exp(other.val) * other.der[key] + np.exp(other.val)*other.der2[key] + np.exp(other.val)**2 * other.der[key] + np.exp(other.val)**2 *other.der2[key] - np.exp(other.val)**2 * other.der[key]**2) / (1 + np.exp(other.val))**3
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        key1 = key[0]
+                        key2 = key[1]
+                        other_der2[key] = (np.exp(other.val)*other.der[key1]*other.der[key2] + np.exp(other.val)*other.der2[key1+key2])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key1]* other.der[key2] / (1 + np.exp(other.val))**3
 
-            return AutoDiff(sqrt_value, "dummy", other_der, other_der2)
+                return AutoDiff(sqrt_value, "dummy", other_der, other_der2, H=True)
+            else:
+                return AutoDiff(sqrt_value, "dummy", other_der)
 
         except:
             try:
@@ -817,18 +857,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = (other.der2[key]/np.sqrt(1-other_val**2)) + (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = (other.der2[key]*np.sqrt(1-other_val**2) + (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = (other.der2[key]/np.sqrt(1-other_val**2)) + (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = (other.der2[key]*np.sqrt(1-other_val**2) + (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
 
-            return AutoDiff(arcsin_value, "dummy", other_der, other_der2)
+                return AutoDiff(arcsin_value, "dummy", other_der, other_der2, H=True)
+            else:
+                return AutoDiff(arcsin_value, "dummy", other_der)
 
         except:
             try:
@@ -899,18 +942,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = (-1*other.der2[key]/np.sqrt(1-other_val**2)) - (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = (-1*other.der2[key]*np.sqrt(1-other_val**2) - (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = (-1*other.der2[key]/np.sqrt(1-other_val**2)) - (other.der[key]*other.der[key]*other_val/((1-other_val**2)**(3/2)))
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = (-1*other.der2[key]*np.sqrt(1-other_val**2) - (other.der[first_var]*other.der[second_var]*other_val/np.sqrt(1-other_val**2)))/(1-other_val**2)
 
-            return AutoDiff(arccos_value, "dummy", other_der, other_der2)
+                return AutoDiff(arccos_value, "dummy", other_der, other_der2, H=True)
+            else:
+                return AutoDiff(arccos_value, "dummy", other_der)
 
         except:
             try:
@@ -976,18 +1022,21 @@ class ElementaryFunctions():
 
             # second derivative
             # loop through all keys in second derivative dictionary
-            for key, derivative2 in other.der2.items():
-                # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
-                # i.e., f_xx --> key == x and x in first derivative dictionary
-                if key in other.der.keys():
-                    other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[key]*other.der[key]*other_val)/((1+other_val**2)**2)
-                else:
-                    # split the second derivative dictionary key into the two variables
-                    first_var = key[0]
-                    second_var = key[1]
-                    other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[first_var]*other.der[second_var]*other_val)/((1+other_val**2)**2)
+            if other.H:
+                for key, derivative2 in other.der2.items():
+                    # check if that key is in first derivative dictionary so we are taking second derivative w.r.t. one variable
+                    # i.e., f_xx --> key == x and x in first derivative dictionary
+                    if key in other.der.keys():
+                        other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[key]*other.der[key]*other_val)/((1+other_val**2)**2)
+                    else:
+                        # split the second derivative dictionary key into the two variables
+                        first_var = key[0]
+                        second_var = key[1]
+                        other_der2[key] = (other.der2[key]/(1+other_val**2)) - (2*other.der[first_var]*other.der[second_var]*other_val)/((1+other_val**2)**2)
 
-            return AutoDiff(arctan_value, "dummy", other_der, other_der2)
+                return AutoDiff(arctan_value, "dummy", other_der, other_der2, H=True)
+            else:
+                return AutoDiff(arctan_value, "dummy", other_der)
 
         except:
             try:

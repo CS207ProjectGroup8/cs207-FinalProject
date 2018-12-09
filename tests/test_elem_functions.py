@@ -6,14 +6,40 @@ from hotAD.ElementaryFunctions import ElementaryFunctions as ef
 
 # sin
 def test_sin_val():
-	x = AutoDiff(2, "x")
-	f = ef.sin(x)
-	assert f.val == 0.9092974268256817;
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.val, 0.9129452507276277);
 
-def test_sin_deriv():
-	x = AutoDiff(2, "x")
-	f = ef.sin(x)
-	assert f.der['x'] == -0.4161468365471424;
+def test_sin_deriv_x():
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.der['x'], 2.0404103090669596);
+
+def test_sin_deriv_y():
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.der['y'], 1.6323282472535678);
+
+def test_sin_deriv2_x():
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.der2['x'], -22.82363126819069);
+
+def test_sin_deriv2_y():
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.der2['y'], -14.607124011642043);
+
+def test_sin_deriv2_xy():
+	x = AutoDiff(4, "x")
+	y = AutoDiff(5, "y")
+	f = ef.sin(x*y)
+	assert np.isclose(f.der2['xy'], -17.85082295273916);
 
 def test_sin_numeric_input_val():
 	assert ef.sin(4) == -0.7568024953079282;
