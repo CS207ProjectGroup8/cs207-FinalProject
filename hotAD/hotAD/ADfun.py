@@ -1,9 +1,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import AutoDiffObject as autodiff
-import ElementaryFunctions as ef
-
+from hotAD.hotAD.AutoDiffObject import AutoDiff
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
@@ -23,9 +21,9 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
     xCal = [0.0] * m
     for i in range(0, m):
         if H == False:
-            xCal[i] = autodiff.AutoDiff(x[i], "{}".format(i))
+            xCal[i] = AutoDiff(x[i], "{}".format(i))
         if H == True:
-            xCal[i] = autodiff.AutoDiff(x[i], "{}".format(i), H = True)
+            xCal[i] = AutoDiff(x[i], "{}".format(i), H = True)
         
     J_F = np.zeros((n, m))                     #to store Jacobian matrix information later
     F1 = np.array([0.0]*n)                      #to store function value later
@@ -224,6 +222,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
             plt.plot(lx[0], ly[0], marker='*', markersize=15, color="blue", label = "start point")
             plt.plot(lx[-1], ly[-1], marker='*', markersize=15, color="purple", label = "end point")
             plt.legend()
+
     if len(x) == 1: 
         if plot == True:
             
