@@ -313,10 +313,10 @@ class ElementaryFunctions():
         >>> a = AutoDiff(2, 'a', H=True)
         >>> b = AutoDiff(3, 'b', H=True)
         >>> t = ElementaryFunctions.power(a,b)
-        >>> print(t.val)
-        8
-        >>> print(t.der['a'])
-        12
+        >>> np.isclose(t.val,8)
+        True
+        >>> np.isclose(t.der['a'], 12)
+        True
         >>> np.isclose(t.der['b'], 5.545177444479562)
         True
         >>> np.isclose(t.der2['a'], 0)
@@ -738,7 +738,7 @@ class ElementaryFunctions():
         >>> x = AutoDiff(2, 'x', H=True)
         >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.logit(x*y)
-        >>> np.isclose(t.val, 0.880797077978)
+        >>> np.isclose(t.val, -0.9975274)
         True
         >>> np.isclose(t.der['x'], 0.104993585404)
         True
