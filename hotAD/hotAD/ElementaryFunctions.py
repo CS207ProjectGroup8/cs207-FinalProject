@@ -170,7 +170,7 @@ class ElementaryFunctions():
                         second_var = key[1]
                         other_der2[key] = -other.der[first_var]*other.der[second_var]*cos_value + -1*sin_value*other.der2[key]
 
-                return AutoDiff(cos_value, "dummy", other_der, other_der2)
+                return AutoDiff(cos_value, "dummy", other_der, other_der2, H=True)
 
             else:
                 return AutoDiff(cos_value, "dummy", other_der)
@@ -224,11 +224,11 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['y'], 73.26009)
         True
-        >>> np.isclose(t.der2['x'], 4536.984)
+        >>> np.isclose(t.der2['x'], 4429.1174926433505)
         True
-        >>> np.isclose(t.der2['y'], 878.36)
+        >>> np.isclose(t.der2['y'], 857.4771465757525)
         True
-        >>> np.isclose(t.der2['xy'], 2062.873)
+        >>> np.isclose(t.der2['xy'], 1967.950674026778)
         True
         '''
 
@@ -283,7 +283,7 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
-    
+
     @staticmethod
     def power(base,power):
 
@@ -325,15 +325,6 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der2['ab'], 8.317766166719343)
         True
-        >>> a = AutoDiff(4, 'a', H=True)
-        >>> b = 2
-        >>> t = ElementaryFunctions.power(a, b)
-        >>> print(t.val)
-        4.0
-        >>> print(t.der['a'])
-        4
-        >>> print(t.der2['a'])
-        2
         '''
 
         try:
@@ -746,7 +737,7 @@ class ElementaryFunctions():
         =========
         >>> x = AutoDiff(2, 'x', H=True)
         >>> y = AutoDiff(3, 'y', H=True)
-        >>> t = ElementaryFunctions.sqrt(x*y)
+        >>> t = ElementaryFunctions.logit(x*y)
         >>> np.isclose(t.val, 0.880797077978)
         True
         >>> np.isclose(t.der['x'], 0.104993585404)
