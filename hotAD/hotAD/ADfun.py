@@ -239,7 +239,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
     array([0., 0.])
     >>> Mini(F3, [1, 0.5], "newton")['Hessian F(x_min)']
     array([[ 802., -400.],
-        [-400.,  200.]])
+           [-400.,  200.]])
     >>> Mini(F3, [1, 0.5], "newton")['number of iter']
     2
     
