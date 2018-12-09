@@ -779,14 +779,13 @@ class AutoDiff():
         >>> print(t.der2['a'])   
         0
         >>> print(t.der2['b'])   
-        0      
+        0
         
         >>> a = AutoDiff(1, 'a')
         >>> b = 33
         >>> t = a - b
         >>> print(t.val, t.der, t.der2)
         -32 {'a': 1} {'a': 0}
-        
         '''
 
         try:
