@@ -1,6 +1,7 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-from hotAD.AutoDiffObject import AutoDiff
+#from hotAD.AutoDiffObject import AutoDiff
+from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -224,11 +225,11 @@ class ElementaryFunctions():
         True
         >>> np.isclose(t.der['y'], 73.26009)
         True
-        >>> np.isclose(t.der2['x'], 4429.1174926433505)
+        >>> np.isclose(t.der2['x'], 15412.51)
         True
-        >>> np.isclose(t.der2['y'], 857.4771465757525)
+        >>> np.isclose(t.der2['y'], 2983.861)
         True
-        >>> np.isclose(t.der2['xy'], 1967.950674026778)
+        >>> np.isclose(t.der2['xy'], 6848.102)
         True
         '''
 
@@ -738,7 +739,7 @@ class ElementaryFunctions():
         >>> x = AutoDiff(2, 'x', H=True)
         >>> y = AutoDiff(3, 'y', H=True)
         >>> t = ElementaryFunctions.logit(x*y)
-        >>> np.isclose(t.val, -0.9975274)
+        >>> np.isclose(t.val, 0.9975274)
         True
         >>> np.isclose(t.der['x'], 0.104993585404)
         True
@@ -751,7 +752,7 @@ class ElementaryFunctions():
             other_val = other.val
             other_der = {}
             other_der2 = {}
-            sqrt_value = np.exp(other.val) / (1 + np.exp(other.val))
+            logit_value = np.exp(other_val) / (1 + np.exp(other_val))
 
             if other_val < 0 :
                 print("Unsupported input. Obect needs to have non-negative values.")
@@ -776,15 +777,15 @@ class ElementaryFunctions():
                         key2 = key[1]
                         other_der2[key] = (np.exp(other.val)*other.der[key1]*other.der[key2] + np.exp(other.val)*other.der2[key1+key2])/(1+np.exp(other.val))**2 - 2 * np.exp(other.val)**2 * other.der[key1]* other.der[key2] / (1 + np.exp(other.val))**3
 
-                return AutoDiff(sqrt_value, "dummy", other_der, other_der2, H=True)
+                return AutoDiff(logit_value, "dummy", other_der, other_der2, H=True)
             else:
-                return AutoDiff(sqrt_value, "dummy", other_der)
+                return AutoDiff(logit_value, "dummy", other_der)
 
         except:
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                return np.exp(other_value)
+                return np.exp(other_value) / (1 + np.exp(other_value))
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
@@ -1038,3 +1039,13 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
+
+if __name__ == "__main__":
+    x = AutoDiff(1.1, 'x', H=True)
+    y = AutoDiff(2.5, 'y', H=True)
+    t = ElementaryFunctions.tan(x*x*y*y)
+    print(t.val, t.der, t.der2)
+
+
+
+
