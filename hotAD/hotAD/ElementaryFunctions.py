@@ -802,7 +802,7 @@ class ElementaryFunctions():
         try:
 
             if abs(other.val) > 1:
-            raise ValueError("Value must be in [-1, 1].")
+                raise ValueError("Value must be in [-1, 1].")
 
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
