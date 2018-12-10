@@ -47,10 +47,8 @@ class AutoDiff():
             raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
 
         if isinstance(varName, str):
-            if len(varName) == 1:
-                self.varName = varName
-            else:
-                raise TypeError("Please enter a single character as the variable name.")
+            self.varName = varName
+
         else:
             raise TypeError("Please enter a string for the name of the AutoDiff object.")
 
@@ -60,15 +58,16 @@ class AutoDiff():
             raise TypeError ("Please enter a truth value for including the Hessian.")
 
         if varName != "dummy":
-            self.der = {varName:1}
-            if H == True:
-                self.der2 = {varName:0}
-
-        else:
-            self.der = args[0]
-            if H == True:
-                self.der2 = args[1]
-
+            if len(varName) == 1:
+                self.der = {varName:1}
+                if H == True:
+                    self.der2 = {varName:0}
+                else:
+                    self.der = args[0]
+                    if H == True:
+                        self.der2 = args[1]
+            else:
+                raise TypeError("Please enter a single character as the variable name.")
 
     def __eq__(self, other):
 
