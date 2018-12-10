@@ -20,7 +20,7 @@ To install, users have two options
 ## Usage
 
 ### AutoDiffObject
-Users can instantiate variables they wish to differentiate and then combine these variables into a function, which will now contain the function value and first derivative. To call vector-valued functions, simply create a list of functions. Users can specify an option argument `H=True` if they wish to compute the second derivative as well.
+Users can instantiate variables they wish to differentiate and then combine these variables into a function, which will now contain the function value and first derivative. To call vector-valued functions, simply create a list of functions. Users can specify an optional argument `H=True` if they wish to compute the second derivative as well.
 
 `x = AutoDiff(3, 'x')
 y = AutoDiff(4, 'y')
@@ -30,7 +30,7 @@ f = x*y + x`
 Users are strongly recommended to use our elementary functions. Currently we have implemented:
 * trigonometric functions (`sin`, `cos`, `tan`, `arcsin`, `arccos`, `arctan`)
 * power functions (`power`, `sqrt`)
-* expoenntial functions (`log`, `exp`)
+* exponential functions (`log`, `exp`)
 * logistic function (`logit`)
 
 `x = AutoDiff(np.pi, 'x')
@@ -38,12 +38,11 @@ y = AutoDiff(np.pi/4, 'y'
 f = ef.sin(x) + np.tan(y)`
 
 ### ADfun
-Users can use the methods in this module to compute the Jacobian matrix of a function, to perform root-finding via Newton's Method, and to perform minimization via `newton`, `quasi-newton-BFGS`, and `gradient-descent`.
+Users can use the methods in this module to compute the Jacobian matrix of a function, to perform root-finding via Newton's Method, and to perform minimization via `newton`, `quasi-newton-BFGS`, and `gradient-descent` methods.
 
 ## More information
 For additional information on how to use the package, please see `docs/milestone2.ipynb`.
 
-## Contact
 Our group members are:
 
 * Yuanheng Wang
