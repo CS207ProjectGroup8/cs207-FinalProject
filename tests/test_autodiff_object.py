@@ -68,7 +68,7 @@ def test_autodiff_div_zerodiv():
 	a = AutoDiff(3, "a")
 	b = AutoDiff(0, "b")
 	with pytest.raises(ZeroDivisionError):
-		assert f = a/b
+		assert a/b
 
 def test_autodiff_div_illegal_args():
 	a = AutoDiff(2, "a")
