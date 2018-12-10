@@ -246,7 +246,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
     >>> Mini(F3, [1, 0.9], "gradient-descent")['x_min']
     array([0.96727347, 0.9354844 ])
     >>> Mini(F3, [1, 0.9], "gradient-descent")['min F(x)']
-    array([0.0007057])
+    array([0.00107281])
     >>> Mini(F3, [1, 0.9], "gradient-descent")['number of iter']
     10000
     
