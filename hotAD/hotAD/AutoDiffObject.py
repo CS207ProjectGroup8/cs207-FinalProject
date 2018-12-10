@@ -446,7 +446,7 @@ class AutoDiff():
                 return AutoDiff(self.val/other.val, "dummy", derDict, der2Dict, H = False)
 
         except ZeroDivisionError as err:
-            print("Denominator cannot have value 0.")
+            raise ZeroDivisionError("Denominator cann ot have value 0.")
 
         except:
             try:
@@ -463,7 +463,8 @@ class AutoDiff():
                     return AutoDiff(self.val/other.real, "dummy", derDict, der2Dict, H = False)
 
             except ZeroDivisionError as err:
-                print("Denominator cannot have value 0.")
+                raise ZeroDivisionError("Denominator cann ot have value 0.")
+                
             except:
                 raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
@@ -586,7 +587,7 @@ class AutoDiff():
                 return AutoDiff(other.val/self.val, "dummy", derDict, der2Dict, H = False)
 
         except ZeroDivisionError as err:
-            print("Denominator cannot have value 0.")
+            raise ZeroDivisionError("Denominator cann ot have value 0.")
 
         except:
             try:
@@ -609,7 +610,7 @@ class AutoDiff():
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = False)
             
             except ZeroDivisionError as err:
-                print("Denominator cannot have value 0.")
+                raise ZeroDivisionError("Denominator cann ot have value 0.")
 
             except:
                 raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
