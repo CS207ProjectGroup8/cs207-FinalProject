@@ -726,7 +726,7 @@ class AutoDiff():
                 else:
                     return AutoDiff(self.val + other.real, "dummy", self.der, H = False)
             except:
-                praise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
+                raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
 
     __radd__ = __add__
