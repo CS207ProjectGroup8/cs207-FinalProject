@@ -57,6 +57,11 @@ def test_autodiff_mul_illegal_arg():
 	with pytest.raises(AttributeError):
 		assert "AutoDiff(4, 'b')"*a
 
-# 
+# Division
+def test_autodiff_div():
+	a = AutoDiff(2, "a")
+	b = AutoDiff(5, "b")
+	f = a/b
+	assert f.der['a'] == 2
 
 

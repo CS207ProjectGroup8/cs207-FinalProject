@@ -62,8 +62,8 @@ class AutoDiff():
                 self.der = {varName:1}
                 if H == True:
                     self.der2 = {varName:0}
-                else:
-                    raise TypeError("Please enter a single character as the variable name.")
+            else:
+                raise TypeError("Please enter a single character as the variable name.")
 
         else:
             self.der = args[0]
