@@ -294,8 +294,7 @@ class AutoDiff():
                     return AutoDiff(self.val * other.real, "dummy", derDict, der2Dict, H = False)
 
             except:
-                print("illegal argument. Needs to be either autodiff object or numeric value.")
-                raise AttributeError
+                raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
 
     __rmul__ = __mul__
@@ -360,7 +359,6 @@ class AutoDiff():
         '''
 
         try:
-        #if isinstance(other, AutoDiff)
             if other.val == 0:
                 raise ZeroDivisionError
 
@@ -466,8 +464,7 @@ class AutoDiff():
                     return AutoDiff(self.val/other.real, "dummy", derDict, der2Dict, H = False)
 
             except:
-                print("illegal argument. Needs to be either autodiff object or numeric value.")
-                raise AttributeError
+                raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
     def __rtruediv__(self,other):
 
@@ -612,9 +609,7 @@ class AutoDiff():
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = False)
 
             except:
-                print("illegal argument. Needs to be either autodiff object or numeric value.")
-                raise AttributeError
-
+                raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
 
     def __add__(self, other):
@@ -731,8 +726,7 @@ class AutoDiff():
                 else:
                     return AutoDiff(self.val + other.real, "dummy", self.der, H = False)
             except:
-                print("illegal argument. Needs to be either autodiff object or numeric value.")
-                raise AttributeError
+                praise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
 
     __radd__ = __add__
@@ -873,8 +867,7 @@ class AutoDiff():
                 else:
                     return AutoDiff(self.val - other.real, "dummy", self.der, H = False)
             except:
-                print("illegal argument. Needs to be either autodiff object or numeric value.")
-                raise AttributeError
+                raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
 
     __rsub__ = __sub__
