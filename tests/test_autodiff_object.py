@@ -19,25 +19,25 @@ def test_autodiff_hessian_args():
 
 def test_autodiff_variable_name_args():
 	with pytest.raises(TypeError):
-		assert AutoDiff(6, 'xy', H=T)
+		assert AutoDiff(6, 'xy', H=True)
 
 # Equality
 def test_autodiff_eq():
 	a = AutoDiff(2, "a")
 	b = AutoDiff(4, "b")
-	assert ef.power(a, 2) == b.val
+	assert ef.power(a, 2).val == b.val
 
 def test_autodiff_neq():
 	a = AutoDiff(2, "a")
 	b = AutoDiff(4, "b")
-	assert a.val == b.val
+	assert a.val != b.val
 
 # Negation
 def test_autodiff_negation():
 	a = AutoDiff(3, "a")
 	b = AutoDiff(1.5, "b")
 	f = a*b
-	assert f.der['a'] == -b.val
+	assert -1*f.der['a'] == -b.val
 
 # Multiplication
 def test_autodiff_mul_der1():
@@ -62,6 +62,42 @@ def test_autodiff_div():
 	a = AutoDiff(2, "a")
 	b = AutoDiff(5, "b")
 	f = a/b
-	assert f.der['a'] == 2
+	assert f.der['a'] == 1/b.val
+
+def test_autodiff_div_zerodiv():
+	a = AutoDiff(3, "a")
+	b = AutoDiff(0, "b")
+	with pytest.raises(ZeroDivisionError):
+		assert a/b
+
+def test_autodiff_div_illegal_args():
+	a = AutoDiff(2, "a")
+	with pytest.raises(AttributeError):
+		assert a/"AutoDiff(2, 'b')"	
+
+# Addition
+def test_autodiff_add():
+	a = AutoDiff(13, "a")
+	b = AutoDiff(22, "b")
+	f = a + b
+	assert f.der['b'] == 0
+
+def test_autodiff_add_illegal_args():
+	a = AutoDiff(9, "a")
+	with pytest.raises(AttributeError):
+		assert a + "AutoDiff(5, 'b')"
+
+# Subtraction
+def test_autodiff_add():
+	a = AutoDiff(10, "a")
+	b = AutoDiff(22, "b")
+	f = a - b
+	assert f.val == -12
+
+def test_autodiff_sub_illegal_args():
+	a = AutoDiff(9, "a")
+	with pytest.raises(AttributeError):
+		assert "AutoDiff(11, 'b')" - a
+
 
 

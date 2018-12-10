@@ -880,16 +880,16 @@ class AutoDiff():
     __rsub__ = __sub__
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    x = AutoDiff(7, "x", H = True)
-    y = AutoDiff(2, "y", H = True)
-    z = AutoDiff(4, "z", H = True)
+#     x = AutoDiff(7, "x", H = True)
+#     y = AutoDiff(2, "y", H = True)
+#     z = AutoDiff(4, "z", H = True)
 
-    print(x.val, x.der)
+#     print(x.val, x.der)
 
-    h = -y/z + z - y*z*x
-    print(h.val, h.der, h.der2)
+#     h = -y/z + z - y*z*x
+#     print(h.val, h.der, h.der2)
 
 #    h = 6/z  + x*3 - 9
 #    print(h.val, h.der, h.der2)
