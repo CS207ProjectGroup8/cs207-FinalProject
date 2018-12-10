@@ -15,7 +15,7 @@ Our Python package employs the forward mode of AD to evaluate the first and seco
 To install, users have two options
 
 * **Pip**: `pip install hotAD` *(coming soon)*
-* **Download source code**: Find the code under `hotAD/hotAD` and the requirements in the `reuiqrements.txt` file.
+* **Download source code**: Find the code under `hotAD/hotAD` and the requirements in the `requirements.txt` file.
 
 ## Usage
 
