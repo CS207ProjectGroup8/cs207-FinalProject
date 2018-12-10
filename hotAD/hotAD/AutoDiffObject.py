@@ -359,8 +359,6 @@ class AutoDiff():
         '''
 
         try:
-            if other.val == 0:
-                raise ZeroDivisionError
 
             derDict = {}
             der2Dict = {}
@@ -447,12 +445,13 @@ class AutoDiff():
             else:
                 return AutoDiff(self.val/other.val, "dummy", derDict, der2Dict, H = False)
 
+        except ZeroDivisionError as err:
+            print("Denominator cannot have value 0.")
+
         except:
             try:
                 derDict = {}
                 der2Dict = {}
-                if other.real == 0:
-                    raise ZeroDivisionError
                 for key in self.der:
                     derDict[key] = (1/other.real) * self.der[key]
 
@@ -463,6 +462,8 @@ class AutoDiff():
                 else:
                     return AutoDiff(self.val/other.real, "dummy", derDict, der2Dict, H = False)
 
+            except ZeroDivisionError as err:
+                print("Denominator cannot have value 0.")
             except:
                 raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
@@ -497,9 +498,7 @@ class AutoDiff():
         '''
 
         try:
-        #if isinstance(other, AutoDiff)
-            if self.val == 0:
-                raise ZeroDivisionError
+
             derDict = {}
             der2Dict = {}
 
@@ -586,10 +585,11 @@ class AutoDiff():
             else:
                 return AutoDiff(other.val/self.val, "dummy", derDict, der2Dict, H = False)
 
+        except ZeroDivisionError as err:
+            print("Denominator cannot have value 0.")
+
         except:
             try:
-                if self.val == 0:
-                    raise ZeroDivisionError
                 derDict = {}
                 der2Dict = {}
                 for key in self.der:
@@ -607,6 +607,9 @@ class AutoDiff():
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = True)
                 else:
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = False)
+            
+            except ZeroDivisionError as err:
+                print("Denominator cannot have value 0.")
 
             except:
                 raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
