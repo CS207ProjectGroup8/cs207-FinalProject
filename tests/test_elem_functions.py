@@ -751,14 +751,10 @@ def test_arccos_illegal_arg():
 		assert ef.arccos("thirty");
 
 def test_arccos_numeric_value():
-	assert np.isclose(ef.arccos(4), np.arccos(4))
-
-def test_arccos_illegal_value():
-	with pytest.raises(ValueError):
-		assert np.arcsin(2);
+	assert np.isclose(ef.arccos(0.4), np.arccos(0.4))
 
 def test_arccos_illegal_arg2():
-	with pytest.raises(ValueError):
+	with pytest.warns(RuntimeWarning):
 		assert np.arccos(2);
 
 # arctan
