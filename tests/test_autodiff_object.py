@@ -55,7 +55,7 @@ def test_autodiff_negation_val():
 	a = AutoDiff(3, "a")
 	b = AutoDiff(1.5, "b")
 	f = a*b
-	assert -1*f.val == -6
+	assert -1*f.val == -4.5
 
 def test_autodiff_negation_firstDer():
 	a = AutoDiff(3, "a")
@@ -67,7 +67,7 @@ def test_autodiff_negation_secondDer():
 	a = AutoDiff(3, "a", H=True)
 	b = AutoDiff(1.5, "b", H=True)
 	f = a*a*b
-	assert -1*f.der2['a'] == (2*b.val)
+	assert -1*f.der2['a'] == -3.0
 
 # Multiplication
 def test_autodiff_mul_val():
