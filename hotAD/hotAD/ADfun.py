@@ -2,8 +2,8 @@
 import numbers
 import numpy as np
 import matplotlib.pyplot as plt
-from hotAD.AutoDiffObject import *
-from hotAD.ElementaryFunctions import ElementaryFunctions as ef
+#from hotAD.AutoDiffObject import *
+#from hotAD.ElementaryFunctions import ElementaryFunctions as ef
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
@@ -43,6 +43,10 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         [-2. -2.  1.]
                         
         >>> F2 = lambda x: [x[0] * 3 + x[1] * x[2] + x[3]*x[3]]
+        >>>print(J_F(F2, [2, 3, 4], H = True)[0][0])
+        82.0
+        >>>print(J_F(F2, [2, 3, 4, 8], H = True)[1][0])
+        [ 3.  4.  3. 16.]
         >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][0])
         [0. 0. 0. 0.]
         >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][1])
