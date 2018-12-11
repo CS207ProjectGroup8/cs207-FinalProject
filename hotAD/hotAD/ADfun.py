@@ -1,4 +1,5 @@
 
+import numbers
 import numpy as np
 import matplotlib.pyplot as plt
 from hotAD.AutoDiffObject import *
@@ -42,6 +43,10 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
         [-2. -2.  1.]
                         
         >>> F2 = lambda x: [x[0] * 3 + x[1] * x[2] + x[3]*x[3]]
+        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[0][0])
+        82.0
+        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[1][0])
+        [ 3.  4.  3. 16.]
         >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][0])
         [0. 0. 0. 0.]
         >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][1])
@@ -141,6 +146,10 @@ def Newton(F, x, criteria = 10**(-8)):
         >>> F = lambda x: [x[0] * x[0], x[1] + x[0]]
         >>> np.isclose(Newton(F,x)['x_min: '][0], 0)
         True
+        >>> np.isclose(Newton(F,x)['F(x_min): '][0], 0)
+        True
+        >>> np.isclose(Newton(F,x)['number of iter: '], 535)
+        True
         
         '''    
     x_k = np.array(x)
@@ -211,7 +220,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
                 be defined by the user or when |x_k-xk_1| < criteria
         - max_iter_GD = 5000: maximum iterations for gradient descent to converge, default set to 5000
         - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
-        - plot = False: if plot = True, require len(x) = 1 or len(x) = 2;
+        - plot = False (or 0): if plot = True (or 1), require len(x) = 1 or len(x) = 2;
                 If plot = True, a plot of the iteration trace will show up
         
         
@@ -268,8 +277,9 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
     if method != "newton" and method != "quasi-newton-BFGS" and method != "gradient-descent":
         raise ValueError ("Optimization methods provided are newton, quasi-newton-BFGS and gradient-descent. Please choose one from them.")
         
-    
-    
+    if isinstance(rate, numbers.Real) == False:
+        raise TypeError ("Rate must be a numeric value.")
+        
     
     if method == "newton":
         x_k = np.array(x)

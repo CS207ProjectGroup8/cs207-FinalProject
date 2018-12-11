@@ -63,6 +63,12 @@ def test_Newton_criteria_valid():
     with pytest.raises(TypeError):
         assert Newton(F, [2, 3], "a");
 
+
+def test_Newton_check_eq_len_F_x():
+    F = lambda x:[x[0]*x[0], x[0]+x[0]]
+    with pytest.raises(ValueError):
+        assert Newton(F, [2]);
+        
 #Test output values
 def test_Newton_output_x_min():
 	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
@@ -119,7 +125,7 @@ def test_Mini_x_plot_valid():
 def test_Mini_plot_valid():
     F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
     with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5], plot = 1);      
+        assert  Mini(F, [1, 0.5], plot = 99);      
         
 #Test optimization output validity
 
