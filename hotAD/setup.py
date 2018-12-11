@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="hotAD",
-    version="0.0.1",
+    version="0.0.2",
     author="Anthony Rentsch, Jiayin Lu, Lipika Ramaswamy, Yuanheng Wang",
     author_email="anthony.rentsch@g.harvard.edu",
     description="A Python package for forward mode automatic differentiation for multivariate functions, Jacobian/Hessian matrix computation, root-finding, and optimization routines.",
