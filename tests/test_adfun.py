@@ -80,7 +80,7 @@ def test_Newton_output_f_root_value():
     
 def test_Newton_output_n_iter():
 	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
-	assert np.isclose(Newton(F, [3, 2])['number of iter: '], 541);
+	assert np.isclose(Newton(F, [3, 2])['number of iter: '], 30);
     
 
 ######## TESTING MINIMIZATION METHODS Mini()
