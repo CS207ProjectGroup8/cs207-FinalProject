@@ -46,7 +46,7 @@ class AutoDiff():
         else:
             raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
 
-        if varName.isalpha():
+        if varName.isalnum() and isinstance(varName,str):
             self.varName = varName
 
         else:
