@@ -148,8 +148,8 @@ def Newton(F, x, criteria = 10**(-8)):
         True
         >>> np.isclose(Newton(F,x)['F(x_min): '][0], 0)
         True
-        >>> np.isclose(Newton(F,x)['number of iter: '], 535)
-        True
+        >>> Newton(F,x)['number of iter: ']
+        25
         
         '''    
     x_k = np.array(x)
@@ -160,15 +160,15 @@ def Newton(F, x, criteria = 10**(-8)):
         raise ValueError ("Need to be a system of n functions with n unknowns!")
         
     else: 
-        while rel_step > criteria:
+        xk_1 = 100*x_k  
+        while np.linalg.norm(x_k-xk_1)>criteria:
             JF_k = J_F(F, list(x_k))
             F_k = JF_k[0]
             J_k = JF_k[1]
             deltaX = np.linalg.solve(J_k, -F_k)
-            try:
-                rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
-            except:
-                break
+            
+            
+            xk_1 = x_k
             x_k = x_k + deltaX
             i += 1
         
