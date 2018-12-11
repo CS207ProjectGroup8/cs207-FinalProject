@@ -446,7 +446,7 @@ class AutoDiff():
                 return AutoDiff(self.val/other.val, "dummy", derDict, der2Dict, H = False)
 
         except ZeroDivisionError as err:
-            raise ZeroDivisionError("Denominator cann ot have value 0.")
+            raise ZeroDivisionError("Denominator cannot have value 0.")
 
         except:
             try:

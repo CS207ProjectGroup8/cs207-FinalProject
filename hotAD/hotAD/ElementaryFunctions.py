@@ -1,6 +1,9 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
+import warnings
+warnings.simplefilter("error", RuntimeWarning)
 from hotAD.AutoDiffObject import AutoDiff
+#from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -876,7 +879,7 @@ class ElementaryFunctions():
                 return AutoDiff(arcsin_value, "dummy", other_der)
 
         except ValueError:
-            raise("Value must be in [-1, 1].")
+            raise ValueError("Value must be in [-1, 1].")
 
         except:
             try:
