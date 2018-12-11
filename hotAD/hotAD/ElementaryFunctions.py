@@ -469,7 +469,7 @@ class ElementaryFunctions():
                             else:
                                 key1 = key[0]
                                 key2 = key[1]
-                                other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key] * power.der[key2] * np.log(base) * np.power(base,power.val)
+                                other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key1] * power.der[key2] * np.log(base) * np.power(base,power.val)
                         return AutoDiff(np.power(base,power.val), "dummy", other_der, other_der2, H = True)
                     else:
                         return AutoDiff(np.power(base,power.val), "dummy", other_der)

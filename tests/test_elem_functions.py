@@ -551,7 +551,7 @@ def test_logit_val():
 	x = AutoDiff(1.1, "x")
 	y = AutoDiff(2.2, "y")
 	f = ef.logit(x*x*y*y)
-	assert np.isclose(f.val, 1.0028615266581875);
+	assert np.isclose(f.val, 0.9971466383123472);
 
 def test_logit_deriv_x():
 	x = AutoDiff(1.1, "x")
@@ -768,13 +768,13 @@ def test_arctan_deriv_x():
 	x = AutoDiff(0.5, "x")
 	y = AutoDiff(0.6, "y")
 	f = ef.arctan(x*x*y*y)
-	assert np.isclose(f.der['x'], 0.3519);
+	assert np.isclose(f.der['x'], 0.3571074298184704);
 
 def test_arctan_deriv_y():
 	x = AutoDiff(0.5, "x")
 	y = AutoDiff(0.6, "y")
 	f = ef.arctan(x*x*y*y)
-	assert np.isclose(f.der['y'], 0.2919);
+	assert np.isclose(f.der['y'], 0.2975895248487253);
 
 def test_arctan_deriv2_x():
 	x = AutoDiff(0.5, "x", H=True)
