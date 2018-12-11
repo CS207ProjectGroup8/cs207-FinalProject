@@ -169,7 +169,7 @@ def Newton(F, x, criteria = 10**(-8)):
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 0.0001, plot = False):
+def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, max_iter_GD = 5000, rate = 0.0001, plot = False):
 
     '''
     For optimization problems. Minimize an one-vector function F that takes in 
@@ -184,7 +184,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
         "min F(x)": the function value evaluated at minimization point x_min
         "number of iter": number of iterations
         "trace": a history of all the x_k calculated in the iterations 
-        "Jcobian F(x_min)": First derivative information evaluated at minimization point x_min,
+        "Jacobian F(x_min)": First derivative information evaluated at minimization point x_min,
                     calculated with our Automatic Differentiation library
         
     In addtion:
@@ -207,11 +207,12 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
         - criteria = 10**(-8): Criteria to stop iterations for the optimization 
                 methods, |x_k-xk_1| < criteria;
                 Note: For "gradient-descent" method, since the method can converge very slowly,
-                the stopping criteria is to stop once reaching 10000 iteration steps or when 
-                |x_k-xk_1| < criteria
+                the stopping criteria is to stop once reaching maximum iteration steps that can 
+                be defined by the user or when |x_k-xk_1| < criteria
         - *args: args can take in as argument a matrix as initial guess of the 
                 inverse Hessian matrix, for use in the "quasi-newton-BFGS" method;
                 otherwise, default will use a identity matrix as the initial guess
+        - max_iter_GD = 5000: maximum iterations for gradient descent to converge, default set to 5000
         - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
         - plot = False: if plot = True, require len(x) = 1 or len(x) = 2;
                 If plot = True, a plot of the iteration trace will show up
@@ -219,6 +220,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
         
     POST: 
         - return a dictionary of minimization information as described above
+        
     EXAMPLES
     =========
     >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
@@ -276,7 +278,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
         x_k = np.array(x)
         x_trace = x_k
         i = 0
-        rel_step = 1
+#        rel_step = 1
         
         xk_1 = 100*x_k
     
@@ -290,7 +292,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
             deltaX = np.linalg.solve(H_k, -J_k)
             xk_1 = x_k
             x_k = x_k + deltaX
-            rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
+#            rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
             
             x_trace = np.vstack([x_trace, x_k])
             i += 1
@@ -346,7 +348,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, rate = 
         x_trace = x_k
         i=0
         xk_1 = 100*x_k
-        while i < 5000 and np.linalg.norm(x_k-xk_1)>criteria:
+        while i < max_iter_GD and np.linalg.norm(x_k-xk_1)>criteria:
             JF_k = J_F(F, x_k)
             J_k = JF_k[1][0]
             
