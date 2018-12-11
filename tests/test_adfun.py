@@ -46,7 +46,7 @@ def test_J_F_jacval():
 	assert np.isclose(Jac[2][3][3], 2.0);
 
 
-#Test for Newton()
+######## TESTING NEWTON ROOT FINDING METHOD Newton()
    
 #Test input validity
 def test_Newton_F_valid():
@@ -77,8 +77,52 @@ def test_Newton_output_n_iter():
 	assert np.isclose(Newton(F, [3, 2])['number of iter: '], 541);
     
 
-##### TESTS FOR MINIMIZATION 
+######## TESTING MINIMIZATION METHODS Mini()
+
+#Test optimization input validity
     
+def test_Mini_F_valid():
+    F = 3
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5]);
+
+def test_Mini_F_length_valid():
+    F = lambda x:[x[0], x[1]]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5]);
+
+def test_Mini_x_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, 3);
+
+def test_Mini_method_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5], method = "apple" );
+        
+def test_Mini_criteria_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5], method = "newton", criteria = "hi");
+
+def test_Mini_rate_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5], method = "newton", rate = "hi");
+
+def test_Mini_x_plot_valid():
+    F = lambda x:[x[0]+x[1]+x[2]]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5, 0], plot = True);
+
+def test_Mini_plot_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5], plot = 1);      
+        
+#Test optimization output validity
+
 ## BFGS Method
     
 def test_Mini_BFGS_output_x_min():
@@ -117,80 +161,17 @@ def test_Mini_Newton_output_n_iter():
 	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
 	assert np.isclose(Mini(F3, [1, 0.5], method = "newton")['number of iter'], 2);
     
+
+## Gradient Descent
+
+def test_Mini_GD_output_x_min():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.9],method = "gradient-descent")['x_min'][0], 0.96727347);
+
+def test_Mini_GD_output_f_root_value():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.9], method = "gradient-descent")['min F(x)'][0], 0.00107281);
     
-    
-#    >>> Mini(F3, [1, 0.5], method = "newton")['x_min']
-#    array([1., 1.])
-#    >>> Mini(F3, [1, 0.5], method = "newton")['min F(x)']
-#    array([0.])
-#    >>> Mini(F3, [1, 0.5], method = "newton")['Jcobian F(x_min)']
-#    array([0., 0.])
-#    >>> Mini(F3, [1, 0.5], method = "newton")['Hessian F(x_min)']
-#    array([[ 802., -400.],
-#           [-400.,  200.]])
-#    >>> Mini(F3, [1, 0.5], method = "newton")['number of iter']
-#    2
-
-
-
-#Test optimization input validity
-def test_Mini_F_valid():
-    F = 3
-    with pytest.raises(TypeError):
-        assert  Mini(F, [1, 0.5]);def test_Mini_F_length_valid():
-    F = lambda x:[x[0], x[1]]
-    with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5]);
-  
-
-def test_Mini_x_valid():
-    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    with pytest.raises(TypeError):
-        assert  Mini(F, 3);
-
-
-def test_Mini_method_valid():
-    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5], method = "apple" );
-        
-def test_Mini_criteria_valid():
-    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    with pytest.raises(TypeError):
-        assert  Mini(F, [1, 0.5], method = "newton", criteria = "hi");
-
-def test_Mini_rate_valid():
-    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    with pytest.raises(TypeError):
-        assert  Mini(F, [1, 0.5], method = "newton", rate = "hi");
-
-def test_Mini_x_plot_valid():
-    F = lambda x:[x[0]+x[1]+x[2]]
-    with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5, 0], plot = True);
-
-def test_Mini_plot_valid():
-    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5], plot = 1);      
-        
-
-
-
-#Test optimization output validity
-def test_Mini_BFGS_output_x_min():
+def test_Mini_GD_output_n_iter():
 	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['x_min'][0], 1.);
-
-def test_Mini_BFGS_output_f_root_value():
-	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['min F(x)'][0], 0);
-
-def test_Mini_BFGS_output_hessian_approx():
-	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['Hessian approximate'][0][0], 0.49616688);
-    
-def test_Mini_BFGS_output_n_iter():
-	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['number of iter'], 31);
-	
+	assert np.isclose(Mini(F3, [1, 0.9], method = "gradient-descent")['number of iter'], 5000);
