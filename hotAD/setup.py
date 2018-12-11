@@ -14,7 +14,7 @@ setuptools.setup(
     url="https://github.com/CS207ProjectGroup8/cs207-FinalProject",
     packages=setuptools.find_packages(),
     install_requires=['numpy==1.15.2',
-                      'matplotlib==2.2.3']
+                      'matplotlib==2.2.3'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
