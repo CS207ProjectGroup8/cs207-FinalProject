@@ -111,11 +111,11 @@ def test_Mini_Newton_output_f_root_value():
 
 def test_Mini_Newton_output_hessian_approx():
 	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['Hessian approximate'][0][0], 0.49616688);
+	assert np.isclose(Mini(F3, [1, 0.5], method = "newton")['Hessian F(x_min)'][0][0],802);
     
 def test_Mini_Newton_output_n_iter():
 	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-	assert np.isclose(Mini(F3, [1, 0.5])['number of iter'], 31);
+	assert np.isclose(Mini(F3, [1, 0.5], method = "newton")['number of iter'], 2);
     
     
     
