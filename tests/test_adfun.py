@@ -40,7 +40,7 @@ def test_J_F_fnval():
 # Testing J_F produces the correct values in the Hessian
 def test_J_F_jacval():
 	F = lambda x: [x[0] * 3 + x[1] * x[2] + x[3]*x[3]]
-	x = [2, 3, 4]
+	x = [2, 3, 4, 8]
 	Jac = J_F(F, x, H = True)
 	assert np.isclose(Jac[2][3][3], 2.0);
 
