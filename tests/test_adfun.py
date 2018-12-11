@@ -137,11 +137,12 @@ def test_Mini_Newton_output_n_iter():
 def test_Mini_F_valid():
     F = 3
     with pytest.raises(TypeError):
-        assert  Mini(F, [1, 0.5]);def test_Mini_F_length_valid():
+        assert  Mini(F, [1, 0.5]);
+
+def test_Mini_F_length_valid():
     F = lambda x:[x[0], x[1]]
     with pytest.raises(ValueError):
         assert  Mini(F, [1, 0.5]);
-  
 
 def test_Mini_x_valid():
     F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
