@@ -718,7 +718,7 @@ class ElementaryFunctions():
     @staticmethod
     def logit(other):
         ''' Returns the another AutoDiff object or numeric value after
-        performing square root operation on the input
+        performing logisitic operation on the input
 
         RETURNS
         ========
