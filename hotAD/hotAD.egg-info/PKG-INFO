@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: hotAD
-Version: 0.0.2
+Version: 0.0.3
 Summary: A Python package for forward mode automatic differentiation for multivariate functions, Jacobian/Hessian matrix computation, root-finding, and optimization routines.
 Home-page: https://github.com/CS207ProjectGroup8/cs207-FinalProject
 Author: Anthony Rentsch, Jiayin Lu, Lipika Ramaswamy, Yuanheng Wang
