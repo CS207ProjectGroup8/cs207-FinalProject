@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from hotAD.AutoDiffObject import *
-from hotAD.ElementaryFunctions import *
+from hotAD.ElementaryFunctions import ElementaryFunctions as ef
 
 #Our method J_F that takes in the user defined function and vector list x
 def J_F(F, x, H = False):              #F as a length n list, x as a length m list 
@@ -156,7 +156,10 @@ def Newton(F, x, criteria = 10**(-8)):
             F_k = JF_k[0]
             J_k = JF_k[1]
             deltaX = np.linalg.solve(J_k, -F_k)
-            rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
+            try:
+                rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
+            except:
+                break
             x_k = x_k + deltaX
             i += 1
         
