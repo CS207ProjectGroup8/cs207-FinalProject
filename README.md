@@ -42,10 +42,10 @@ f = ef.sin(x) + np.tan(y)
 ```
 
 ### ADfun
-Users can use the methods in this module to compute the Jacobian matrix of a function, to perform root-finding via Newton's Method, and to perform minimization via `newton`, `quasi-newton-BFGS`, and `gradient-descent` methods.
+Users can use the methods in this module to compute the Jacobian and Hessian matricies of a function, to perform root-finding via Newton's Method, and to perform minimization via `newton`, `quasi-newton-BFGS`, and `gradient-descent` methods.
 
 ## More information
-For additional information on how to use the package, please see `docs/milestone2.ipynb`.
+For additional information on how to use the package, please see `docs/documentation.ipynb`.
 
 Our group members are:
 
