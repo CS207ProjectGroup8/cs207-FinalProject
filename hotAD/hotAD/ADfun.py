@@ -115,7 +115,7 @@ def J_F(F, x, H = False):              #F as a length n list, x as a length m li
 #Optimization & Root Finding
 #full Newton: root-finding
 #Require len(F) = len(x)
-def Newton(F, x, criteria = 10**(-8)):
+def Newton(F, x, criteria = 10**(-8), max_iter = 5000):
     ''' Takes in user defined n-vector function F and m-vector list x, and 
         returns the root closest to the initial guess (x).
         
@@ -133,6 +133,7 @@ def Newton(F, x, criteria = 10**(-8)):
              - x: A length m list of numeric types with an initial guess for the root
              - criteria: the minimum stopping criterion for step size in Newton's method.
                          Default value is set to 10^(-8)
+             - max_iter = 5000: maximum iterations for the newton's method to stop, default set to 5000
 
         
         POST:
@@ -161,7 +162,7 @@ def Newton(F, x, criteria = 10**(-8)):
         
     else: 
         xk_1 = 100*x_k  
-        while np.linalg.norm(x_k-xk_1)>criteria:
+        while i < max_iter and np.linalg.norm(x_k-xk_1)>criteria:
             JF_k = J_F(F, list(x_k))
             F_k = JF_k[0]
             J_k = JF_k[1]
@@ -218,7 +219,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
                 Note: For "gradient-descent" method, since the method can converge very slowly,
                 the stopping criteria is to stop once reaching maximum iteration steps that can 
                 be defined by the user or when |x_k-xk_1| < criteria
-        - max_iter_GD = 5000: maximum iterations for gradient descent to converge, default set to 5000
+        - max_iter_GD = 5000: maximum iterations for the chosen method to stop, default set to 5000
         - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
         - plot = False (or 0): if plot = True (or 1), require len(x) = 1 or len(x) = 2;
                 If plot = True, a plot of the iteration trace will show up
@@ -288,7 +289,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
         
         xk_1 = 100*x_k
     
-        while np.linalg.norm(x_k-xk_1)>criteria:
+        while i < max_iter_GD and np.linalg.norm(x_k-xk_1)>criteria:
             
             JH_k = J_F(F, list(x_k), H = True) 
         
@@ -322,24 +323,26 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
         xk_1 = 100*x_k
         
             
-        while np.linalg.norm(x_k-xk_1)>criteria:
+        while i < max_iter_GD and np.linalg.norm(x_k-xk_1)>criteria:
             deltaX = - np.matmul(H_k, J_k)
+            
             xk_1 = x_k
             x_k = x_k + deltaX
             
+            if np.linalg.norm(x_k-xk_1) != 0: 
+                x_trace = np.vstack([x_trace, x_k])
             
-            x_trace = np.vstack([x_trace, x_k])
+                JF_k2 = J_F(F, list(x_k))
+                J_k2 = JF_k2[1][0]
+            
+                yk = J_k2 - J_k    #vector
             
             
-            JF_k2 = J_F(F, list(x_k))
-            J_k2 = JF_k2[1][0]
-            
-            yk = J_k2 - J_k    #vector
-            rouk = 1/(yk.T @ deltaX)    #number
-            H_k = np.matmul(np.matmul((I - np.outer((deltaX * rouk), yk.T)), H_k), (I - np.outer((rouk * yk), deltaX.T))) + np.outer((rouk * deltaX), deltaX.T) 
+                rouk = 1/(yk.T @ deltaX)    #number
+                H_k = np.matmul(np.matmul((I - np.outer((deltaX * rouk), yk.T)), H_k), (I - np.outer((rouk * yk), deltaX.T))) + np.outer((rouk * deltaX), deltaX.T) 
         
-            J_k = J_k2
-            i += 1
+                J_k = J_k2
+                i += 1
         
         result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jacobian F(x_min)": JF_k2[1][0], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
         
@@ -395,7 +398,6 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
             
             trace = result["trace"]
             lx = trace.T[0]
-            print(lx)
             ly = []
             for i in range(0, len(lx)):
                 ly.append(F([lx[i]]))
