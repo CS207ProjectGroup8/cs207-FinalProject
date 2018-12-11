@@ -66,7 +66,7 @@ def test_Newton_criteria_valid():
 
 def test_Newton_check_eq_len_F_x():
     F = lambda x:[x[0]*x[0], x[0]+x[0]]
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         assert Newton(F, [2]);
         
 #Test output values
