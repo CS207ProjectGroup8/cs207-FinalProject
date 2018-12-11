@@ -21,11 +21,33 @@ def test_autodiff_variable_name_args():
 	with pytest.raises(TypeError):
 		assert AutoDiff(6, 'xy', H=True)
 
+def test_autodiff_variable_name_args_notAlpha_space():
+	with pytest.raises(TypeError):
+		assert AutoDiff(6, ' ')	
+
+def test_autodiff_variable_name_args_notAlpha_num():
+	with pytest.raises(TypeError):
+		assert AutoDiff(6, '4')	
+
+def test_autodiff_variable_name_args_notAlpha_symbol():
+	with pytest.raises(TypeError):
+		assert AutoDiff(6, '&')	
+
 # Equality
 def test_autodiff_eq():
 	a = AutoDiff(2, "a")
 	b = AutoDiff(4, "b")
 	assert ef.power(a, 2).val == b.val
+
+def test_autodiff_neq_ad_and_num():
+	a = AutoDiff(4, "a")
+	b = 4
+	assert a != b
+
+def test_autodiff_neq_ad_and_num2():
+	a = AutoDiff(4, "a")
+	b = "four"
+	assert a != b
 
 def test_autodiff_neq():
 	a = AutoDiff(2, "a")
@@ -33,13 +55,31 @@ def test_autodiff_neq():
 	assert a.val != b.val
 
 # Negation
-def test_autodiff_negation():
+def test_autodiff_negation_val():
+	a = AutoDiff(3, "a")
+	b = AutoDiff(1.5, "b")
+	f = a*b
+	assert -1*f.der['a'] == -6
+
+def test_autodiff_negation_firstDer():
 	a = AutoDiff(3, "a")
 	b = AutoDiff(1.5, "b")
 	f = a*b
 	assert -1*f.der['a'] == -b.val
 
+def test_autodiff_negation_secondDer():
+	a = AutoDiff(3, "a")
+	b = AutoDiff(1.5, "b")
+	f = a*a*b
+	assert -1*f.der2['a'] == (2*b.val)
+
 # Multiplication
+def test_autodiff_mul_val():
+	a = AutoDiff(3, "a")
+	b = AutoDiff(2, "b")
+	f = (a*a)*(b*b)
+	assert f.der['a'] == 36
+
 def test_autodiff_mul_der1():
 	a = AutoDiff(3, "a")
 	b = AutoDiff(1.5, "b")
