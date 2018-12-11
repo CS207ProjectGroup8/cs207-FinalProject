@@ -51,10 +51,10 @@ class AutoDiff():
                 varName.isalnum()
                 self.varName = varName
             except AttributeError as err:
-                raise TypeError("varName has to be a character")
+                raise AttributeError("varName has to be a character")
 
         else:
-            raise TypeError("Please enter a character for the name of the AutoDiff object.")
+            raise AttributeError("Please enter a character for the name of the AutoDiff object.")
 
         if H in [True, False]:
             self.H = H

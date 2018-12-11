@@ -85,7 +85,7 @@ def test_Mini_F_valid():
     F = 3
     with pytest.raises(TypeError):
         assert  Mini(F, [1, 0.5]);
-        
+
 def test_Mini_F_length_valid():
     F = lambda x:[x[0], x[1]]
     with pytest.raises(ValueError):
