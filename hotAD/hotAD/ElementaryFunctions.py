@@ -453,10 +453,6 @@ class ElementaryFunctions():
                         print ("Base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
 
-                    if base.real <= 0:
-                        print ("Base value should be positive, because we don't consider imaginary number here.")
-                        raise ValueError
-
                     other_der = {}
                     other_der2 = {}
                     ##try to check if the passed in other object is numeric value
@@ -465,11 +461,11 @@ class ElementaryFunctions():
                     if power.H:
                         for key, derivative2 in power.der2.items():
                             if key in power.der.keys():
-                                other_der2[key] = power.der[key] * np.log(base) * np.power(base,power.val) + power.der2[key] * np.log(base) * np.power(base,power.val)
+                                other_der2[key] = (power.der[key] * np.log(base))**2 * np.power(base,power.val)
                             else:
                                 key1 = key[0]
                                 key2 = key[1]
-                                other_der2[key] = power.der[key2] * np.log(base) * np.power(base,power.val) + power.der[key1] * power.der[key2] * np.log(base) * np.power(base,power.val)
+                                other_der2[key] = power.der2[key] * np.log(base) * np.power(base,power.val) + power.der[key1] * power.der[key2] * np.log(base)**2 * np.power(base,power.val)
                         return AutoDiff(np.power(base,power.val), "dummy", other_der, other_der2, H = True)
                     else:
                         return AutoDiff(np.power(base,power.val), "dummy", other_der)
