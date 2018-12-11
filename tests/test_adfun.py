@@ -63,10 +63,11 @@ def test_Newton_criteria_valid():
     with pytest.raises(TypeError):
         assert Newton(F, [2, 3], "a");
 
-def test_Newton_criteria_valid_size_of_x_and_F_equal():
-	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
+
+def test_Newton_check_eq_len_F_x():
+    F = lambda x:[x[0]*x[0], x[0]+x[0]]
     with pytest.raises(TypeError):
-        assert Newton(F, [2, 3, 4]);
+        assert Newton(F, [2]);
         
 #Test output values
 def test_Newton_output_x_min():
