@@ -464,7 +464,7 @@ class ElementaryFunctions():
                         other_der[key] = power.der[key] * np.log(base) * np.power(base,power.val)
                     if power.H:
                         for key, derivative2 in power.der2.items():
-                            if key in base.der.keys():
+                            if key in power.der.keys():
                                 other_der2[key] = power.der[key] * np.log(base) * np.power(base,power.val) + power.der2[key] * np.log(base) * np.power(base,power.val)
                             else:
                                 key1 = key[0]
@@ -874,7 +874,7 @@ class ElementaryFunctions():
             else:
                 return AutoDiff(arcsin_value, "dummy", other_der)
 
-        except RuntimeWarning:   
+        except RuntimeWarning:
             raise RuntimeWarning("Value must be in [-1, 1].")
 
         except:
@@ -883,7 +883,7 @@ class ElementaryFunctions():
                 other_value = other.real
                 return np.arcsin(other_value)
 
-            except RuntimeWarning:   
+            except RuntimeWarning:
                 raise RuntimeWarning("Value must be in [-1, 1].")
 
             except:
@@ -961,7 +961,7 @@ class ElementaryFunctions():
             else:
                 return AutoDiff(arccos_value, "dummy", other_der)
 
-        except RuntimeWarning:   
+        except RuntimeWarning:
             raise RuntimeWarning("Value must be in [-1, 1].")
 
         except:
@@ -969,7 +969,7 @@ class ElementaryFunctions():
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
                 return np.arccos(other_value)
-            except RuntimeWarning:   
+            except RuntimeWarning:
                 raise RuntimeWarning("Value must be in [-1, 1].")
             except:
                 ##catch error if passed object is not numeric or autodiff
