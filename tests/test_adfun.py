@@ -72,14 +72,42 @@ def test_Newton_output_f_root_value():
 	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
 	assert np.isclose(Newton(F, [3, 2])['F(x_min): '][0], 0);
     
-def test_Newton_output_f_root_value():
+def test_Newton_output_n_iter():
 	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
 	assert np.isclose(Newton(F, [3, 2])['number of iter: '], 541);
     
 
-##### TESTS FOR MINIMIZATION YEAH YEAH
+##### TESTS FOR MINIMIZATION 
     
+## BFGS Method
+    
+def test_Mini_BFGS_output_x_min():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.5])['x_min'][0], 1.);
 
+def test_Mini_BFGS_output_f_root_value():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.5])['min F(x)'][0], 0);
 
+def test_Mini_BFGS_output_hessian_approx():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.5])['Hessian approximate'][0][0], 0.49616688);
+    
+def test_Mini_BFGS_output_n_iter():
+	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+	assert np.isclose(Mini(F3, [1, 0.5])['number of iter'], 31);
+
+#    >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+#    >>> Mini(F3, [1, 0.5])['x_min']
+#    array([1., 1.])
+#    >>> Mini(F3, [1, 0.5])['min F(x)']
+#    array([1.93577378e-21])
+#    >>> Mini(F3, [1, 0.5])['Jcobian F(x_min)']
+#    array([-1.04250164e-09,  5.55377966e-10])
+#    >>> Mini(F3, [1, 0.5])['Hessian approximate']
+#    array([[0.49616688, 0.99235036],
+#           [0.99235036, 1.98973386]])
+#    >>> Mini(F3, [1, 0.5])['number of iter']
+#    31
 
 	
