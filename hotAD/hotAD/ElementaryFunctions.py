@@ -1,7 +1,6 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-#from hotAD.AutoDiffObject import AutoDiff
-from AutoDiffObject import AutoDiff
+from hotAD.AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -1049,4 +1048,3 @@ if __name__ == "__main__":
     x = AutoDiff(2, 'x', H=True)
     f = ElementaryFunctions.arcsin(x)
     print(f.val, f.der, f.der2)
-
