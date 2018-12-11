@@ -132,6 +132,52 @@ def test_Mini_Newton_output_n_iter():
 #    2
 
 
+
+#Test optimization input validity
+def test_Mini_F_valid():
+    F = 3
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5]);def test_Mini_F_length_valid():
+    F = lambda x:[x[0], x[1]]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5]);
+  
+
+def test_Mini_x_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, 3);
+
+
+def test_Mini_method_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5], method = "apple" );
+        
+def test_Mini_criteria_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5], method = "newton", criteria = "hi");
+
+def test_Mini_rate_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(TypeError):
+        assert  Mini(F, [1, 0.5], method = "newton", rate = "hi");
+
+def test_Mini_x_plot_valid():
+    F = lambda x:[x[0]+x[1]+x[2]]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5, 0], plot = True);
+
+def test_Mini_plot_valid():
+    F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    with pytest.raises(ValueError):
+        assert  Mini(F, [1, 0.5], plot = 1);      
+        
+
+
+
+#Test optimization output validity
 def test_Mini_BFGS_output_x_min():
 	F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
 	assert np.isclose(Mini(F3, [1, 0.5])['x_min'][0], 1.);
