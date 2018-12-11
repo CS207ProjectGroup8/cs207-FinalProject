@@ -4,7 +4,7 @@ A Python package for forward mode automatic differentiation for multivariate fun
 
 [![Build Status](https://travis-ci.org/CS207ProjectGroup8/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/CS207ProjectGroup8/cs207-FinalProject.svg?branch=master)
 
-[![Coverage Status](https://coveralls.io/repos/github/CS207ProjectGroup8/cs207-FinalProject/badge.svg?branch=master)](https://coveralls.io/github/CS207ProjectGroup8/cs207-FinalProject?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/CS207ProjectGroup8/cs207-FinalProject/badge.svg?branch=master&service=github)](https://coveralls.io/github/CS207ProjectGroup8/cs207-FinalProject?branch=master)
 
 ## Background
 Classically, scientists have used symbolic differentiation and finite difference method to compute derivatives of functions, but these approaches face issues of increasing errors and increasing time cost in evaluating the derivatives as dimensions and complexities of the function go up. **Automatic differentiation (AD)** applies the chain rule - a rudimentary differentiation technique - over and over on a series of elementary arithmetic operations that make up any function. As the order increases, the complexity of AD calculation is not worse than the original function, therefore achieving efficiency.
