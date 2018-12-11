@@ -1,9 +1,8 @@
 ##This class is used to define the behavior of elementary functions
 import numpy as np
-#import warnings
-#warnings.filterwarnings("error")
+import warnings
+warnings.simplefilter("error", RuntimeWarning)
 from hotAD.AutoDiffObject import AutoDiff
-#from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -868,7 +867,7 @@ class ElementaryFunctions():
                 return AutoDiff(arcsin_value, "dummy", other_der)
 
         except RuntimeWarning:
-            raise RuntimeWarning("Value must be in [-1, 1].")
+            raise ValueError("Value must be in [-1, 1].")
 
         except:
             try:
@@ -878,7 +877,7 @@ class ElementaryFunctions():
                 #     raise ValueError
                 return np.arcsin(other_value)
             except RuntimeWarning:
-                raise RuntimeWarning("Value must be in [-1, 1].")
+                raise ValueError("Value must be in [-1, 1].")
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
@@ -1047,7 +1046,7 @@ class ElementaryFunctions():
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
 
-# if __name__ == "__main__":
-#     x = AutoDiff(2, 'x', H=True)
-#     f = ElementaryFunctions.arcsin(x)
-#     print(f.val, f.der, f.der2)
+if __name__ == "__main__":
+    x = AutoDiff(2, 'x', H=True)
+    f = ElementaryFunctions.arcsin(x)
+    print(f.val, f.der, f.der2)
