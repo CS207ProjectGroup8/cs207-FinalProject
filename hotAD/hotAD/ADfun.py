@@ -169,7 +169,7 @@ def Newton(F, x, criteria = 10**(-8)):
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, max_iter_GD = 5000, rate = 0.0001, plot = False):
+def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 5000, rate = 0.0001, plot = False):
 
     '''
     For optimization problems. Minimize an one-vector function F that takes in 
@@ -418,7 +418,3 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), *args, max_ite
             plt.legend()
 
     return result
-
-
-
-
