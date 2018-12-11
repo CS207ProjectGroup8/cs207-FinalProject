@@ -211,7 +211,7 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
                 be defined by the user or when |x_k-xk_1| < criteria
         - max_iter_GD = 5000: maximum iterations for gradient descent to converge, default set to 5000
         - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
-        - plot = False: if plot = True, require len(x) = 1 or len(x) = 2;
+        - plot = False (or 0): if plot = True (or 1), require len(x) = 1 or len(x) = 2;
                 If plot = True, a plot of the iteration trace will show up
         
         

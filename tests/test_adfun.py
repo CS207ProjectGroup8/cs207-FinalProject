@@ -119,7 +119,7 @@ def test_Mini_x_plot_valid():
 def test_Mini_plot_valid():
     F = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
     with pytest.raises(ValueError):
-        assert  Mini(F, [1, 0.5], plot = 1);      
+        assert  Mini(F, [1, 0.5], plot = 99);      
         
 #Test optimization output validity
 
