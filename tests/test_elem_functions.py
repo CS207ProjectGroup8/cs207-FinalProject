@@ -60,7 +60,7 @@ def test_sin_illegal_arg():
 		assert ef.sin("thirty");
 
 def test_illegal_len_varname():
-	with pytest.raises(AttributeError):
+	with pytest.raises(TypeError):
 		assert AutoDiff(4, "variable1")
 
 def test_numeric_value():
