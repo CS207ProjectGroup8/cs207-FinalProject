@@ -169,7 +169,7 @@ def Newton(F, x, criteria = 10**(-8)):
 
 
 #Optimization: Minimization for F from R^n to R
-def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 5000, rate = 0.0001, plot = False):
+def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 5000, rate = 0.0001, plot = False):
 
     '''
     For optimization problems. Minimize an one-vector function F that takes in 
@@ -209,9 +209,6 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
                 Note: For "gradient-descent" method, since the method can converge very slowly,
                 the stopping criteria is to stop once reaching maximum iteration steps that can 
                 be defined by the user or when |x_k-xk_1| < criteria
-        - *args: args can take in as argument a matrix as initial guess of the 
-                inverse Hessian matrix, for use in the "quasi-newton-BFGS" method;
-                otherwise, default will use a identity matrix as the initial guess
         - max_iter_GD = 5000: maximum iterations for gradient descent to converge, default set to 5000
         - rate = 0.0001: learning rate of the gradient-descent method, default to 0.0001
         - plot = False: if plot = True, require len(x) = 1 or len(x) = 2;
@@ -259,17 +256,17 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
     
     #Catch errors:
     if len(F(x))!= 1:
-        print("F needs to be a function from R^n to R!")
-        raise ValueError
+        raise ValueError ("F needs to be a function from R^n to R!")
+    
+    if plot not in [True, False]:
+        raise ValueError ("Enter True or False for whether a plot should be output.")
     
     if plot == True:
         if len(x) != 1 and len(x) != 2:
-            print("Cannot make plots of the iteration steps, since x is of more than 2 dimensions!")
-            raise ValueError
+            raise ValueError ("Cannot make plots of the iteration steps, since x is of more than 2 dimensions!")
     
     if method != "newton" and method != "quasi-newton-BFGS" and method != "gradient-descent":
-        print("Optimization methods provided are newton, quasi-newton-BFGS and gradient-descent. Please choose one from them.")
-        raise ValueError
+        raise ValueError ("Optimization methods provided are newton, quasi-newton-BFGS and gradient-descent. Please choose one from them.")
         
     
     
@@ -278,7 +275,6 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
         x_k = np.array(x)
         x_trace = x_k
         i = 0
-#        rel_step = 1
         
         xk_1 = 100*x_k
     
@@ -292,7 +288,6 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
             deltaX = np.linalg.solve(H_k, -J_k)
             xk_1 = x_k
             x_k = x_k + deltaX
-#            rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
             
             x_trace = np.vstack([x_trace, x_k])
             i += 1
@@ -307,13 +302,9 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
 
         x_trace = x_k
         i = 0
-        rel_step = 1
         I = np.eye(len(x),len(x))
         
-        if len(args) != 0:
-            H_k = args[0]
-        else: 
-            H_k = I
+        H_k = I
         
         JF_k = J_F(F, list(x_k))
         J_k = JF_k[1][0]
