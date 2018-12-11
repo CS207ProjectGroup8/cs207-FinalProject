@@ -5,6 +5,7 @@ from hotAD.AutoDiffObject import AutoDiff
 from hotAD.ElementaryFunctions import ElementaryFunctions as ef
 from hotAD.ADfun import *
 
+######## TESTING JACOBIAN
 
 # Input args
 def test_J_F_valid_H():
@@ -44,21 +45,7 @@ def test_J_F_jacval():
 	Jac = J_F(F, x, H = True)
 	assert np.isclose(Jac[2][3][3], 2.0);
 
-#        >>> F2 = lambda x: [x[0] * 3 + x[1] * x[2] + x[3]*x[3]]
-#        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][0])
-#        [0. 0. 0. 0.]
-#        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][1])
-#        [0. 0. 1. 0.]
-#        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][2])
-#        [0. 1. 0. 0.]
-#        >>> print(J_F(F2, [2, 3, 4, 8], H = True)[2][3])
-#        [0. 0. 0. 2.]
-#
-#
-#        F = lambda x: [x[0] * 3 + x[1] * x[2], x[2] - x[0] * x[1] + x[0]]
-#        print(J_F(F, [2, 3, 4])[0])
-#        [18.  0.]
-#        >>> print(J_F(F, [2, 3, 4])[1][0])
-#        [3. 4. 3.]
-#        >>> print(J_F(F, [2, 3, 4])[1][1])
-#        [-2. -2.  1.]
+
+
+    >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+    >>> Mini(F3, [1, 0.5])['x_min']
