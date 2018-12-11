@@ -325,22 +325,24 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
             
         while i < max_iter_GD and np.linalg.norm(x_k-xk_1)>criteria:
             deltaX = - np.matmul(H_k, J_k)
+            
             xk_1 = x_k
             x_k = x_k + deltaX
             
+            if np.linalg.norm(x_k-xk_1) != 0: 
+                x_trace = np.vstack([x_trace, x_k])
             
-            x_trace = np.vstack([x_trace, x_k])
+                JF_k2 = J_F(F, list(x_k))
+                J_k2 = JF_k2[1][0]
+            
+                yk = J_k2 - J_k    #vector
             
             
-            JF_k2 = J_F(F, list(x_k))
-            J_k2 = JF_k2[1][0]
-            
-            yk = J_k2 - J_k    #vector
-            rouk = 1/(yk.T @ deltaX)    #number
-            H_k = np.matmul(np.matmul((I - np.outer((deltaX * rouk), yk.T)), H_k), (I - np.outer((rouk * yk), deltaX.T))) + np.outer((rouk * deltaX), deltaX.T) 
+                rouk = 1/(yk.T @ deltaX)    #number
+                H_k = np.matmul(np.matmul((I - np.outer((deltaX * rouk), yk.T)), H_k), (I - np.outer((rouk * yk), deltaX.T))) + np.outer((rouk * deltaX), deltaX.T) 
         
-            J_k = J_k2
-            i += 1
+                J_k = J_k2
+                i += 1
         
         result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jacobian F(x_min)": JF_k2[1][0], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
         
@@ -396,7 +398,6 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
             
             trace = result["trace"]
             lx = trace.T[0]
-            print(lx)
             ly = []
             for i in range(0, len(lx)):
                 ly.append(F([lx[i]]))
