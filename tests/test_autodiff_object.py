@@ -18,16 +18,16 @@ def test_autodiff_hessian_args():
 		assert AutoDiff(5, 'x', H=3)
 
 def test_autodiff_variable_name_args():
-	with pytest.raises(TypeError):
+	with pytest.raises(AttributeError):
 		assert AutoDiff(6, 'xy', H=True)
 
 def test_autodiff_variable_name_args_notAlpha_space():
-	with pytest.raises(TypeError):
+	with pytest.raises(AttributeError):
 		assert AutoDiff(6, ' ')	
 
 def test_autodiff_variable_name_args_notAlpha_symbol():
-	with pytest.raises(TypeError):
-		assert AutoDiff(6, '&')	
+	with pytest.raises(AttributeError):
+		assert AutoDiff(6, '&')
 
 # Equality
 def test_autodiff_eq():
