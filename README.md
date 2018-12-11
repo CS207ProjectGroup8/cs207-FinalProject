@@ -14,7 +14,7 @@ Our Python package employs the forward mode of AD to evaluate the first and seco
 ## Installation
 To install, users have two options
 
-* **Pip**: `pip install hotAD` *(coming soon)*
+* **[Pip](https://pypi.org/project/hotAD/?fbclid=IwAR2zgoybP2w9GoLlzv-SsfegraY5ODgdgABdEPeHnwgVLrUnmN-zhlMhiS8)**: `pip install hotAD`
 * **Download source code**: Find the code under `hotAD/hotAD` and the requirements in the `requirements.txt` file.
 
 ## Usage
@@ -22,9 +22,11 @@ To install, users have two options
 ### AutoDiffObject
 Users can instantiate variables they wish to differentiate and then combine these variables into a function, which will now contain the function value and first derivative. To call vector-valued functions, simply create a list of functions. Users can specify an optional argument `H=True` if they wish to compute the second derivative as well.
 
-`x = AutoDiff(3, 'x')`
-`y = AutoDiff(4, 'y')`
-`f = x*y + x`
+```
+x = AutoDiff(3, 'x')  
+y = AutoDiff(4, 'y')  
+f = x*y + x  
+```
 
 ### ElementaryFunctions
 Users are strongly recommended to use our elementary functions. Currently we have implemented:
@@ -33,9 +35,11 @@ Users are strongly recommended to use our elementary functions. Currently we hav
 * exponential functions (`log`, `exp`)
 * logistic function (`logit`)
 
-`x = AutoDiff(np.pi, 'x')`
-`y = AutoDiff(np.pi/4, 'y'`
-`f = ef.sin(x) + np.tan(y)`
+```
+x = AutoDiff(np.pi, 'x')  
+y = AutoDiff(np.pi/4, 'y')  
+f = ef.sin(x) + np.tan(y)  
+```
 
 ### ADfun
 Users can use the methods in this module to compute the Jacobian matrix of a function, to perform root-finding via Newton's Method, and to perform minimization via `newton`, `quasi-newton-BFGS`, and `gradient-descent` methods.
