@@ -1,4 +1,5 @@
 
+import numbers
 import numpy as np
 import matplotlib.pyplot as plt
 from hotAD.AutoDiffObject import *
@@ -268,8 +269,9 @@ def Mini(F, x, method = "quasi-newton-BFGS", criteria = 10**(-8), max_iter_GD = 
     if method != "newton" and method != "quasi-newton-BFGS" and method != "gradient-descent":
         raise ValueError ("Optimization methods provided are newton, quasi-newton-BFGS and gradient-descent. Please choose one from them.")
         
-    
-    
+    if isinstance(rate, numbers.Real) == False:
+        raise TypeError ("Rate must be a numeric value.")
+        
     
     if method == "newton":
         x_k = np.array(x)
