@@ -159,7 +159,8 @@ def Newton(F, x, criteria = 10**(-8)):
             try:
                 rel_step = np.linalg.norm(deltaX)/np.linalg.norm(x_k)
             except:
-                x_k = x_k + deltaX
+                break
+            x_k = x_k + deltaX
             i += 1
         
         return {"x_min: ": x_k, "F(x_min): ": J_F(F, list(x_k))[0], "number of iter: ": i}
