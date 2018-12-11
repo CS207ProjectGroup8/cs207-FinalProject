@@ -228,7 +228,7 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
     array([1., 1.])
     >>> Mini(F3, [1, 0.5])['min F(x)']
     array([1.93577378e-21])
-    >>> Mini(F3, [1, 0.5])['Jcobian F(x_min)']
+    >>> Mini(F3, [1, 0.5])['Jacobian F(x_min)']
     array([-1.04250164e-09,  5.55377966e-10])
     >>> Mini(F3, [1, 0.5])['Hessian approximate']
     array([[0.49616688, 0.99235036],
@@ -236,23 +236,23 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
     >>> Mini(F3, [1, 0.5])['number of iter']
     31
     
-    >>> Mini(F3, [1, 0.5], "newton")['x_min']
+    >>> Mini(F3, [1, 0.5], method = "newton")['x_min']
     array([1., 1.])
-    >>> Mini(F3, [1, 0.5], "newton")['min F(x)']
+    >>> Mini(F3, [1, 0.5], method = "newton")['min F(x)']
     array([0.])
-    >>> Mini(F3, [1, 0.5], "newton")['Jcobian F(x_min)']
+    >>> Mini(F3, [1, 0.5], method = "newton")['Jacobian F(x_min)']
     array([0., 0.])
-    >>> Mini(F3, [1, 0.5], "newton")['Hessian F(x_min)']
+    >>> Mini(F3, [1, 0.5], method = "newton")['Hessian F(x_min)']
     array([[ 802., -400.],
            [-400.,  200.]])
-    >>> Mini(F3, [1, 0.5], "newton")['number of iter']
+    >>> Mini(F3, [1, 0.5], method = "newton")['number of iter']
     2
     
-    >>> Mini(F3, [1, 0.9], "gradient-descent")['x_min']
+    >>> Mini(F3, [1, 0.9],method = "gradient-descent")['x_min']
     array([0.96727347, 0.9354844 ])
-    >>> Mini(F3, [1, 0.9], "gradient-descent")['min F(x)']
+    >>> Mini(F3, [1, 0.9], method = "gradient-descent")['min F(x)']
     array([0.00107281])
-    >>> Mini(F3, [1, 0.9], "gradient-descent")['number of iter']
+    >>> Mini(F3, [1, 0.9], method = "gradient-descent")['number of iter']
     5000
     
     '''
@@ -299,7 +299,7 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
         
         JH_k = J_F(F, list(x_k), H = True) 
             
-        result = {"x_min": x_k, "min F(x)": JH_k[0], "Jcobian F(x_min)": JH_k[1][0], "Hessian F(x_min)": JH_k[2], "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JH_k[0], "Jacobian F(x_min)": JH_k[1][0], "Hessian F(x_min)": JH_k[2], "number of iter": i,  "trace":x_trace}
    
         
     if method == "quasi-newton-BFGS":  #H_k is Inverse Hessian approximation
@@ -340,7 +340,7 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
             J_k = J_k2
             i += 1
         
-        result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jcobian F(x_min)": JF_k2[1][0], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JF_k2[0], "Jacobian F(x_min)": JF_k2[1][0], "Hessian approximate": H_k,  "number of iter": i,  "trace":x_trace}
         
         
     if method == "gradient-descent":
@@ -361,7 +361,7 @@ def Mini(F, x, *args, method = "quasi-newton-BFGS", criteria = 10**(-8), max_ite
             
         JF_k = J_F(F, x_k)
             
-        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jcobian F(x_min)": JF_k[1][0], "number of iter": i,  "trace":x_trace}
+        result = {"x_min": x_k, "min F(x)": JF_k[0], "Jacobian F(x_min)": JF_k[1][0], "number of iter": i,  "trace":x_trace}
         
     if len(x) == 2: 
         if plot == True:
