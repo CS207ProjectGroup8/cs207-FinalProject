@@ -1,0 +1,11 @@
+README.md
+setup.py
+hotAD/ADfun.py
+hotAD/AutoDiffObject.py
+hotAD/ElementaryFunctions.py
+hotAD/__init__.py
+hotAD.egg-info/PKG-INFO
+hotAD.egg-info/SOURCES.txt
+hotAD.egg-info/dependency_links.txt
+hotAD.egg-info/requires.txt
+hotAD.egg-info/top_level.txt
