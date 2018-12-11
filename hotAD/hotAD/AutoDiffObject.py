@@ -47,14 +47,13 @@ class AutoDiff():
             raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
 
         if isinstance(varName,str):
-            try:
-                varName.isalnum()
+            if varName.isalnum():
                 self.varName = varName
-            except AttributeError as err:
-                raise AttributeError("varName has to be a character")
+            else:
+                raise TypeError("Please enter a alphanumeric char for the name of the AutoDiff object.")
 
         else:
-            raise AttributeError("Please enter a character for the name of the AutoDiff object.")
+            raise TypeError("Please enter a character for the name of the AutoDiff object.")
 
         if H in [True, False]:
             self.H = H
