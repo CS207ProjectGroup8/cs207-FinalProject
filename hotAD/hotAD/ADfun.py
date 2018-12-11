@@ -148,7 +148,7 @@ def Newton(F, x, criteria = 10**(-8)):
         True
         >>> np.isclose(Newton(F,x)['F(x_min): '][0], 0)
         True
-        >>> np.isclose(Newton(F,x)['number of iter: '], 30)
+        >>> np.isclose(Newton(F,x)['number of iter: '], 536)
         True
         
         '''    
