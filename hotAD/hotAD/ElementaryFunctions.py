@@ -3,7 +3,6 @@ import numpy as np
 import warnings
 warnings.simplefilter("error", RuntimeWarning)
 from hotAD.AutoDiffObject import AutoDiff
-#from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
@@ -846,9 +845,6 @@ class ElementaryFunctions():
 
         try:
 
-            if abs(other.val) > 1:
-                raise ValueError
-
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
             other_val = other.val
@@ -878,18 +874,18 @@ class ElementaryFunctions():
             else:
                 return AutoDiff(arcsin_value, "dummy", other_der)
 
-        except ValueError:
-            raise ValueError("Value must be in [-1, 1].")
+        except RuntimeWarning:   
+            raise RuntimeWarning("Value must be in [-1, 1].")
 
         except:
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                if abs(other_value) > 1:
-                    raise ValueError
                 return np.arcsin(other_value)
-            except ValueError:
-                raise ValueError("Value must be in [-1, 1].")
+
+            except RuntimeWarning:   
+                raise RuntimeWarning("Value must be in [-1, 1].")
+
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
@@ -936,9 +932,6 @@ class ElementaryFunctions():
 
         try:
 
-            if abs(other.val) > 1:
-                raise ValueError("Value must be in [-1, 1].")
-
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
             other_val = other.val
@@ -968,13 +961,16 @@ class ElementaryFunctions():
             else:
                 return AutoDiff(arccos_value, "dummy", other_der)
 
+        except RuntimeWarning:   
+            raise RuntimeWarning("Value must be in [-1, 1].")
+
         except:
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                if abs(other_value) > 1:
-                    raise ValueError("Value must be in [-1, 1].")
                 return np.arccos(other_value)
+            except RuntimeWarning:   
+                raise RuntimeWarning("Value must be in [-1, 1].")
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
@@ -1057,8 +1053,3 @@ class ElementaryFunctions():
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
                 raise AttributeError
-
-if __name__ == "__main__":
-    x = AutoDiff(2, 'x', H=True)
-    f = ElementaryFunctions.arcsin(x)
-    print(f.val, f.der, f.der2)
