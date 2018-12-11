@@ -338,17 +338,16 @@ class ElementaryFunctions():
             other_der2 = {}
             try:
                 ##When both the base and the power are autodiff objects
+                power_val = power.val
                 if type(np.power(base.val, power.val)) == complex:
-                    print ("Base value should be positive, because we don't consider imaginary number here.")
-                    raise ValueError
+                    raise ValueError("Base value should be positive, because we don't consider imaginary number here.")
 
                 base_value = np.power(base.val, power.val)
                 base_der = set(base.der)
                 power_der = set(power.der)
 
                 if base.val <= 0:
-                    print ("Base value should be positive, because we don't consider imaginary number here.")
-                    raise ValueError
+                    raise ValueError("Base value should be positive, because we don't consider imaginary number here.")
 
                 if base.H and power.H:
                     for key in base_der.union(power_der):
@@ -413,36 +412,44 @@ class ElementaryFunctions():
                                 other_der[key] = np.power(base.val,power.val) * power.der[key] * np.log(base.val)
                     return AutoDiff(base_value, "dummy", other_der)
 
+            except ValueError as err:
+                print(err.args)
             except:
                 ##when base is autodiff object and power is not
-                if type(np.power(base.val, power.real)) == complex:
-                    print ("Base value should be positive, because we don't consider imaginary number here.")
-                    raise ValueError
+                try:
+                    power_val = power.real
+                    if type(np.power(base.val, power.real)) == complex:
+                        raise ValueError("Base value should be positive, because we don't consider imaginary number here.")
 
-                base_value = np.power(base_val, power)
-                base_der = power * np.power(base_val, power-1)
-                for key,derivative in base.der.items():
-                    other_der[key] = base_der * derivative
+                    base_value = np.power(base_val, power)
+                    base_der = power * np.power(base_val, power-1)
+                    for key,derivative in base.der.items():
+                        other_der[key] = base_der * derivative
 
-                if base.H:
-                    for key,derivative2 in base.der2.items():
-                        if key in base.der.keys():
-                            other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key]**2 + power * np.power(base.val,power-1) * base.der2[key]
-                        else:
-                            key1 = key[0]
-                            key2 = key[1]
-                            other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key1] * base.der[key2] + power * np.power(base.val,power-1) * base.der2[key]
+                    if base.H:
+                        for key,derivative2 in base.der2.items():
+                            if key in base.der.keys():
+                                other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key]**2 + power * np.power(base.val,power-1) * base.der2[key]
+                            else:
+                                key1 = key[0]
+                                key2 = key[1]
+                                other_der2[key] = power * (power-1) * np.power(base.val,power-2) * base.der[key1] * base.der[key2] + power * np.power(base.val,power-1) * base.der2[key]
 
-                    return AutoDiff(base_value, "dummy", other_der, other_der2, H = True)
-                else:
-                    return AutoDiff(base_value, "dummy", other_der)
+                        return AutoDiff(base_value, "dummy", other_der, other_der2, H = True)
+                    else:
+                        return AutoDiff(base_value, "dummy", other_der)
+                except ValueError as err:
+                    print(err.args)
+                except:
+                    print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
+                    raise AttributeError
 
         except:
             try:
                 base_value = base.real
-
                 try:
                     #base numeric, power autodiff
+                    power_val = power.val
                     if type(np.power(base.real, power.val)) == complex:
                         print ("Base value should be positive, because we don't consider imaginary number here.")
                         raise ValueError
@@ -468,12 +475,16 @@ class ElementaryFunctions():
                     else:
                         return AutoDiff(np.power(base.val,power.val), "dummy", other_der)
                 except:
-
-                    if type(np.power(base, power)) == complex:
-                        print ("Base value should be positive, because we don't consider imaginary number here.")
-                        raise ValueError
-
-                    return np.power(base,power)
+                    try:
+                        power_val = power.real
+                        if type(np.power(base, power)) == complex:
+                            raise ValueError("Base value should be positive, because we don't consider imaginary number here.")
+                        return np.power(base,power)
+                    except ValueError as err:
+                        print(err.args)
+                    except:
+                        print("Illegal argument. Needs to be either AutoDiff object or numeric value.")
+                        raise AttributeError
 
             except:
                 ##catch error if passed object is not numeric or autodiff
@@ -835,8 +846,8 @@ class ElementaryFunctions():
 
         try:
 
-            if abs(other.val) > 1:
-                raise ValueError
+            # if abs(other.val) > 1:
+            #     raise ValueError
 
             ##try to find if the passed in other object is autodiff object and do
             ##proper operation to the passed in object
@@ -867,18 +878,20 @@ class ElementaryFunctions():
             else:
                 return AutoDiff(arcsin_value, "dummy", other_der)
 
-        except ValueError:
-            raise ValueError("Value must be in [-1, 1].")
+        except RuntimeWarning:   
+            raise RuntimeWarning("Value must be in [-1, 1].")
+        # except ValueError:
+        #     raise ValueError("Value must be in [-1, 1].")
 
         except:
             try:
                 ##try to check if the passed in other object is numeric value
                 other_value = other.real
-                if abs(other_value) > 1:
-                    raise ValueError
+                # if abs(other_value) > 1:
+                #     raise ValueError
                 return np.arcsin(other_value)
-            except ValueError:
-                raise ValueError("Value must be in [-1, 1].")
+            # except ValueError:
+            #     raise ValueError("Value must be in [-1, 1].")
             except:
                 ##catch error if passed object is not numeric or autodiff
                 print("Illegal argument. Needs to be either AutoDiff object or numeric value.")

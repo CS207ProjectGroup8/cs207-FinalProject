@@ -1,5 +1,6 @@
 # Tests for ElementaryFunctions.py
 import numpy as np
+import warnings
 import pytest
 from hotAD.AutoDiffObject import AutoDiff
 from hotAD.ElementaryFunctions import ElementaryFunctions as ef
@@ -157,13 +158,13 @@ def test_tan_deriv2_y():
 	x = AutoDiff(4, "x", H=True)
 	y = AutoDiff(5, "y", H=True)
 	f = ef.tan(x*x*y*y)
-	assert np.isclose(f.der2['y'], 376002.08725162304);
+	assert np.isclose(f.der2['y'], 300685.7009832602);
 
 def test_tan_deriv2_xy():
 	x = AutoDiff(4, "x", H=True)
 	y = AutoDiff(5, "y", H=True)
 	f = ef.tan(x*x*y*y)
-	assert np.isclose(f.der2['xy'], 300685.7009832602);
+	assert np.isclose(f.der2['xy'], 376002.08725162304);
 
 def test_tan_no_sec_derivative():
 	x = AutoDiff(4, "x")
@@ -679,7 +680,7 @@ def test_arcsin_numeric_value():
 	assert np.isclose(ef.arcsin(0.2), np.arcsin(0.2));
 
 def test_arcsin_illegal_arg2():
-	with pytest.raises(ValueError):
+	with pytest.warns(RuntimeWarning):
 		assert np.arcsin(2);
 
 

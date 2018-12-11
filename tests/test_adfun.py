@@ -47,5 +47,41 @@ def test_J_F_jacval():
 
 
 
-    >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
-    >>> Mini(F3, [1, 0.5])['x_min']
+   # >>> F3 = lambda x:[100*(x[1]-x[0]*x[0])*(x[1]-x[0]*x[0]) + (1-x[0])*(1-x[0])]
+   # >>> Mini(F3, [1, 0.5])['x_min']
+
+	
+
+
+#Test for Newton()
+#Test input validity
+def Newton_F_valid():
+    with pytest.raises(TypeError):
+        assert Newton(3, [0, 1]);
+        
+def Newton_x_valid():
+    F = lambda x:[x[0]*x[1], x[0]*x[0]]
+    with pytest.raises(TypeError):
+        assert Newton(F, 3);
+        
+def Newton_criteria_valid():
+    F = lambda x:[x[0]*x[1], x[0]*x[0]]
+    with pytest.raises(ValueError):
+        assert Newton(F, [2, 3], "a");
+
+#Test output values
+
+def test_output_x_min():
+	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
+	assert np.isclose(Newton(F, [3, 2])['x_min: '][0], 0);
+    
+def test_output_f_root_value():
+	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
+	assert np.isclose(Newton(F, [3, 2])['F(x_min): '][0], 0);
+    
+def test_output_f_root_value():
+	F = lambda x:[x[0] * x[0] +4 * x[1], x[1] + x[0]*x[1]]
+	assert np.isclose(Newton(F, [3, 2])['number of iter: '], 541);
+    
+    
+	
