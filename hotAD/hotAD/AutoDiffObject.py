@@ -46,11 +46,11 @@ class AutoDiff():
         else:
             raise TypeError ("Please enter an integer or a float for the value of the AutoDiff object.")
 
-        if isinstance(varName, str):
+        if varName.isalpha():
             self.varName = varName
 
         else:
-            raise TypeError("Please enter a string for the name of the AutoDiff object.")
+            raise TypeError("Please enter a character for the name of the AutoDiff object.")
 
         if H in [True, False]:
             self.H = H
@@ -464,7 +464,7 @@ class AutoDiff():
 
             except ZeroDivisionError as err:
                 raise ZeroDivisionError("Denominator cann ot have value 0.")
-                
+
             except:
                 raise AttributeError("Illegal argument. Needs to be either autodiff object or numeric value.")
 
@@ -608,7 +608,7 @@ class AutoDiff():
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = True)
                 else:
                     return AutoDiff(other.real/self.val, "dummy", derDict, der2Dict, H = False)
-            
+
             except ZeroDivisionError as err:
                 raise ZeroDivisionError("Denominator cann ot have value 0.")
 
