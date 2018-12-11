@@ -2,8 +2,8 @@
 import numpy as np
 import warnings
 warnings.simplefilter("error", RuntimeWarning)
-#from hotAD.AutoDiffObject import AutoDiff
-from AutoDiffObject import AutoDiff
+from hotAD.AutoDiffObject import AutoDiff
+#from AutoDiffObject import AutoDiff
 
 class ElementaryFunctions():
 
