@@ -446,7 +446,7 @@ def test_exp_deriv2_xy():
 	x = AutoDiff(0.5, "x", H=True)
 	y = AutoDiff(1.1, "y", H=True)
 	f = ef.exp(x*x*y*y)
-	assert np.isclose(f.der2['xy'], 2.96361557643404);
+	assert np.isclose(f.der2['xy'], 3.877702561784869);
 
 def test_exp_no_sec_derivative_():
 	x = AutoDiff(4, "x")
@@ -614,7 +614,7 @@ def test_logit_numeric_value():
 def test_arcsin_val_error():
 	x = AutoDiff(1.1, "x")
 	y = AutoDiff(2.2, "y")
-	with pytest.raises(AttributeError):
+	with pytest.warns(RuntimeWarning):
 		assert ef.arcsin(x*x*y*y);
 
 def test_arcsin_val():
@@ -654,23 +654,23 @@ def test_logit_deriv2_xy():
 	assert np.isclose(f.der2['xy'], 1.2147290303591283);
 
 def test_arcsin_no_sec_derivative_():
-	x = AutoDiff(4, "x")
+	x = AutoDiff(0.5, "x")
 	with pytest.raises(AttributeError):
 		assert ef.arcsin(x).der2['x'];
 
 def test_arcsin_no_sec_derivative_xy():
-	x = AutoDiff(4, "x")
-	y = AutoDiff(5, "y")
+	x = AutoDiff(0.5, "x")
+	y = AutoDiff(0.4, "y")
 	with pytest.raises(AttributeError):
 		assert ef.arcsin(x*x*y*y).der2['x'];
 
 def test_arcsin_numeric_input_no_val():
 	with pytest.raises(AttributeError):
-		assert ef.arcsin(30).val;
+		assert ef.arcsin(0.2).val;
 
 def test_arcsin_numeric_input_no_deriv():
 	with pytest.raises(AttributeError):
-		assert ef.arcsin(30).der;
+		assert ef.arcsin(-0.2).der;
 
 def test_arcsin_illegal_arg():
 	with pytest.raises(AttributeError):
@@ -688,7 +688,7 @@ def test_arcsin_illegal_arg2():
 def test_arccos_val_error():
 	x = AutoDiff(1.1, "x")
 	y = AutoDiff(2.2, "y")
-	with pytest.raises(AttributeError):
+	with pytest.warns(RuntimeWarning):
 		assert ef.arccos(x*x*y*y);
 
 def test_arccos_val():
@@ -728,23 +728,23 @@ def test_arccos_deriv2_xy():
 	assert np.isclose(f.der2['xy'], -1.2147290303591283);
 
 def test_arccos_no_sec_derivative_():
-	x = AutoDiff(4, "x")
+	x = AutoDiff(0.2, "x")
 	with pytest.raises(AttributeError):
 		assert ef.arccos(x).der2['x'];
 
 def test_arccos_no_sec_derivative_xy():
-	x = AutoDiff(4, "x")
-	y = AutoDiff(5, "y")
+	x = AutoDiff(0.1, "x")
+	y = AutoDiff(0.3, "y")
 	with pytest.raises(AttributeError):
 		assert ef.arccos(x*x*y*y).der2['x'];
 
 def test_arccos_numeric_input_no_val():
 	with pytest.raises(AttributeError):
-		assert ef.arccos(30).val;
+		assert ef.arccos(0).val;
 
 def test_arccos_numeric_input_no_deriv():
 	with pytest.raises(AttributeError):
-		assert ef.arccos(30).der;
+		assert ef.arccos(-0.9).der;
 
 def test_arccos_illegal_arg():
 	with pytest.raises(AttributeError):
