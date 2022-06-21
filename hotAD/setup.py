@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/CS207ProjectGroup8/cs207-FinalProject",
     packages=setuptools.find_packages(),
-    install_requires=['numpy==1.15.2',
+    install_requires=['numpy==1.22.0',
                       'matplotlib==2.2.3'],
     classifiers=[
         "Programming Language :: Python :: 3",
